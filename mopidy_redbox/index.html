@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>RedBox Settings</title>
-</head>
-<body>
+{% extends "base.html"%}
+{% block body %}
+<h1>Radios List</h1>
 <table>
     <tr>
         <th>Name</th>
@@ -21,5 +18,4 @@
     {% end %}
 </table> 
 <a href="add">Add</a>
-</body>
-</html>
+{% end %}

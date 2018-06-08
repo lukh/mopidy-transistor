@@ -1,9 +1,9 @@
-<html>
-    <body>
-        <form method="POST">
-            Name<input type="text" name="name">
-            URL<input type="url" name="uri">
-            <input type="submit" value="Submit">
-        </form>
-    </body>
-</html>
+{% extends "base.html"%}
+{% block body %}
+<h1>Add new radio</h1>
+<form method="POST">
+    Name<input type="text" name="name">
+    URL<input type="url" name="uri">
+    <input type="submit" value="Submit">
+</form>
+{% end %}

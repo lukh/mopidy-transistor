@@ -1,10 +1,10 @@
-<html>
-    <body>
-        <form method="POST">
-            Name<input type="text" name="name" value="{{ radio.name }}">
-            URL<input type="url" name="uri" value="{{ radio.uri }}">
-            Position<input type="number" step="0.01" name="position" value="{{ radio.position }}">
-            <input type="submit" value="Submit">
-        </form>
-    </body>
-</html>
+{% extends "base.html"%}
+{% block body %}
+<h1>Edit radio</h1>
+<form method="POST">
+    Name<input type="text" name="name" value="{{ escape(radio.name) }}">
+    URL<input type="url" name="uri" value="{{ escape(radio.uri) }}">
+    Position<input type="number" step="0.01" name="position" value="{{ radio.position }}">
+    <input type="submit" value="Submit">
+</form>
+{% end %}
