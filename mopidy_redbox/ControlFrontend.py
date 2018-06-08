@@ -2,6 +2,7 @@ import pykka
 import logging
 import sqlite3
 import serial
+import os
 from threading import Thread
 from mopidy import core
 from mopidy.exceptions import FrontendError
@@ -22,11 +23,14 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.serial = serial.Serial(self.config['serial_port'], 9600, timeout=0.1)
         
         self.radios = {}
+        self.radio_pos = None
 
         self.running = False
 
+        self.noise_playing = False
 
-    def on_start(self):        
+
+    def on_start(self): 
         try:
             self.running = True
             self.thread = Thread(target=self.thread_func)
@@ -70,6 +74,9 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         def is_inside(val, target, margin):
             return val > (target-margin) and val < (target+margin)
 
+
+        self.logger.info("TUNER POS: {}".format(position))
+
         # self.get_db_informations()
         positions = [k for k in self.radios]
 
@@ -80,10 +87,10 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 if self.radio_pos != p:
                     self.radio_pos = p
 
-                    # self.ap_queue.put("stop")
-                    # self.noise_playing = False
+                    self.noise_playing = False
 
-                    print self.radios[p]['name']
+                    self.logger.info("RADIO: {}".format(self.radios[p]['name']))
+                    
                     self.play_uri(self.radios[p]['uri'])
 
                 break
@@ -91,20 +98,33 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         if not curs_on_radio:
             self.radio_pos = None
 
-        # if not curs_on_radio and not self.noise_playing:
-        #    self.noise_playing = True
-        #    self.ap_queue.put("play")
-
-            # self.clear_playlist()
+        if not curs_on_radio and not self.noise_playing:
+            self.logger.info("Play noise")
+            self.noise_playing = True
+            self.play_random_noise_from_folder()
 
 
     def play_uri(self, uri):
         self.core.tracklist.clear()
         self.core.tracklist.add(tracks=None, at_position=None, uri=uri, uris=None)
-        self.core.tracklist.play(tl_track=None, tlid =None)
+        self.core.playback.play(tl_track=None, tlid =None)
 
     def clear_playlist(self):
         self.core.tracklist.clear()
+
+    def play_random_noise_from_folder(self):
+        folder = self.config['fm_noise_directory']
+
+        # TODO get random file in this directory
+
+        fn = os.path.join(folder, "radionoise.wav")
+        if not os.path.isfile(fn):
+            raise FrontendError("Noise file doesn't exists")
+
+        uri = "file://"+fn
+        self.logger.info(uri)
+
+        self.play_uri(uri)
 
     def get_db_informations(self):
         self.radios = {}
