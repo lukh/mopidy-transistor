@@ -84,9 +84,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                     # self.noise_playing = False
 
                     print self.radios[p]['name']
-                    self.core.tracklist.clear()
-                    self.core.tracklist.add(tracks=None, at_position=None, uri=self.radios[p]['uri'], uris=None)
-                    self.core.tracklist.play(tl_track=None, tlid =None)
+                    self.play_uri(self.radios[p]['uri'])
+
                 break
 
         if not curs_on_radio:
@@ -96,7 +95,16 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         #    self.noise_playing = True
         #    self.ap_queue.put("play")
 
-            # self.core.tracklist.clear()
+            # self.clear_playlist()
+
+
+    def play_uri(self, uri):
+        self.core.tracklist.clear()
+        self.core.tracklist.add(tracks=None, at_position=None, uri=uri, uris=None)
+        self.core.tracklist.play(tl_track=None, tlid =None)
+
+    def clear_playlist(self):
+        self.core.tracklist.clear()
 
     def get_db_informations(self):
         self.radios = {}
