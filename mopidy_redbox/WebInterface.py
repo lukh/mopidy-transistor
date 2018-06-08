@@ -1,6 +1,7 @@
 import tornado.ioloop
 import tornado.web
-
+from threading import Thread
+import zmq
 
 from tools import *
 
@@ -13,12 +14,20 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("index.html", radios=self.db.getRadios())
         
 
+context = zmq.Context()
 class AddHandler(tornado.web.RequestHandler):
     def initialize(self, dbfilename):
         self.db = RedBoxDataBase(dbfilename)
+        
+        self.socket_tuner = context.socket(zmq.REQ)
+        self.socket_tuner.connect("ipc://tuner_position")
+
 
     def get(self):
-        self.render("add.html")
+        self.socket_tuner.send("query:tuner_position")
+        value = float(self.socket_tuner.recv())
+
+        self.render("add.html", tuner_position=value)
 
     def post(self):
         r = Radio(name=self.get_argument("name"), uri=self.get_argument("uri"), position=0.69)
