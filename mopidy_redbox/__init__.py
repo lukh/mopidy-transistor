@@ -44,5 +44,5 @@ class Extension(ext.Extension):
             'factory': self.webapp
         })
 
-        # from .ControlFrontend import ControlFrontend
-        # registry.add('frontend', ControlFrontend)
+        from .ControlFrontend import ControlFrontend
+        registry.add('frontend', ControlFrontend)

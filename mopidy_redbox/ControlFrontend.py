@@ -2,6 +2,7 @@ import pykka
 import logging
 import sqlite3
 import serial
+from threading import Thread
 from mopidy import core
 from mopidy.exceptions import FrontendError
 
@@ -20,21 +21,18 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.serial = serial.Serial(self.config['serial_port'], 9600, timeout=0.1)
         
-        self.db = sqlite3.connect(self.config['dbfile'])
         self.radios = {}
 
         self.running = False
 
 
-    def on_start(self):
-        self.get_db_informations()
-        
+    def on_start(self):        
         try:
             self.running = True
             self.thread = Thread(target=self.thread_func)
             self.thread.start()
         except Exception as e:
-            raise FrontendError("Impossible to start the thread")
+            raise FrontendError("Impossible to start the thread: {}".format(str(e)))
 
     def on_stop(self):
         self.running = False
@@ -42,11 +40,15 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def thread_func(self):
-        while self.running:
-            raw = self.serial.readline()
-            if raw == "":
-                return
+        self.logger.info("Starting Serial Thread")
+        self.db = sqlite3.connect(self.config['dbfile'])
+        self.get_db_informations()
 
+        while self.running:
+            raw = self.serial.readline() # should be blocking ?
+            if raw == "":
+                continue
+            
             splitted = raw.split("=")
             ch = splitted[0]
             val = float (splitted[1]) / 1024.0
@@ -60,7 +62,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         
 
     def set_volume(self, volume):
-        v = int(volume * 100.0)
+        volume = int(volume * 100.0)
+        self.logger.info("VOLUME: {}".format(volume))
         self.core.mixer.set_volume(volume)
 
     def set_radio(self, position):
@@ -89,15 +92,14 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         if not curs_on_radio:
             self.radio_pos = None
 
-        if not curs_on_radio and not self.noise_playing:
+        # if not curs_on_radio and not self.noise_playing:
         #    self.noise_playing = True
         #    self.ap_queue.put("play")
 
-            self.core.tracklist.clear()
+            # self.core.tracklist.clear()
 
     def get_db_informations(self):
         self.radios = {}
         c = self.db.execute("SELECT * FROM radios")
         for e in c:
             self.radios[e[3]] = {"name":e[1], "uri":e[2]}
-        print self.radios
