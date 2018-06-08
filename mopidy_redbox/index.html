@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RedBox Settings</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>URI</th>
+        <th>Position</th>
+    </tr>
+    {% for radio in radios %}
+    <tr>
+        <th>{{ escape(radio.name) }}</th>
+        <th>{{ escape(radio.uri) }}</th>
+        <th>{{ escape(str(radio.position)) }}</th>
+        <th><a href="edit/{{ radio.id }}">Edit</a></th>
+        <th><a href="delete/{{ radio.id }}">Delete</a></th>
+    </tr>
+    {% end %}
+</table> 
+<a href="add">Add</a>
+</body>
+</html>

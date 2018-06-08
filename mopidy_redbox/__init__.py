@@ -4,6 +4,8 @@ import logging
 import os
 
 from mopidy import config, ext
+import tornado.web
+from WebInterface import *
 
 
 __version__ = '0.0.1'
@@ -25,22 +27,22 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['serial_port'] = config.String()
-        #schema['password'] = config.Secret()
+        schema['dbfile'] = config.String()
         return schema
 
+    def webapp(self, config, core):
+        return [
+            (r"/", MainHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/add", AddHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/edit/([0-9]+)", EditHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/delete/([0-9]+)", DeleteHandler, dict(dbfilename=config['redbox']['dbfile']))
+        ]
+
     def setup(self, registry):
-        # You will typically only implement one of the following things
-        # in a single extension.
+        registry.add('http:app', {
+            'name': self.ext_name,
+            'factory': self.webapp
+        })
 
-        from .ControlFrontend import ControlFrontend
-        registry.add('input', ControlFrontend)
-
-        # # TODO: Edit or remove entirely
-        # from .backend import FoobarBackend
-        # registry.add('backend', FoobarBackend)
-
-        # # TODO: Edit or remove entirely
-        # registry.add('http:static', {
-        #     'name': self.ext_name,
-        #     'path': os.path.join(os.path.dirname(__file__), 'static'),
-        # })
+        # from .ControlFrontend import ControlFrontend
+        # registry.add('frontend', ControlFrontend)
