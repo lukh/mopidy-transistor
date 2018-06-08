@@ -32,7 +32,17 @@ class EditHandler(tornado.web.RequestHandler):
         self.db = RedBoxDataBase(dbfilename)
 
     def get(self, radio_id):
-        self.redirect("/")
+        radio = self.db.getRadio(radio_id)
+        self.render("edit.html", radio=radio)
+
+    def post(self, radio_id):
+        self.db.updateRadio(
+            radio_id,
+            self.get_argument('name'),
+            self.get_argument('uri'),
+            self.get_argument('position'),
+        )
+        self.redirect("/redbox")
 
 class DeleteHandler(tornado.web.RequestHandler):
     def initialize(self, dbfilename):

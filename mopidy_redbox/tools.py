@@ -62,6 +62,11 @@ class RedBoxDataBase(object):
         c.execute("DELETE FROM radios WHERE id={}".format(radio_id))
         self.conn.commit()
 
+    def updateRadio(self, radio_id, name, uri, position):
+        c = self.conn.cursor()
+        c.execute("UPDATE radios SET name='{}', uri='{}', position='{}' WHERE id={}".format(name, uri, position, radio_id))
+        self.conn.commit()
+
 if __name__=="__main__":
     rbdb = RedBoxDataBase("redbox.db")
 
