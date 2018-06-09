@@ -4,6 +4,7 @@ import sqlite3
 import serial
 import os
 import zmq
+import random
 from threading import Thread
 
 from mopidy import core
@@ -203,9 +204,11 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         """
         folder = self.config['fm_noise_directory']
 
-        # TODO get random file in this directory
+        # get random file in this directory
+        onlyfiles = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and os.path.splitext(f)[-1].lower() in [".wav", ".mp3"]]
+        fn = onlyfiles[random.randint(0, len(onlyfiles)-1)]
 
-        fn = os.path.join(folder, "radionoise.wav")
+        fn = os.path.join(folder, fn)
         if not os.path.isfile(fn):
             raise FrontendError("Noise file doesn't exists")
 
