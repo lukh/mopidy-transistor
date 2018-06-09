@@ -24,7 +24,6 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.logger = logging.getLogger(__name__)
 
-        self.serial = serial.Serial(self.config['serial_port'], 9600, timeout=0.1)
         
         self.radios = {}
         self.radio_index = None
@@ -35,20 +34,28 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.noise_playing = False
 
 
-    def on_start(self): 
+    def on_start(self):
+        try:
+            self.serial = serial.Serial(self.config['serial_port'], 9600, timeout=0.1)
+        except Exception as e:
+            raise FrontendError("Impossible to open serial port {}: {}".format(self.config['serial_port'], str(e)))
+        
         try:
             self.running = True
             self.thread_serial = Thread(target=self.thread_serial_func)
             self.thread_serial.start()
+        except Exception as e:
+            raise FrontendError("Impossible to start the thread: {}".format(str(e)))
 
-
+        try:
             self.socket_ctrl = context.socket(zmq.PUB)
             self.socket_ctrl.bind("inproc://frontend_control")
             self.thread_publish = Thread(target=self.thread_webinterface_func)
             self.thread_publish.start()
-
         except Exception as e:
             raise FrontendError("Impossible to start the thread: {}".format(str(e)))
+
+        
 
     def on_stop(self):
         self.running = False
