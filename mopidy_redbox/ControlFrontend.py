@@ -97,7 +97,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             
             splitted = raw.split("=")
             ch = splitted[0]
-            val = float (splitted[1]) / 1024.0
+            val = round(float (splitted[1]) / 1024.0, 3)
             if(ch == "A1"):
                 self.set_volume(val)
             elif(ch == "A0"):
@@ -135,7 +135,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             if socket_tuner in socks and socks[socket_tuner] == zmq.POLLIN:
                 msg = socket_tuner.recv()
                 if msg == "query:tuner_position":
-                    socket_tuner.send(str(self.raw_tuner_pos))
+                    socket_tuner.send(str(round(self.raw_tuner_pos, 2)))
                 else:
                     socket_tuner.send("unknown")
 
@@ -162,7 +162,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         curs_on_radio = False
         for p in positions:
-            if is_inside(position, p, 0.02):
+            if is_inside(position, p, 0.01):
                 curs_on_radio = True
                 if self.radio_index != p:
                     self.radio_index = p
