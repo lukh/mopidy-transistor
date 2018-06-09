@@ -19,27 +19,37 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
     """
     def __init__(self, config, core):
         super(ControlFrontend, self).__init__()
+
+        # mopidy core actor and config
         self.core = core
         self.config = config['redbox']
 
+        # logger
         self.logger = logging.getLogger(__name__)
 
-        
+        # radios list from the database
         self.radios = {}
+
+        # keep trace of the radio playing (current radio index)
         self.radio_index = None
+
+        # raw pos for sending to the web interface
         self.raw_tuner_pos = 0.0
 
+        # for the serial thread
         self.running = False
 
         self.noise_playing = False
 
 
     def on_start(self):
+        # opening serial port
         try:
             self.serial = serial.Serial(self.config['serial_port'], 9600, timeout=0.1)
         except Exception as e:
             raise FrontendError("Impossible to open serial port {}: {}".format(self.config['serial_port'], str(e)))
         
+        # starting serial thread
         try:
             self.running = True
             self.thread_serial = Thread(target=self.thread_serial_func)
@@ -47,8 +57,9 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         except Exception as e:
             raise FrontendError("Impossible to start the thread: {}".format(str(e)))
 
+        # opening webinterface thread (transmission of the current tuner pos when requested)
         try:
-            self.socket_ctrl = context.socket(zmq.PUB)
+            self.socket_ctrl = context.socket(zmq.PUB) # used for stop signal
             self.socket_ctrl.bind("inproc://frontend_control")
             self.thread_publish = Thread(target=self.thread_webinterface_func)
             self.thread_publish.start()
@@ -58,9 +69,11 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         
 
     def on_stop(self):
+        # stopping serial thread
         self.running = False
         self.thread_serial.join()
 
+        # stopping webinterface communication thread
         self.socket_ctrl.send("quit")
         self.thread_publish.join()
 
@@ -68,6 +81,11 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def thread_serial_func(self):
+        """
+            Acquiring serial data, parsing and dispatching:
+            * volume
+            * tuner
+        """
         self.logger.info("[Controller Frontend] Starting thread_serial_func")
         self.db = RedBoxDataBase(self.config['dbfile'])
         self.radios = self.db.getRadiosKeywordPosition()
@@ -90,6 +108,10 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         
 
     def thread_webinterface_func(self):
+        """
+            Waiting REQ from the WebInterface, asking for tuner position.
+            in a poller, another socket is listening for the stop command, from ControlFrontend, mainthread
+        """
         self.logger.info("[Controller Frontend] Starting thread_webinterface_func")
         socket_tuner = context.socket(zmq.REP)
         socket_tuner.bind("ipc://tuner_position")
@@ -118,11 +140,17 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                     socket_tuner.send("unknown")
 
     def set_volume(self, volume):
+        """
+            Change volume
+        """
         volume = int(volume * 100.0)
         self.logger.info("[Controller Frontend] VOLUME: {}".format(volume))
         self.core.mixer.set_volume(volume)
 
     def set_radio(self, position):
+        """
+            Select the radio or play noise if needed
+        """
         def is_inside(val, target, margin):
             return val > (target-margin) and val < (target+margin)
 
@@ -154,6 +182,9 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def play_uri(self, uri):
+        """
+            Plays the given uri
+        """
         self.logger.info("[Controller Frontend] Playing {}".format(uri))
 
         self.core.tracklist.clear()
@@ -161,9 +192,15 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.playback.play(tl_track=None, tlid =None)
 
     def clear_playlist(self):
+        """
+            Stop playing
+        """
         self.core.tracklist.clear()
 
     def play_random_noise_from_folder(self):
+        """
+            Play a random noise from the folder in config
+        """
         folder = self.config['fm_noise_directory']
 
         # TODO get random file in this directory
