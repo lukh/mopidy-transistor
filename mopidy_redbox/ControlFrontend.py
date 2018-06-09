@@ -9,6 +9,8 @@ from threading import Thread
 from mopidy import core
 from mopidy.exceptions import FrontendError
 
+from tools import *
+
 context = zmq.Context()
 
 class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
@@ -55,14 +57,13 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.socket_ctrl.send("quit")
         self.thread_publish.join()
 
-        self.logger.info("leaving RedBox Frontend")
+        self.logger.info("[Controller Frontend] Leaving")
 
 
     def thread_serial_func(self):
-        self.logger.info("Starting thread_serial_func")
-        self.db = sqlite3.connect(self.config['dbfile'])
-        self.get_db_informations()
-
+        self.logger.info("[Controller Frontend] Starting thread_serial_func")
+        self.db = RedBoxDataBase(self.config['dbfile'])
+        self.radios = self.db.getRadiosKeywordPosition()
 
         while self.running:
             raw = self.serial.readline() # should be blocking ?
@@ -82,7 +83,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         
 
     def thread_webinterface_func(self):
-        self.logger.info("Starting thread_webinterface_func")
+        self.logger.info("[Controller Frontend] Starting thread_webinterface_func")
         socket_tuner = context.socket(zmq.REP)
         socket_tuner.bind("ipc://tuner_position")
 
@@ -95,7 +96,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         poller.register(socket_tuner, zmq.POLLIN)
 
         while True:
-            self.logger.info("Starting thread_webinterface_func loop")
+            self.logger.info("[Controller Frontend] Starting thread_webinterface_func loop")
             socks = dict(poller.poll())
             if socket_ctrl in socks and socks[socket_ctrl] == zmq.POLLIN:
                 msg = socket_ctrl.recv()
@@ -111,7 +112,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def set_volume(self, volume):
         volume = int(volume * 100.0)
-        self.logger.info("VOLUME: {}".format(volume))
+        self.logger.info("[Controller Frontend] VOLUME: {}".format(volume))
         self.core.mixer.set_volume(volume)
 
     def set_radio(self, position):
@@ -119,7 +120,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             return val > (target-margin) and val < (target+margin)
 
 
-        self.logger.info("TUNER POS: {}".format(position))
+        self.logger.info("[Controller Frontend] TUNER: {}".format(position))
 
         # self.get_db_informations()
         positions = [k for k in self.radios]
@@ -133,9 +134,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
                     self.noise_playing = False
 
-                    self.logger.info("RADIO: {}".format(self.radios[p]['name']))
-                    
-                    self.play_uri(self.radios[p]['uri'])
+                    self.play_uri(self.radios[p].uri)
 
                 break
 
@@ -143,12 +142,13 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             self.radio_index = None
 
         if not curs_on_radio and not self.noise_playing:
-            self.logger.info("Play noise")
             self.noise_playing = True
             self.play_random_noise_from_folder()
 
 
     def play_uri(self, uri):
+        self.logger.info("[Controller Frontend] Playing {}".format(uri))
+
         self.core.tracklist.clear()
         self.core.tracklist.add(tracks=None, at_position=None, uri=uri, uris=None)
         self.core.playback.play(tl_track=None, tlid =None)
@@ -166,12 +166,6 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             raise FrontendError("Noise file doesn't exists")
 
         uri = "file://"+fn
-        self.logger.info(uri)
 
         self.play_uri(uri)
 
-    def get_db_informations(self):
-        self.radios = {}
-        c = self.db.execute("SELECT * FROM radios")
-        for e in c:
-            self.radios[e[3]] = {"name":e[1], "uri":e[2]}

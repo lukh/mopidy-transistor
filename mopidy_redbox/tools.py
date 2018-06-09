@@ -1,5 +1,7 @@
 import sqlite3 as lite
 import os
+import logging
+
 
 class Radio(object):
     FIELDS = ["id", "name", "uri", "position"]
@@ -12,22 +14,26 @@ class Radio(object):
 
 class RedBoxDataBase(object):
     def __init__(self, filename):
+        self.logger = logging.getLogger(__name__)
+
+
         db_exists = os.path.isfile(filename)
 
         self.conn = lite.connect(filename)
+
 
         if not db_exists:
             self.initDb()
 
 
     def initDb(self):
+        self.logger.info("DB doesn't exist, creating")
         c = self.conn.cursor()
         c.execute("CREATE TABLE radios ( id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name	TEXT, uri	TEXT,  position	REAL  );")
         self.conn.commit()
 
 
     def getRadios(self):
-        
         radios = []
         c = self.conn.cursor()
         for row in c.execute("SELECT {} FROM radios".format(", ".join(Radio.FIELDS))):
@@ -35,6 +41,17 @@ class RedBoxDataBase(object):
             for i in range(len(Radio.FIELDS)):
                 radio[Radio.FIELDS[i]] = row[i]
             radios.append(Radio(**radio))
+
+        return radios
+
+    def getRadiosKeywordPosition(self):
+        radios = {}
+        c = self.conn.cursor()
+        for row in c.execute("SELECT {} FROM radios".format(", ".join(Radio.FIELDS))):
+            radio = {}
+            for i in range(len(Radio.FIELDS)):
+                radio[Radio.FIELDS[i]] = row[i]
+            radios[radio["position"]] = Radio(**radio)
 
         return radios
 
