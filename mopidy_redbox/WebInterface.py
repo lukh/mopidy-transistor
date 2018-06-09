@@ -30,7 +30,7 @@ class AddHandler(tornado.web.RequestHandler):
         self.render("add.html", tuner_position=value)
 
     def post(self):
-        r = Radio(name=self.get_argument("name"), uri=self.get_argument("uri"), position=0.69)
+        r = Radio(name=self.get_argument("name"), uri=self.get_argument("uri"), position=self.get_argument("position"))
         self.db.addRadio(r)
 
         self.redirect("/redbox")
