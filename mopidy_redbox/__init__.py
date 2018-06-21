@@ -32,11 +32,14 @@ class Extension(ext.Extension):
         return schema
 
     def webapp(self, config, core):
+
         return [
             (r"/", MainHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/add", AddHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/edit/([0-9]+)", EditHandler, dict(dbfilename=config['redbox']['dbfile'])),
-            (r"/delete/([0-9]+)", DeleteHandler, dict(dbfilename=config['redbox']['dbfile']))
+            (r"/delete/([0-9]+)", DeleteHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r'/css/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'css')}),
+            (r'/vendor/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'vendor')})
         ]
 
     def setup(self, registry):
