@@ -1,21 +1,27 @@
 {% extends "base.html"%}
 {% block body %}
-<h1>Radios List</h1>
-<table>
+<h3>Radios List</h3>
+<table class="table">
+    <thead id="radio-list-header">
     <tr>
         <th>Name</th>
         <th>URI</th>
         <th>Position</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
+    </thead>
+    <tbody>
     {% for radio in radios %}
     <tr>
-        <th>{{ escape(radio.name) }}</th>
-        <th>{{ escape(radio.uri) }}</th>
-        <th>{{ escape(str(radio.position)) }}</th>
-        <th><a href="edit/{{ radio.id }}">Edit</a></th>
-        <th><a href="delete/{{ radio.id }}">Delete</a></th>
+        <td>{{ escape(radio.name) }}</td>
+        <td><a href="{{ escape(radio.uri) }}">{{ escape(radio.uri) }}</a></td>
+        <td>{{ escape(str(radio.position)) }}</td>
+        <td><a href="edit/{{ radio.id }}">Edit</a></td>
+        <td><a href="delete/{{ radio.id }}">Delete</a></td>
     </tr>
     {% end %}
+    </tbody>
 </table> 
-<a href="add">Add</a>
+<a href="add" class="btn btn-info" role="button">Add radio</a>
 {% end %}

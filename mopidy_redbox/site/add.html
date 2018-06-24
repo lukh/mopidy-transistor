@@ -1,11 +1,22 @@
 {% extends "base.html"%}
 {% block body %}
-<h1>Add new radio</h1>
+<h3>Add new radio</h3>
 <form method="POST">
-    Name<input type="text" name="name">
-    URL<input type="url" name="uri">
-    Position <input type "number" name="position" step="0.01" value="{{ tuner_position }}">(current tuner value)
-    <input type="submit" value="Submit">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name"class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="uri">URL</label>
+        <input type="url" name="uri" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="position">Position</label>
+        <input type "number" name="position" step="0.01" value="{{ tuner_position }}" class="form-control">
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Submit">
+    </div>
 </form>
 <span>{{ "Can't connect to the Redbox Controller. Using default value 0.0" if not daemon_msg_recv else "" }}</span>
 {% end %}

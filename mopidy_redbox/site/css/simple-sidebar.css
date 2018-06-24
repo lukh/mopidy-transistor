@@ -93,6 +93,10 @@ body {
   color: #FFF;
 }
 
+#radio-list-header {
+  color: #900;
+}
+
 .sidebar-nav>.sidebar-brand a:hover {
   color: #fff;
   background: none;
