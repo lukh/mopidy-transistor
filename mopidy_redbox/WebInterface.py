@@ -20,14 +20,24 @@ class AddHandler(tornado.web.RequestHandler):
         self.db = RedBoxDataBase(dbfilename)
         
         self.socket_tuner = context.socket(zmq.REQ)
+        self.socket_tuner.setsockopt(zmq.LINGER, 0)
         self.socket_tuner.connect("ipc://tuner_position")
 
 
     def get(self):
+        daemon_msg_recv = False
         self.socket_tuner.send("query:tuner_position")
-        value = float(self.socket_tuner.recv())
 
-        self.render("add.html", tuner_position=value)
+        # use poll for timeouts:
+        poller = zmq.Poller()
+        poller.register(self.socket_tuner, zmq.POLLIN)
+        if poller.poll(1*1000): # 10s timeout in milliseconds
+            value = float(self.socket_tuner.recv())
+            daemon_msg_recv= True
+        else:
+            value = 0.0
+
+        self.render("add.html", tuner_position=value, daemon_msg_recv=daemon_msg_recv)
 
     def post(self):
         r = Radio(name=self.get_argument("name"), uri=self.get_argument("uri"), position=self.get_argument("position"))

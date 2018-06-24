@@ -7,4 +7,5 @@
     Position <input type "number" name="position" step="0.01" value="{{ tuner_position }}">(current tuner value)
     <input type="submit" value="Submit">
 </form>
+<span>{{ "Can't connect to the Redbox Controller. Using default value 0.0" if not daemon_msg_recv else "" }}</span>
 {% end %}

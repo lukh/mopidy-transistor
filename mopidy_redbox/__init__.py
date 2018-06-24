@@ -39,7 +39,8 @@ class Extension(ext.Extension):
             (r"/edit/([0-9]+)", EditHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/delete/([0-9]+)", DeleteHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r'/css/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'css')}),
-            (r'/vendor/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'vendor')})
+            (r'/vendor/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'vendor')}),
+            (r'/images/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'images')})
         ]
 
     def setup(self, registry):
