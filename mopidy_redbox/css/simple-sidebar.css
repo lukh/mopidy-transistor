@@ -115,6 +115,12 @@ body {
     padding: 20px;
     position: relative;
   }
+  #footer {
+    padding-left: 20px;
+    position:absolute;
+    bottom: 2%;
+    width: 100%;
+  }
   #wrapper.toggled #page-content-wrapper {
     position: relative;
     margin-right: 0;
