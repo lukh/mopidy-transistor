@@ -11,7 +11,7 @@ class MainHandler(tornado.web.RequestHandler):
         self.db = RedBoxDataBase(dbfilename)
 
     def get(self):
-        self.render("index.html", radios=self.db.getRadios())
+        self.render("site/index.html", radios=self.db.getRadios())
         
 
 context = zmq.Context()
@@ -37,7 +37,7 @@ class AddHandler(tornado.web.RequestHandler):
         else:
             value = 0.0
 
-        self.render("add.html", tuner_position=value, daemon_msg_recv=daemon_msg_recv)
+        self.render("site/add.html", tuner_position=value, daemon_msg_recv=daemon_msg_recv)
 
     def post(self):
         r = Radio(name=self.get_argument("name"), uri=self.get_argument("uri"), position=self.get_argument("position"))
@@ -52,7 +52,7 @@ class EditHandler(tornado.web.RequestHandler):
 
     def get(self, radio_id):
         radio = self.db.getRadio(radio_id)
-        self.render("edit.html", radio=radio)
+        self.render("site/edit.html", radio=radio)
 
     def post(self, radio_id):
         self.db.updateRadio(
