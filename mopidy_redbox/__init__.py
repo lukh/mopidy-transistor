@@ -27,7 +27,7 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['serial_port'] = config.String()
-	schema['serial_baudrate'] = config.Int()
+	schema['serial_baudrate'] = config.String()
         schema['dbfile'] = config.String()
         schema['fm_noise_directory'] = config.String()
         return schema

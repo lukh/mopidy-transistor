@@ -19,8 +19,10 @@ class RedBoxDataBase(object):
 
         db_exists = os.path.isfile(filename)
 
-        self.conn = lite.connect(filename)
-
+        try
+            self.conn = lite.connect(filename)
+        except Exception as e:
+            self.logger.error("Can't open db file {}: {}".format(filename, str(e)))
 
         if not db_exists:
             self.initDb()
