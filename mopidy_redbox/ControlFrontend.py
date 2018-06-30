@@ -163,6 +163,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         curs_on_radio = False
         for p in positions:
+            # looking for a match
             if is_inside(position, p, 0.01):
                 curs_on_radio = True
                 if self.radio_index != p:
@@ -171,7 +172,11 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                     self.noise_playing = False
 
                     self.play_uri(self.radios[p].uri)
+                break
 
+            # hysteresis
+            elif is_inside(position, p, 0.03):
+                curs_on_radio = True
                 break
 
         if not curs_on_radio:
