@@ -102,6 +102,9 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 continue
 
             splitted = raw.split("=")
+            if len(splitted) != 2:
+                continue
+
             ch = splitted[0]
             val = splitted[1]
             if(ch == "A1"):
