@@ -28,7 +28,8 @@ setup(
         'Mopidy >= 1.0',
         'Pykka >= 1.1',
         'pyzmq',
-	'pyserial'
+	'pyserial',
+        'numpy'
     ],
     entry_points={
         'mopidy.ext': [
