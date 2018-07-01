@@ -1,6 +1,34 @@
 import sqlite3 as lite
 import os
 import logging
+import numpy as np
+
+class Smoother(object):
+    def __init__(self, win_size, threshold):
+
+        self.buffer = np.zeros(win_size)
+        self.current_val = 0.0
+        self.threshold = threshold
+
+    def put(self, sample):
+        """
+            Add a sample to the smoother, return True if the smoothed data changed
+        """
+        # shift data
+        self.buffer[:-1] = self.buffer[1:]
+        self.buffer[-1] = sample
+
+        avg = np.mean(self.buffer)
+
+        if np.abs(avg-self.current_val) > self.threshold:
+            self.current_val = avg
+            return True
+
+        return False
+
+    def get(self):
+        return self.current_val
+
 
 
 class Radio(object):
@@ -19,7 +47,7 @@ class RedBoxDataBase(object):
 
         db_exists = os.path.isfile(filename)
 
-        try
+        try:
             self.conn = lite.connect(filename)
         except Exception as e:
             self.logger.error("Can't open db file {}: {}".format(filename, str(e)))
