@@ -30,6 +30,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         # radios list from the database
         self.radios = {}
+        self.update_db = False
 
         # keep trace of the radio playing (current radio index)
         self.radio_index = None
@@ -94,6 +95,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         smt0 = Smoother(8, 1)
         smt1 = Smoother(8, 1)
 
+	downsampler = 0 # for db_update
         while self.running:
             raw = self.serial.readline() # should be blocking ?
             if raw == "":
@@ -109,6 +111,14 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 if smt0.put(val):
                     self.set_radio(smt0.get() / 1024.0)
                     self.raw_tuner_pos = smt0.get() / 1024.0
+
+            downsampler += 1
+            if downsampler == 1000:
+                downsampler = 0
+                if self.update_db:
+                    self.update_db = False
+                    self.radios = self.db.getRadiosKeywordPosition()
+                    self.logger.info("[Controller Frontend] DB Updated")
 
         self.serial.close()
 
@@ -142,6 +152,9 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 msg = socket_tuner.recv()
                 if msg == "query:tuner_position":
                     socket_tuner.send(str(round(self.raw_tuner_pos, 2)))
+                elif msg == "info:db_updated":
+                    self.update_db = True
+                    socket_tuner.send("ok")
                 else:
                     socket_tuner.send("unknown")
 

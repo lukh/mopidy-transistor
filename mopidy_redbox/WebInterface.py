@@ -31,7 +31,7 @@ class AddHandler(tornado.web.RequestHandler):
         # use poll for timeouts:
         poller = zmq.Poller()
         poller.register(self.socket_tuner, zmq.POLLIN)
-        if poller.poll(1*1000): # 10s timeout in milliseconds
+        if poller.poll(1*1000): # 1s timeout in milliseconds
             value = float(self.socket_tuner.recv())
             daemon_msg_recv= True
         else:
@@ -42,6 +42,14 @@ class AddHandler(tornado.web.RequestHandler):
     def post(self):
         r = Radio(name=self.get_argument("name"), uri=self.get_argument("uri"), position=self.get_argument("position"))
         self.db.addRadio(r)
+
+        self.socket_tuner.send("info:db_updated")
+
+        # use poll for timeouts:
+        poller = zmq.Poller()
+        poller.register(self.socket_tuner, zmq.POLLIN)
+        if poller.poll(1*1000): # 1s timeout in milliseconds
+            msg = float(self.socket_tuner.recv())
 
         self.redirect("/redbox")
 
