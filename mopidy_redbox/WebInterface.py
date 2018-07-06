@@ -49,8 +49,7 @@ class AddHandler(tornado.web.RequestHandler):
         poller = zmq.Poller()
         poller.register(self.socket_tuner, zmq.POLLIN)
         if poller.poll(1*1000): # 1s timeout in milliseconds
-            msg = float(self.socket_tuner.recv())
-
+            msg = self.socket_tuner.recv()
         self.redirect("/redbox")
 
 
