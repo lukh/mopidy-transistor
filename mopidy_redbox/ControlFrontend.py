@@ -6,6 +6,7 @@ import os
 import zmq
 import random
 from threading import Thread
+import time
 
 from mopidy import core
 from mopidy.exceptions import FrontendError
@@ -92,17 +93,19 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.db = RedBoxDataBase(self.config['dbfile'])
         self.radios = self.db.getRadiosKeywordPosition()
 
-        smt0 = Smoother(8, 1)
-        smt1 = Smoother(8, 1)
+        smt0 = Smoother(4, 3)
+        smt1 = Smoother(4, 3)
 
 	downsampler = 0 # for db_update
         while self.running:
             raw = self.serial.readline() # should be blocking ?
             if raw == "":
+                time.sleep(0.05)
                 continue
 
             splitted = raw.split("=")
             if len(splitted) != 2:
+                time.sleep(0.05)
                 continue
 
             ch = splitted[0]
