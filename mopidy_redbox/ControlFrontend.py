@@ -196,7 +196,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 break
 
             # hysteresis
-            elif is_inside(position, p, 0.02):
+            elif is_inside(position, p, 0.03):
                 curs_on_radio = True
                 break
 
