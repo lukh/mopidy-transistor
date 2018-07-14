@@ -93,9 +93,6 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.db = RedBoxDataBase(self.config['dbfile'])
         self.radios = self.db.getRadiosKeywordPosition()
 
-        smt0 = Smoother(4, 3)
-        smt1 = Smoother(4, 3)
-
 	downsampler = 0 # for db_update
         while self.running:
             raw = self.serial.readline() # should be blocking ?
@@ -109,14 +106,12 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 continue
 
             ch = splitted[0]
-            val = splitted[1]
+            val = int(splitted[1])
             if(ch == "A1"):
-                if smt1.put(val):
-                    self.set_volume(smt1.get() / 1024.0)
+                self.set_volume(val / 1024.0)
             elif(ch == "A0"):
-                if smt0.put(val):
-                    self.set_radio(smt0.get() / 1024.0)
-                    self.raw_tuner_pos = smt0.get() / 1024.0
+                self.set_radio(val / 1024.0)
+                self.raw_tuner_pos = val / 1024.0
 
             downsampler += 1
             if downsampler == 1000:
