@@ -66,7 +66,7 @@ class RedBoxDataBase(object):
     def getRadios(self):
         radios = []
         c = self.conn.cursor()
-        for row in c.execute("SELECT {} FROM radios".format(", ".join(Radio.FIELDS))):
+        for row in c.execute("SELECT {} FROM radios ORDER BY position".format(", ".join(Radio.FIELDS))):
             radio = {}
             for i in range(len(Radio.FIELDS)):
                 radio[Radio.FIELDS[i]] = row[i]
