@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+<h2>Settings</h2>
+
+<h3>Mopidy</h3>
+{% for section in config %}
+<h4>{{ escape(section) }}</h4>
+
+<form method="POST" action="/redbox/settings/{{ escape(section) }}">
+        {% for name in config[section] %}
+            <div class="form-group">
+                <label for="{{ escape(name) }}">{{ escape(name) }}</label>
+                <input type="text" name="{{ escape(name) }}" value="{{ escape(config[section][name]) }}" class="form-control">
+            </div>
+        {% end %}    
+        <div class="form-group">
+        <input class="btn btn-info" type="submit" value="Save">
+        </div>
+    </form>
+{% end %}
+
+<h3>System</h3>
+<h4>Wifi Settings</h4>
+{% end %}
+

@@ -30,6 +30,7 @@ class Extension(ext.Extension):
 	schema['serial_baudrate'] = config.String()
         schema['dbfile'] = config.String()
         schema['fm_noise_directory'] = config.String()
+        schema['config_file'] = config.String()
         return schema
 
     def webapp(self, config, core):
@@ -39,6 +40,10 @@ class Extension(ext.Extension):
             (r"/add", AddHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/edit/([0-9]+)", EditHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/delete/([0-9]+)", DeleteHandler, dict(dbfilename=config['redbox']['dbfile'])),
+
+            (r"/settings", SettingsHandler, dict(config_file=config['redbox']['config_file'])),
+            (r"/settings/([^/]+)", SettingsHandler, dict(config_file=config['redbox']['config_file'])),
+
             (r'/css/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/css')}),
             (r'/vendor/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/vendor')}),
             (r'/images/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/images')})

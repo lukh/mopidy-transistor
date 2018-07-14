@@ -2,6 +2,8 @@ import tornado.ioloop
 import tornado.web
 from threading import Thread
 import zmq
+from ConfigParser import SafeConfigParser
+from collections import OrderedDict
 
 from tools import *
 
@@ -79,3 +81,36 @@ class DeleteHandler(tornado.web.RequestHandler):
         self.redirect("/redbox")
 
 
+
+
+class SettingsHandler(tornado.web.RequestHandler):
+    def initialize(self, config_file):
+        self.config_file = config_file
+
+    def get(self, section=None):
+        parser = SafeConfigParser()
+        parser.read(self.config_file)
+
+        config = OrderedDict()
+
+        for section in parser.sections():
+            if len(parser.items(section)) != 0:
+                config[section] = OrderedDict()
+                for name, value in parser.items(section):
+                    config[section][name] = value
+
+        self.render('site/settings.html', config=config)
+
+    def post(self, section):
+        parser = SafeConfigParser()
+        parser.read(self.config_file)
+
+        for name in parser.options(section):
+            parser.set(section, name, self.get_argument(name))
+
+
+        with open(self.config_file, 'w') as fp:
+            parser.write(fp)
+
+        self.redirect('/redbox/settings')
+    
