@@ -6,6 +6,8 @@ import os
 import zmq
 import random
 from threading import Thread
+from Queue import Queue, Empty
+
 import time
 
 from mopidy import core
@@ -44,6 +46,9 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.noise_playing = False
 
+        # for com between two thread
+        self.queue_ser = Queue()
+
 
     def on_start(self):
         # opening serial port
@@ -55,8 +60,12 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         # starting serial thread
         try:
             self.running = True
+
             self.thread_serial = Thread(target=self.thread_serial_func)
             self.thread_serial.start()
+
+            self.thread_ctrl = Thread(target=self.thread_control_func)
+            self.thread_ctrl.start()
         except Exception as e:
             raise FrontendError("Impossible to start the thread: {}".format(str(e)))
 
@@ -74,6 +83,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
     def on_stop(self):
         # stopping serial thread
         self.running = False
+
+        self.thread_ctrl.join()
         self.thread_serial.join()
 
         # stopping webinterface communication thread
@@ -84,25 +95,33 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def thread_serial_func(self):
+        self.logger.info("[Controller Frontend] Starting thread_serial_func")
+
+        while self.running:
+            raw = self.serial.readline() # blocking with given timeout in serial ctr
+            if raw != "":
+                self.queue_ser.put(raw)
+
+    def thread_control_func(self):
         """
             Acquiring serial data, parsing and dispatching:
             * volume
             * tuner
         """
-        self.logger.info("[Controller Frontend] Starting thread_serial_func")
+        self.logger.info("[Controller Frontend] Starting thread_control_func")
         self.db = RedBoxDataBase(self.config['dbfile'])
         self.radios = self.db.getRadiosKeywordPosition()
 
 	downsampler = 0 # for db_update
+
         while self.running:
-            raw = self.serial.readline() # should be blocking ?
-            if raw == "":
-                time.sleep(0.05)
+            try:
+                raw = self.queue_ser.get(block=False, timeout=0.2)
+            except Empty:
                 continue
 
             splitted = raw.split("=")
             if len(splitted) != 2:
-                time.sleep(0.05)
                 continue
 
             ch = splitted[0]
