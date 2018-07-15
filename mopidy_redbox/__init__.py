@@ -37,9 +37,14 @@ class Extension(ext.Extension):
 
         return [
             (r"/", MainHandler, dict(dbfilename=config['redbox']['dbfile'])),
-            (r"/add", AddHandler, dict(dbfilename=config['redbox']['dbfile'])),
-            (r"/edit/([0-9]+)", EditHandler, dict(dbfilename=config['redbox']['dbfile'])),
-            (r"/delete/([0-9]+)", DeleteHandler, dict(dbfilename=config['redbox']['dbfile'])),
+
+            (r"/radio/add", AddRadioHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/radio/edit/([0-9]+)", EditRadioHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/radio/delete/([0-9]+)", DeleteRadioHandler, dict(dbfilename=config['redbox']['dbfile'])),
+
+            (r"/rss/add", AddRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/rss/edit/([0-9]+)", EditRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/rss/delete/([0-9]+)", DeleteRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
 
             (r"/settings", SettingsHandler, dict(config_file=config['redbox']['config_file'])),
             (r"/settings/([^/]+)", SettingsHandler, dict(config_file=config['redbox']['config_file'])),
