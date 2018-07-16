@@ -1,6 +1,7 @@
 import pykka
 import logging
 import sqlite3
+from transitions import Machine, State
 import serial
 import os
 import zmq
@@ -28,15 +29,37 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core = core
         self.config = config['redbox']
 
+        self.initStateMachine()
+
         # logger
         self.logger = logging.getLogger(__name__)
 
+        # buttons and knobs map (should come from config later)
+        self.control_map = {
+            "A1":"volume", 
+            "A0":"tuner", 
+
+            "D0":"power_off", 
+            "D1":"press_radio", 
+            "D2":"press_rss", 
+            "D3":"next_podcast", 
+            "D4":"previous_podcast"
+        }
+
         # radios list from the database
         self.radios = {}
+
+        # rss lists from db
+        self.podcasts = {}
+        self.podcast_element_index = None # currently played podacast
+
         self.update_db = False
 
         # keep trace of the radio playing (current radio index)
         self.radio_index = None
+
+        # keep trace of the rss playing (current radio index)
+        self.podcast_index = None
 
         # raw pos for sending to the web interface
         self.raw_tuner_pos = 0.0
@@ -48,6 +71,32 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         # for com between two thread
         self.queue_ser = Queue()
+
+
+    def initStateMachine(self):
+        machine = Machine(
+        model=self, 
+        states=[
+            State('turn_off', on_enter=["turn_off_system"]), 
+            State('radio'), 
+            State('rss'), 
+        ], 
+        transitions=[
+            { 'trigger': 'power_off', 'source': ['rss', 'radio'], 'dest': 'turn_off' },
+
+            { 'trigger': 'press_radio', 'source': ['rss', 'radio'], 'dest': 'radio' },
+            { 'trigger': 'press_rss', 'source': ['rss', 'radio'], 'dest': 'rss' },
+
+            { 'trigger': 'tuner', 'source': 'radio', 'dest': 'radio', 'after':'set_radio' },
+            { 'trigger': 'tuner', 'source': 'rss', 'dest': 'rss', 'after':'set_podcast' },
+
+            { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
+            
+            { 'trigger': 'next_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_next_in_podcast' },
+            { 'trigger': 'previous_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_previous_in_podcast' },
+        ], 
+        initial='radio'
+        )
 
 
     def on_start(self):
@@ -111,7 +160,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.logger.info("[Controller Frontend] Starting thread_control_func")
         self.db = RedBoxDataBase(self.config['dbfile'])
         self.radios = self.db.getRadiosKeywordPosition()
-
+        self.podcasts = self.db.getRssFeedsKeywordPosition()
 
         while self.running:
             try:
@@ -119,17 +168,18 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             except Empty:
                 continue
 
-            splitted = raw.split("=")
-            if len(splitted) != 2:
-                continue
 
+            # raw = "Ax=YYYY" or raw = "Dx"
+            splitted = raw.split('=')
             ch = splitted[0]
-            val = int(splitted[1])
-            if(ch == "A1"):
-                self.set_volume(val / 1024.0)
-            elif(ch == "A0"):
-                self.set_radio(val / 1024.0)
-                self.raw_tuner_pos = val / 1024.0
+            val = int(splitted[1]) / 1024.0 if len(splitted) == 2 else None
+
+            if ch in self.control_map:
+                action = self.control_map[ch]
+                if action in self.get_triggers(self.state): # validate if the action is allowed in the current state
+                    self.trigger(action, position=val) # the arg position is ignored for buttons, but it is easier.
+
+
 
             if self.update_db:
                 self.update_db = False
@@ -182,15 +232,20 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.logger.info("[Controller Frontend] VOLUME: {}".format(volume))
         self.core.mixer.set_volume(volume)
 
-    def set_radio(self, position):
+    def set_radio(self, position=None):
         """
             Select the radio or play noise if needed
         """
         def is_inside(val, target, margin):
             return val > (target-margin) and val < (target+margin)
 
+        if position is None:
+            return
 
         self.logger.info("[Controller Frontend] TUNER: {}".format(position))
+
+        self.raw_tuner_pos = position
+
 
         # self.get_db_informations()
         positions = [k for k in self.radios]
@@ -219,6 +274,80 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         if not curs_on_radio and not self.noise_playing:
             self.noise_playing = True
             self.play_random_noise_from_folder()
+
+
+    def set_podcast(self, position=None):
+        """
+            Select the RSS or play noise if needed
+        """
+        def is_inside(val, target, margin):
+            return val > (target-margin) and val < (target+margin)
+
+        if position is None:
+            return
+
+        self.logger.info("[Controller Frontend] TUNER: {}".format(position))
+
+        self.raw_tuner_pos = position
+
+
+        # self.get_db_informations()
+        positions = [k for k in self.podcasts]
+
+        curs_on_radio = False
+        for p in positions:
+            # looking for a match
+            if is_inside(position, p, 0.01):
+                curs_on_radio = True
+                if self.podcast_index != p:
+                    self.podcast_index = p
+
+                    self.noise_playing = False
+
+                    self.podcast_element_index = 0
+                    self.play_podcast_element()
+                break
+
+            # hysteresis
+            elif is_inside(position, p, 0.03):
+                curs_on_radio = True
+                break
+
+        if not curs_on_radio:
+            self.podcast_index = None
+            self.podcast_element_index = None
+
+        if not curs_on_radio and not self.noise_playing:
+            self.noise_playing = True
+            self.play_random_noise_from_folder()
+
+
+    def set_next_in_podcast(self, **kwargs):
+        self.podcast_element_index += 1
+        self.play_podcast_element()
+
+    def set_previous_in_podcast(self, **kwargs):
+        if self.podcast_element_index > 0:
+            self.podcast_element_index -= 1
+            self.play_podcast_element()
+
+
+
+
+    def turn_off_system(self, **kwargs):
+        print "KILLING ALL"
+
+
+        
+
+    def play_podcast_element(self):
+        if self.podcast_index is None or self.podcast_element_index is None:
+            return
+
+        uri = self.podcasts[self.podcast_index].uri
+        index = self.podcast_element_index
+
+        # TODO 
 
 
     def play_uri(self, uri):

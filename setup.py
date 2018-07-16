@@ -29,7 +29,8 @@ setup(
         'Pykka >= 1.1',
         'pyzmq',
 	'pyserial',
-        'numpy'
+        'numpy',
+        'transitions'
     ],
     entry_points={
         'mopidy.ext': [
