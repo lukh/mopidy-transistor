@@ -112,7 +112,6 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.db = RedBoxDataBase(self.config['dbfile'])
         self.radios = self.db.getRadiosKeywordPosition()
 
-	downsampler = 0 # for db_update
 
         while self.running:
             try:
@@ -132,13 +131,10 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 self.set_radio(val / 1024.0)
                 self.raw_tuner_pos = val / 1024.0
 
-            downsampler += 1
-            if downsampler == 1000:
-                downsampler = 0
-                if self.update_db:
-                    self.update_db = False
-                    self.radios = self.db.getRadiosKeywordPosition()
-                    self.logger.info("[Controller Frontend] DB Updated")
+            if self.update_db:
+                self.update_db = False
+                self.radios = self.db.getRadiosKeywordPosition()
+                self.logger.info("[Controller Frontend] DB Updated")
 
         self.serial.close()
 
