@@ -28,9 +28,10 @@ setup(
         'Mopidy >= 1.0',
         'Pykka >= 1.1',
         'pyzmq',
-	'pyserial',
+        'pyserial',
         'numpy',
-        'transitions'
+        'transitions',
+        'podcastparser'
     ],
     entry_points={
         'mopidy.ext': [

@@ -8,6 +8,8 @@ import zmq
 import random
 from threading import Thread
 from Queue import Queue, Empty
+import podcastparser
+import urllib
 
 import time
 
@@ -51,7 +53,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         # rss lists from db
         self.podcasts = {}
-        self.podcast_element_index = None # currently played podacast
+        self.podcast_episode_index = None # currently played podacast
 
         self.update_db = False
 
@@ -304,8 +306,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
                     self.noise_playing = False
 
-                    self.podcast_element_index = 0
-                    self.play_podcast_element()
+                    self.podcast_episode_index = 0
+                    self.play_podcast_episode()
                 break
 
             # hysteresis
@@ -315,7 +317,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         if not curs_on_radio:
             self.podcast_index = None
-            self.podcast_element_index = None
+            self.podcast_episode_index = None
 
         if not curs_on_radio and not self.noise_playing:
             self.noise_playing = True
@@ -323,13 +325,12 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def set_next_in_podcast(self, **kwargs):
-        self.podcast_element_index += 1
-        self.play_podcast_element()
+        self.podcast_episode_index += 1
+        self.play_podcast_episode()
 
     def set_previous_in_podcast(self, **kwargs):
-        if self.podcast_element_index > 0:
-            self.podcast_element_index -= 1
-            self.play_podcast_element()
+        self.podcast_episode_index -= 1
+        self.play_podcast_episode()
 
 
 
@@ -340,14 +341,31 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         
 
-    def play_podcast_element(self):
-        if self.podcast_index is None or self.podcast_element_index is None:
+    def play_podcast_episode(self):
+        def clamp(n, minn, maxn):
+            return max(min(maxn, n), minn)
+
+        if self.podcast_index is None or self.podcast_episode_index is None:
             return
 
         uri = self.podcasts[self.podcast_index].uri
-        index = self.podcast_element_index
 
-        # TODO 
+        parsed = podcastparser.parse(uri, urllib.urlopen(uri))
+        episodes = parsed['episodes']
+
+        self.logger.info("[Controller Frontend] Accessing {} / {}".format(uri, parsed['title']))
+
+        self.podcast_episode_index = clamp(self.podcast_episode_index, 0 len(episodes))
+
+        episode = episodes[self.podcast_episode_index]
+
+        self.logger.info("[Controller Frontend] Playing {}".format(episode['title']))
+
+        # TODO check url index (?) and mime/type
+        media_url = episode['enclosures'][0]['url']
+
+        self.play_uri(media_url)
+
 
 
     def play_uri(self, uri):
