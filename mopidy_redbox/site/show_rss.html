@@ -1,0 +1,14 @@
+{% extends "base.html"%}
+{% block body %}
+<h1>Podcast</h1>
+<h2>{{ parsed['title'] }}</h2>
+<div>{{parsed['description'] }}</div>
+
+{% for episode in parsed['episodes'] %}
+<h3>{{ episode['title'] }}</h3>
+<div><p>{{ episode['description'] }}</p></div>
+<div>{{ episode['enclosures'][0]['url'] }}</div>
+<br>
+{% end %}
+
+{% end %}
