@@ -5,6 +5,7 @@ from transitions import Machine, State
 import serial
 import os
 import zmq
+from subprocess import call
 import random
 from threading import Thread
 from Queue import Queue, Empty
@@ -336,9 +337,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def turn_off_system(self, **kwargs):
-        print "KILLING ALL"
-
-
+        self.logger.info("[ControllerFrontend] Turning off the Pi")
+        call("sudo shutdown -h now", shell=True)
         
 
     def play_podcast_episode(self):
