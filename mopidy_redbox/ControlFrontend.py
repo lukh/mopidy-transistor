@@ -77,27 +77,27 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def initStateMachine(self):
         machine = Machine(
-        model=self, 
-        states=[
-            State('turn_off', on_enter=["turn_off_system"]), 
-            State('radio'), 
-            State('rss'), 
-        ], 
-        transitions=[
-            { 'trigger': 'power_off', 'source': ['rss', 'radio'], 'dest': 'turn_off' },
+            model=self, 
+            states=[
+                State('turn_off', on_enter=["turn_off_system"]), 
+                State('radio'), 
+                State('rss'), 
+            ], 
+            transitions=[
+                { 'trigger': 'power_off', 'source': '*', 'dest': 'turn_off' },
 
-            { 'trigger': 'press_radio', 'source': ['rss', 'radio'], 'dest': 'radio' },
-            { 'trigger': 'press_rss', 'source': ['rss', 'radio'], 'dest': 'rss' },
+                { 'trigger': 'press_radio', 'source': ['rss', 'radio'], 'dest': 'radio' },
+                { 'trigger': 'press_rss', 'source': ['rss', 'radio'], 'dest': 'rss' },
 
-            { 'trigger': 'tuner', 'source': 'radio', 'dest': 'radio', 'after':'set_radio' },
-            { 'trigger': 'tuner', 'source': 'rss', 'dest': 'rss', 'after':'set_podcast' },
+                { 'trigger': 'tuner', 'source': 'radio', 'dest': 'radio', 'after':'set_radio' },
+                { 'trigger': 'tuner', 'source': 'rss', 'dest': 'rss', 'after':'set_podcast' },
 
-            { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
+                { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
             
-            { 'trigger': 'next_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_next_in_podcast' },
-            { 'trigger': 'previous_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_previous_in_podcast' },
-        ], 
-        initial='radio'
+                { 'trigger': 'next_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_next_in_podcast' },
+                { 'trigger': 'previous_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_previous_in_podcast' },
+            ], 
+            initial='radio'
         )
 
 
