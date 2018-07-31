@@ -46,6 +46,8 @@ class Extension(ext.Extension):
             (r"/rss/edit/([0-9]+)", EditRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/rss/delete/([0-9]+)", DeleteRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
 
+            (r"/rss/show/([0-9]+)", ShowRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
+
             (r"/settings", SettingsHandler, dict(config_file=config['redbox']['config_file'])),
             (r"/settings/([^/]+)", SettingsHandler, dict(config_file=config['redbox']['config_file'])),
 

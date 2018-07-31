@@ -4,6 +4,8 @@ from threading import Thread
 import zmq
 from ConfigParser import SafeConfigParser
 from collections import OrderedDict
+import podcastparser
+import urllib
 
 from tools import *
 
@@ -150,6 +152,18 @@ class DeleteRssHandler(tornado.web.RequestHandler):
         self.db.deleteRss(rss_id)
         self.redirect("/redbox")
 
+
+
+class ShowRssHandler(tornado.web.RequestHandler):
+    def initialize(self, dbfilename):
+        self.db = RedBoxDataBase(dbfilename)
+
+    def get(self, rss_id):
+        rss = self.db.getRss(rss_id)
+
+        parsed = podcastparser.parse(rss.uri, urllib.urlopen(rss.uri))
+
+        self.render("site/show_rss.html", parsed=parsed)
 
 
 
