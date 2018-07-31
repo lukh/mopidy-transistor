@@ -17,8 +17,8 @@
         <td>{{ escape(radio.name) }}</td>
         <td><a href="{{ escape(radio.uri) }}">{{ escape(radio.uri) }}</a></td>
         <td>{{ escape(str(radio.position)) }}</td>
-        <td><a href="radio/edit/{{ radio.id }}">Edit</a></td>
-        <td><a href="radio/delete/{{ radio.id }}">Delete</a></td>
+        <td><a href="radio/edit/{{ escape(str(radio.id)) }}">Edit</a></td>
+        <td><a href="radio/delete/{{ escape(str(radio.id)) }}">Delete</a></td>
     </tr>
     {% end %}
     </tbody>
@@ -39,11 +39,11 @@
     <tbody>
     {% for rss in feeds %}
     <tr>
-        <td><a href="rss/show/{{ escape(rss.id) }}"></a>{{ escape(rss.name) }}</a></td>
+        <td><a href="rss/show/{{ escape(str(rss.id)) }}">{{ escape(rss.name) }}</a></td>
         <td><a href="{{ escape(rss.uri) }}">{{ escape(rss.uri) }}</a></td>
         <td>{{ escape(str(rss.position)) }}</td>
-        <td><a href="rss/edit/{{ rss.id }}">Edit</a></td>
-        <td><a href="rss/delete/{{ rss.id }}">Delete</a></td>
+        <td><a href="rss/edit/{{ escape(str(rss.id)) }}">Edit</a></td>
+        <td><a href="rss/delete/{{ escape(str(rss.id)) }}">Delete</a></td>
     </tr>
     {% end %}
     </tbody>
