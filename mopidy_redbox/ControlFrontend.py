@@ -355,7 +355,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.logger.info("[Controller Frontend] Accessing {} / {}".format(uri, parsed['title']))
 
-        self.podcast_episode_index = clamp(self.podcast_episode_index, 0 len(episodes))
+        self.podcast_episode_index = clamp(self.podcast_episode_index, 0, len(episodes))
 
         episode = episodes[self.podcast_episode_index]
 
