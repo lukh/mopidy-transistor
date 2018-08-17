@@ -402,9 +402,16 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             Play a random noise from the folder in config
         """
         folder = self.config['fm_noise_directory']
+        if not os.path.isdir(folder):
+            self.logger.warning("[Controller Frontend] Bad FM Noise folder: {}. Not playing".format(folder))
+            return
 
         # get random file in this directory
         onlyfiles = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and os.path.splitext(f)[-1].lower() in [".wav", ".mp3"]]
+        if len(onlyfiles) == 0:
+            self.logger.warning("[Controller Frontend] No files found in FM Noise folder: {}. Not playing".format(folder))
+            return
+
         fn = onlyfiles[random.randint(0, len(onlyfiles)-1)]
 
         fn = os.path.join(folder, fn)
