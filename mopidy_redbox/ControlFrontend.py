@@ -1,7 +1,7 @@
 import pykka
 import logging
 import sqlite3
-from transitions import Machine, State
+from transitions import Machine, State, MachineError
 import serial
 import os
 import zmq
@@ -174,13 +174,17 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
             # raw = "Ax=YYYY" or raw = "Dx"
             splitted = raw.split('=')
-            ch = splitted[0]
+            ch = splitted[0].replace("\n", "").replace("\r", "")
             val = int(splitted[1]) / 1024.0 if len(splitted) == 2 else None
 
             if ch in self.control_map:
+                self.logger.info("[Controller Frontend] " + self.control_map[ch])
                 action = self.control_map[ch]
-                if action in self.get_triggers(self.state): # validate if the action is allowed in the current state
+                # validate if the action is allowed in the current state
+                try:
                     self.trigger(action, position=val) # the arg position is ignored for buttons, but it is easier.
+                except MachineError as e:
+                    self.logger.info("[Controller Frontend] " + str(e))
 
 
 
