@@ -22,7 +22,11 @@ class Extension(ext.Extension):
 
     def get_default_config(self):
         conf_file = os.path.join(os.path.dirname(__file__), 'ext.conf')
-        return config.read(conf_file)
+        default_conf = config.read(conf_file)
+        default_conf = default_conf.replace("~", os.path.expanduser("~"))
+
+        print default_conf
+        return default_conf
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
