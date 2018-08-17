@@ -25,7 +25,6 @@ class Extension(ext.Extension):
         default_conf = config.read(conf_file)
         default_conf = default_conf.replace("~", os.path.expanduser("~"))
 
-        print default_conf
         return default_conf
 
     def get_config_schema(self):
