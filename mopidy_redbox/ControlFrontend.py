@@ -231,11 +231,14 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
                 else:
                     socket_tuner.send("unknown")
 
-    def set_volume(self, volume):
+    def set_volume(self, position=None):
         """
             Change volume
         """
-        volume = int(volume * 100.0)
+        if position is None:
+            return
+
+        volume = int(position * 100.0)
         self.logger.info("[Controller Frontend] VOLUME: {}".format(volume))
         self.core.mixer.set_volume(volume)
 
@@ -330,10 +333,16 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def set_next_in_podcast(self, **kwargs):
+        if self.podcast_index is None or self.podcast_episode_index is None:
+            self.logger.info("[ControllerFrontend] No podcast selected")
+            return
         self.podcast_episode_index += 1
         self.play_podcast_episode()
 
     def set_previous_in_podcast(self, **kwargs):
+        if self.podcast_index is None or self.podcast_episode_index is None:
+            self.logger.info("[ControllerFrontend] No podcast selected")
+            return
         self.podcast_episode_index -= 1
         self.play_podcast_episode()
 
