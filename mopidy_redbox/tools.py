@@ -2,6 +2,7 @@ import sqlite3 as lite
 import os
 import logging
 import numpy as np
+from mopidy.exceptions import FrontendError
 
 class Smoother(object):
     def __init__(self, win_size, threshold):
@@ -52,6 +53,10 @@ class RedBoxDataBase(object):
     def __init__(self, filename):
         self.logger = logging.getLogger(__name__)
 
+        # check the directory exists
+        file_dir = os.path.dirname(filename)
+        if not os.path.isdir(file_dir):
+            raise FrontendError("Can't find the directory {}".format(file_dir))
 
         db_exists = os.path.isfile(filename)
 

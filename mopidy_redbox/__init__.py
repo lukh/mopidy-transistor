@@ -67,3 +67,7 @@ class Extension(ext.Extension):
 
         from .ControlFrontend import ControlFrontend
         registry.add('frontend', ControlFrontend)
+
+
+
+
