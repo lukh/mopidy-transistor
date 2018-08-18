@@ -252,7 +252,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         if position is None:
             return
 
-        self.logger.info("[Controller Frontend] TUNER: {}".format(position))
+        self.logger.info("[Controller Frontend] TUNER(radio): {}".format(position))
 
         self.raw_tuner_pos = position
 
@@ -296,7 +296,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         if position is None:
             return
 
-        self.logger.info("[Controller Frontend] TUNER: {}".format(position))
+        self.logger.info("[Controller Frontend] TUNER(podcast): {}".format(position))
 
         self.raw_tuner_pos = position
 
