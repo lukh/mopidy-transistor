@@ -187,15 +187,21 @@ class SettingsHandler(tornado.web.RequestHandler):
         self.render('site/settings.html', config=config)
 
     def post(self, section):
-        parser = SafeConfigParser()
-        parser.read(self.config_file)
+        # all internal settings
+        if section != "wifi":
+            parser = SafeConfigParser()
+            parser.read(self.config_file)
 
-        for name in parser.options(section):
-            parser.set(section, name, self.get_argument(name))
+            for name in parser.options(section):
+                parser.set(section, name, self.get_argument(name))
 
 
-        with open(self.config_file, 'w') as fp:
-            parser.write(fp)
+            with open(self.config_file, 'w') as fp:
+                parser.write(fp)
 
+        # wifi
+        else:
+            pass 
+
+        # redirect the to settings page
         self.redirect('/redbox/settings')
-    

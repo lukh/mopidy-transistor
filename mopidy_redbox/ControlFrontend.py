@@ -105,7 +105,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
     def on_start(self):
         # opening serial port
         try:
-            self.serial = serial.Serial(self.config['serial_port'], int(self.config['serial_baudrate']), timeout=0.1)
+            # rtscts=True,dsrdtr=True is for virtual port (using socat)
+            self.serial = serial.Serial(self.config['serial_port'], int(self.config['serial_baudrate']), timeout=0.1, rtscts=True, dsrdtr=True)
         except Exception as e:
             raise FrontendError("Impossible to open serial port {}: {}".format(self.config['serial_port'], str(e)))
         
