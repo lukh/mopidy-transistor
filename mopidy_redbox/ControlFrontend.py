@@ -4,11 +4,11 @@ import sqlite3
 from transitions import Machine, State, MachineError
 import serial
 import os
-import zmq
 from subprocess import call
 import random
 from threading import Thread
-from Queue import Queue, Empty
+from multiprocessing import connection
+import select
 import podcastparser
 import urllib
 
@@ -19,7 +19,8 @@ from mopidy.exceptions import FrontendError
 
 from tools import *
 
-context = zmq.Context()
+connection.Listener.fileno = lambda self: self._listener._socket.fileno()
+
 
 class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
     """
@@ -72,8 +73,6 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.noise_playing = False
 
-        # for com between two thread
-        self.queue_ser = Queue()
 
 
     def initStateMachine(self):
@@ -103,6 +102,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
 
     def on_start(self):
+        self.running = True
+
         # opening serial port
         try:
             # rtscts=True,dsrdtr=True is for virtual port (using socat)
@@ -110,13 +111,10 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         except Exception as e:
             raise FrontendError("Impossible to open serial port {}: {}".format(self.config['serial_port'], str(e)))
         
+        
+
         # starting serial thread
         try:
-            self.running = True
-
-            self.thread_serial = Thread(target=self.thread_serial_func)
-            self.thread_serial.start()
-
             self.thread_ctrl = Thread(target=self.thread_control_func)
             self.thread_ctrl.start()
         except Exception as e:
@@ -124,8 +122,6 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
 
         # opening webinterface thread (transmission of the current tuner pos when requested)
         try:
-            self.socket_ctrl = context.socket(zmq.PUB) # used for stop signal
-            self.socket_ctrl.bind("inproc://frontend_control")
             self.thread_publish = Thread(target=self.thread_webinterface_func)
             self.thread_publish.start()
         except Exception as e:
@@ -138,22 +134,11 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.running = False
 
         self.thread_ctrl.join()
-        self.thread_serial.join()
-
-        # stopping webinterface communication thread
-        self.socket_ctrl.send("quit")
         self.thread_publish.join()
 
         self.logger.info("[Controller Frontend] Leaving")
 
 
-    def thread_serial_func(self):
-        self.logger.info("[Controller Frontend] Starting thread_serial_func")
-
-        while self.running:
-            raw = self.serial.readline() # blocking with given timeout in serial ctr
-            if raw != "":
-                self.queue_ser.put(raw)
 
     def thread_control_func(self):
         """
@@ -167,9 +152,8 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         self.podcasts = self.db.getRssFeedsKeywordPosition()
 
         while self.running:
-            try:
-                raw = self.queue_ser.get(block=False, timeout=0.2)
-            except Empty:
+            raw = self.serial.readline() # blocking with given timeout in serial ctr
+            if raw == "":
                 continue
 
 
@@ -203,34 +187,39 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
             in a poller, another socket is listening for the stop command, from ControlFrontend, mainthread
         """
         self.logger.info("[Controller Frontend] Starting thread_webinterface_func")
-        socket_tuner = context.socket(zmq.REP)
-        socket_tuner.bind("ipc://tuner_position")
+        try:
+            listener = connection.Listener(str(self.config['ipc_fd']), 'AF_UNIX')
+        except:
+            raise FrontendError("Can't open pipe {}. Mopidy could have been closed abrutly. Try reboot.".format(self.config['ipc_fd']))
+        while self.running:
+            #self.logger.info('[Controller Frontend] wait for conn')
 
-        socket_ctrl = context.socket(zmq.SUB)
-        socket_ctrl.connect("inproc://frontend_control")
-        socket_ctrl.setsockopt(zmq.SUBSCRIBE, "")
+            r, w, e = select.select((listener, ), (), (), 0.5)
+            if listener in r:
+                conn = listener.accept()
+                #self.logger.info("[Controller Frontend] accepting connection")
+                while self.running:
+                    try:
+                        msg = conn.recv()
+                        #self.logger.info("[Controller Frontend] got message: {}".format(msg))
+                        if msg == "query:tuner_position":
+                            conn.send(str(round(self.raw_tuner_pos, 2)))
 
-        poller = zmq.Poller()
-        poller.register(socket_ctrl, zmq.POLLIN)
-        poller.register(socket_tuner, zmq.POLLIN)
+                        elif msg == "info:db_updated":
+                            self.update_db = True
+                            conn.send("ok")
 
-        while True:
-            self.logger.info("[Controller Frontend] Starting thread_webinterface_func loop")
-            socks = dict(poller.poll())
-            if socket_ctrl in socks and socks[socket_ctrl] == zmq.POLLIN:
-                msg = socket_ctrl.recv()
-                if msg == "quit":
-                    break
+                        elif msg == "close":
+                            #self.logger.info('[Controller Frontend] closing connection with Web')
+                            break
 
-            if socket_tuner in socks and socks[socket_tuner] == zmq.POLLIN:
-                msg = socket_tuner.recv()
-                if msg == "query:tuner_position":
-                    socket_tuner.send(str(round(self.raw_tuner_pos, 2)))
-                elif msg == "info:db_updated":
-                    self.update_db = True
-                    socket_tuner.send("ok")
-                else:
-                    socket_tuner.send("unknown")
+                        else:
+                            conn.send("unknown")
+
+                    except EOFError: # client closed the connection unexpectly
+                        break
+
+                conn.close()        
 
     def set_volume(self, position=None):
         """

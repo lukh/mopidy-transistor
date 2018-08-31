@@ -30,10 +30,11 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['serial_port'] = config.String()
-	schema['serial_baudrate'] = config.String()
+        schema['serial_baudrate'] = config.String()
         schema['dbfile'] = config.String()
         schema['fm_noise_directory'] = config.String()
         schema['config_file'] = config.String()
+        schema['ipc_fd'] = config.String()
         return schema
 
     def webapp(self, config, core):
@@ -41,11 +42,11 @@ class Extension(ext.Extension):
         return [
             (r"/", MainHandler, dict(dbfilename=config['redbox']['dbfile'])),
 
-            (r"/radio/add", AddRadioHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/radio/add", AddRadioHandler, dict(dbfilename=config['redbox']['dbfile'], ipc_fd=config['redbox']['ipc_fd'])),
             (r"/radio/edit/([0-9]+)", EditRadioHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/radio/delete/([0-9]+)", DeleteRadioHandler, dict(dbfilename=config['redbox']['dbfile'])),
 
-            (r"/rss/add", AddRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
+            (r"/rss/add", AddRssHandler, dict(dbfilename=config['redbox']['dbfile'], ipc_fd=config['redbox']['ipc_fd'])),
             (r"/rss/edit/([0-9]+)", EditRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
             (r"/rss/delete/([0-9]+)", DeleteRssHandler, dict(dbfilename=config['redbox']['dbfile'])),
 
