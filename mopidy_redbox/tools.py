@@ -2,6 +2,9 @@ import sqlite3 as lite
 import os
 import logging
 import numpy as np
+import tornado.ioloop
+import tornado.web
+from multiprocessing.connection import Client
 from mopidy.exceptions import FrontendError
 
 class Smoother(object):
@@ -184,6 +187,56 @@ class RedBoxDataBase(object):
         c = self.conn.cursor()
         c.execute("UPDATE rss SET name='{}', uri='{}', position='{}' WHERE id={}".format(name, uri, position, rss_id))
         self.conn.commit()
+
+
+
+
+class IAddHandler(tornado.web.RequestHandler):
+    ADD_TYPE = "None"
+    def initialize(self, dbfilename, ipc_fd):
+        self.db = RedBoxDataBase(dbfilename)
+        
+        self.ipc_fd = str(ipc_fd)
+
+
+    def get(self):
+        # open the communcation to frontend
+        self.conn = Client(self.ipc_fd, "AF_UNIX")
+
+        daemon_msg_recv = False
+        self.conn.send("query:tuner_position")
+
+        if self.conn.poll(0.5):
+            value = float(self.conn.recv())
+            daemon_msg_recv= True
+        else:
+            value = 0.0
+
+        self.conn.send("close")
+        self.conn.close()
+
+        self.render("site/add.html", add_type=self.ADD_TYPE, tuner_position=value, daemon_msg_recv=daemon_msg_recv)
+
+    def post(self):
+        # open the communcation to frontend
+        self.conn = Client(self.ipc_fd, "AF_UNIX")
+
+        self.post_action()
+
+        self.conn.send("info:db_updated")
+        # use poll for timeouts:
+        if self.conn.poll(0.5):
+            msg = self.conn.recv()
+
+        self.conn.send("close")
+
+        self.conn.close()
+
+        self.redirect("/redbox")
+
+    def post_action(self):
+        raise NotImplementedError
+
 
 if __name__=="__main__":
     rbdb = RedBoxDataBase("redbox.db")
