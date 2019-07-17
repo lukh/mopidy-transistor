@@ -200,38 +200,42 @@ class IAddHandler(tornado.web.RequestHandler):
 
 
     def get(self):
-        # open the communcation to frontend
-        self.conn = Client(self.ipc_fd, "AF_UNIX")
-
         daemon_msg_recv = False
-        self.conn.send("query:tuner_position")
+        value = 0.0
+        try:
+            # open the communcation to frontend
+            self.conn = Client(self.ipc_fd, "AF_UNIX")
 
-        if self.conn.poll(0.5):
-            value = float(self.conn.recv())
-            daemon_msg_recv= True
-        else:
-            value = 0.0
+            self.conn.send("query:tuner_position")
 
-        self.conn.send("close")
-        self.conn.close()
+            if self.conn.poll(0.5):
+                value = float(self.conn.recv())
+                daemon_msg_recv= True
+
+            self.conn.send("close")
+            self.conn.close()
+        except:
+            pass #TODO
 
         self.render("site/add.html", add_type=self.ADD_TYPE, tuner_position=value, daemon_msg_recv=daemon_msg_recv)
 
     def post(self):
-        # open the communcation to frontend
-        self.conn = Client(self.ipc_fd, "AF_UNIX")
+        try:
+            # open the communcation to frontend
+            self.conn = Client(self.ipc_fd, "AF_UNIX")
+
+            self.conn.send("info:db_updated")
+            # use poll for timeouts:
+            if self.conn.poll(0.5):
+                msg = self.conn.recv()
+
+            self.conn.send("close")
+
+            self.conn.close()
+        except:
+            pass #TODO
 
         self.post_action()
-
-        self.conn.send("info:db_updated")
-        # use poll for timeouts:
-        if self.conn.poll(0.5):
-            msg = self.conn.recv()
-
-        self.conn.send("close")
-
-        self.conn.close()
-
         self.redirect("/redbox")
 
     def post_action(self):
