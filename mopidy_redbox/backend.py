@@ -1,8 +1,16 @@
 import logging
+import os
 
+import mopidy
 from mopidy import backend, exceptions, models
 
+from mopidy import local
+from mopidy.internal import storage as internal_storage
+
 import pykka
+
+import mopidy_redbox
+import library
 
 logger = logging.getLogger(__name__)
 
@@ -15,42 +23,87 @@ class RedBoxBackend(pykka.ThreadingActor, backend.Backend):
     def __init__(self, config, audio):
         super(RedBoxBackend, self).__init__()
 
-        self.library = RedBoxLibraryProvider(backend=self)
-        self.playback = RedBoxPlaybackProvider(audio=audio, backend=self)
+        lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'))
+        lib.load()
+
+        self.library = RedBoxLibraryProvider(self, lib)
+        self.playback = RedBoxPlaybackProvider(audio, self, lib)
 
 
 
 
 class RedBoxLibraryProvider(backend.LibraryProvider):
+    def __init__(self, backend, lib):
+        super(RedBoxLibraryProvider, self).__init__(backend)
+        self.lib = lib
+
     @property
     def root_directory(self):
         return models.Ref.directory(name='RedBox', uri="redbox:")
 
+    def refresh(self, uri=None):
+        self.lib.load()
+
 
     def lookup(self, uri):
-        logger.warning("lookup: {}".format(uri))
-        return [models.Track(name=uri, uri=uri)]
+        if not uri.startswith("redbox:"):
+            return []
+
+        split_uri = uri.split(":")
+
+        if len(split_uri) == 4:
+            if split_uri[1] == "radios":
+                bank_radios = self.lib.data['radio_banks'][split_uri[2]]
+                for rad in bank_radios:
+                    if rad['name'] == split_uri[3]:
+                        return [models.Track(name=rad['name'], uri=uri)]
+
+        return []
 
     def browse(self, uri):
-        if uri == 'redbox:':
-            return [
-                models.Ref.directory(name="RadioBankA", uri="redbox:bank_a"),
-                models.Ref.directory(name="RadioBankB", uri="redbox:bank_b")
-            ]
-        elif uri == "redbox:bank_a":
-            return [
-                models.Ref.track(name="radio meuh", uri="redbox:bank_a:radio_meuh"),
-                models.Ref.track(name="fip", uri="redbox:bank_a:fip")
-            ]
+        if not uri.startswith("redbox:"):
+            return []
+
+        split_uri = uri.split(":")
+
+        # root
+        if len(split_uri) == 2:
+            if split_uri[1] == "":
+                return [
+                    models.Ref.directory(name="Radios", uri="redbox:radios"),
+                    models.Ref.directory(name="Podcast", uri="redbox:podcasts")
+                ]
+
+            if split_uri[1] == "radios":
+                return [
+                    models.Ref.directory(name=bank, uri="redbox:radios:{}".format(bank)) for bank in self.lib.data["radio_banks"]
+                ]
+
+        if len(split_uri) == 3:
+            if split_uri[1] == "radios":
+                return [
+                    models.Ref.track(name=radio['name'], uri="redbox:radios:{}:{}".format(split_uri[2], radio['name'])) for radio in self.lib.data['radio_banks'][split_uri[2]]
+                ]
 
         return []
 
 
 class RedBoxPlaybackProvider(backend.PlaybackProvider):
+    def __init__(self, audio, backend, lib):
+        super(RedBoxPlaybackProvider,  self).__init__(audio, backend)
+        self.lib = lib
 
     def translate_uri(self, uri):
-        lut = {
-            "redbox:bank_a:radio_meuh":"http://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3",
-            "redbox:bank_a:fip":"http://direct.fipradio.fr/live/fip-midfi.mp3"
-        }
-        return lut[uri]
+        if not uri.startswith("redbox:"):
+            return ""
+
+        split_uri = uri.split(":")
+
+        if len(split_uri) == 4:
+            if split_uri[1] == "radios":
+                bank_radios = self.lib.data['radio_banks'][split_uri[2]]
+                for rad in bank_radios:
+                    if rad['name'] == split_uri[3]:
+                        return rad['stream_url']
+
+        return ""
