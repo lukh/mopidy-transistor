@@ -118,7 +118,7 @@ class RedBoxPlaybackProvider(backend.PlaybackProvider):
 
     def translate_uri(self, uri):
         if not uri.startswith("redbox:"):
-            return ""
+            return None
 
         split_uri = uri.split(":")
 
@@ -136,4 +136,4 @@ class RedBoxPlaybackProvider(backend.PlaybackProvider):
                             if split_uri[3] == ep['title']:
                                 return ep['url']
 
-        return ""
+        return None
