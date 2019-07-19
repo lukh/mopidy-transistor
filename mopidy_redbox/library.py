@@ -2,20 +2,21 @@ import collections
 import os
 import mopidy
 import logging
+import unicodedata
+import urllib2
+import podcastparser
+import threading
 
 from mopidy import local
 from mopidy.internal import storage as internal_storage
-
-import urllib
-import podcastparser
-import threading
 
 
 logger = logging.getLogger(__name__)
 
 class Library(object):
-    def __init__(self, json_file):
+    def __init__(self, json_file, podcast_timeout=5.0):
         self._json_file = json_file
+        self._podcast_timeout = podcast_timeout
         self.load()
 
     def save(self):
@@ -49,7 +50,7 @@ class Library(object):
         def run():
             try:
                 for podcast in self.data['podcasts']:
-                    raw = urllib.urlopen(podcast['feed_url'])
+                    raw = urllib2.urlopen(podcast['feed_url'], timeout=self._podcast_timeout)
                     parsed = podcastparser.parse(podcast['feed_url'], raw)
                     episodes = parsed['episodes']
 
@@ -59,7 +60,7 @@ class Library(object):
                         title = episode['title']
                         media_url = episode['enclosures'][0]['url']
 
-                        podcast['episodes'].append({"title":title, "url":media_url})
+                        podcast['episodes'].append({"title":unicodedata.normalize('NFKD', title).encode('ascii','ignore'), "url":media_url})
 
                 self.save()
                 logger.info("Redbox Library: done downloading podcasts infos")
