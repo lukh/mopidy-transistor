@@ -13,6 +13,9 @@ class SerialInterfaceListener(Thread):
 
         self.core = core
 
+
+        self.initStateMachine()
+
         # opening serial port
         try:
             # rtscts=True,dsrdtr=True is for virtual port (using socat)
