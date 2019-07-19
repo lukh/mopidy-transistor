@@ -1,14 +1,17 @@
 import time
 import serial
 from threading import Thread
+from transitions import Machine, State, MachineError
+
 from mopidy.exceptions import FrontendError
 
 class SerialInterfaceListener(Thread):
-    def __init__(self, config):
+    def __init__(self, core, config):
         super(SerialInterfaceListener, self).__init__()
 
         self._stop_flag = False
 
+        self.core = core
 
         # opening serial port
         try:
@@ -34,4 +37,46 @@ class SerialInterfaceListener(Thread):
 
             print raw_byte
 
+
+
+
+    def initStateMachine(self):
+        machine = Machine(
+            model=self, 
+            states=[
+                State('turn_off', on_enter=["turn_off_system"]), 
+                State('radio'), 
+                State('rss'), 
+            ], 
+            transitions=[
+                { 'trigger': 'power_off', 'source': '*', 'dest': 'turn_off' },
+
+                { 'trigger': 'press_radio', 'source': ['rss', 'radio'], 'dest': 'radio' },
+                { 'trigger': 'press_rss', 'source': ['rss', 'radio'], 'dest': 'rss' },
+
+                { 'trigger': 'tuner', 'source': 'radio', 'dest': 'radio', 'after':'set_radio' },
+                { 'trigger': 'tuner', 'source': 'rss', 'dest': 'rss', 'after':'set_podcast' },
+
+                { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
             
+                { 'trigger': 'next_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_next_in_podcast' },
+                { 'trigger': 'previous_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_previous_in_podcast' },
+            ], 
+            initial='radio'
+        )
+
+
+    def set_volume(self, position=None):
+        pass
+
+    def set_radio(self, position=None):
+        pass
+
+    def set_podcast(self, position=None):
+        pass
+
+    def play_podcast_episode(self):
+        pass
+
+    def turn_off_system(self, **kwargs):
+        pass

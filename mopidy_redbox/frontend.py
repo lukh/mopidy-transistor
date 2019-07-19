@@ -21,7 +21,7 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener):
     def on_start(self):
         logger.info('REDBOX FRont End Running')
 
-        self.interface = interface.SerialInterfaceListener(self.config)
+        self.interface = interface.SerialInterfaceListener(self.core, self.config)
         self.interface.start()
 
 
