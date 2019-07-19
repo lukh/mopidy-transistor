@@ -9,6 +9,9 @@ from mopidy.internal import storage as internal_storage
 
 import pykka
 
+import urllib
+import podcastparser
+
 import mopidy_redbox
 import library
 
@@ -58,6 +61,16 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
                     if rad['name'] == split_uri[3]:
                         return [models.Track(name=rad['name'], uri=uri)]
 
+
+            if split_uri[1] == "podcasts":
+                for podcast in self.lib.data['podcasts']:
+                    if split_uri[2] == podcast['name']:
+                        for ep in podcast['episodes']:
+                            if split_uri[3] == ep['title']:
+                                return [models.Track(name=ep['title'], uri=uri)]
+
+
+
         return []
 
     def browse(self, uri):
@@ -79,12 +92,23 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
                     models.Ref.directory(name=bank, uri="redbox:radios:{}".format(bank)) for bank in self.lib.data["radio_banks"]
                 ]
 
+            if split_uri[1] == "podcasts":
+                return [
+                    models.Ref.directory(name=podcast['name'], uri="redbox:podcasts:{}".format(podcast['name'])) for podcast in self.lib.data["podcasts"]
+                ]
+
         if len(split_uri) == 3:
             if split_uri[1] == "radios":
                 return [
                     models.Ref.track(name=radio['name'], uri="redbox:radios:{}:{}".format(split_uri[2], radio['name'])) for radio in self.lib.data['radio_banks'][split_uri[2]]
                 ]
-
+            if split_uri[1] == "podcasts":
+                for podcast in self.lib.data['podcasts']:
+                    if split_uri[2] == podcast['name']:
+                        return [
+                            models.Ref.track(name=episode['title'], uri="redbox:podcasts:{}:{}".format(split_uri[2], episode['title'])) 
+                                for episode in podcast['episodes']
+                        ]
         return []
 
 
@@ -105,5 +129,12 @@ class RedBoxPlaybackProvider(backend.PlaybackProvider):
                 for rad in bank_radios:
                     if rad['name'] == split_uri[3]:
                         return rad['stream_url']
+
+            if split_uri[1] == "podcasts":
+                for podcast in self.lib.data['podcasts']:
+                    if split_uri[2] == podcast['name']:
+                        for ep in podcast['episodes']:
+                            if split_uri[3] == ep['title']:
+                                return ep['url']
 
         return ""
