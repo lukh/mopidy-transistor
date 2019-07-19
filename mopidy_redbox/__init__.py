@@ -28,6 +28,10 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
+        schema['serial_port'] = config.String()
+        schema['serial_baudrate'] = config.Integer()
+
+        schema['podcasts_timeout'] = config.Integer()
         return schema
 
     def setup(self, registry):
