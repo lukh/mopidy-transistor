@@ -28,14 +28,14 @@ class Library(object):
                 'version': mopidy.__version__,
                 'radio_banks': {
                     "AM":[
-                        {"name":"FIP", "stream_url":"http://direct.fipradio.fr/live/fip-midfi.mp3"},
-                        {"name":"Meeeuh", "stream_url":"http://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3"}
+                        {"name":"FIP", "stream_url":"http://direct.fipradio.fr/live/fip-midfi.mp3", "position":64},
+                        {"name":"Meeeuh", "stream_url":"http://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3", "position":124}
                     ],
                     "FM":[]
                 },
                 "podcasts":[
-                    {"name":"TEDx", "feed_url":"http://www.npr.org/rss/podcast.php?id=510298", "episodes":[]},
-                    {"name":"Revolt", "feed_url":"http://wordsmith.podomatic.com/rss2.xml", "episodes":[]},
+                    {"name":"TEDx", "feed_url":"http://www.npr.org/rss/podcast.php?id=510298", "episodes":[], "position":64},
+                    {"name":"Revolt", "feed_url":"http://wordsmith.podomatic.com/rss2.xml", "episodes":[], "position":200},
                 ]
             }
             self.save()

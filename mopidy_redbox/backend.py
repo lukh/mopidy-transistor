@@ -57,13 +57,13 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
             if split_uri[1] == "radios":
                 bank_radios = self.lib.data['radio_banks'][split_uri[2]]
                 for rad in bank_radios:
-                    if rad['name'] == split_uri[3]:
+                    if rad['position'] == int(split_uri[3]):
                         return [models.Track(name=rad['name'], uri=uri)]
 
 
             if split_uri[1] == "podcasts":
                 for podcast in self.lib.data['podcasts']:
-                    if split_uri[2] == podcast['name']:
+                    if podcast['position'] == int(split_uri[2]):
                         for ep in podcast['episodes']:
                             if split_uri[3] == ep['title']:
                                 return [models.Track(name=ep['title'], uri=uri)]
@@ -93,17 +93,17 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
 
             if split_uri[1] == "podcasts":
                 return [
-                    models.Ref.directory(name=podcast['name'], uri="redbox:podcasts:{}".format(podcast['name'])) for podcast in self.lib.data["podcasts"]
+                    models.Ref.directory(name=podcast['name'], uri="redbox:podcasts:{}".format(podcast['position'])) for podcast in self.lib.data["podcasts"]
                 ]
 
         if len(split_uri) == 3:
             if split_uri[1] == "radios":
                 return [
-                    models.Ref.track(name=radio['name'], uri="redbox:radios:{}:{}".format(split_uri[2], radio['name'])) for radio in self.lib.data['radio_banks'][split_uri[2]]
+                    models.Ref.track(name=radio['name'], uri="redbox:radios:{}:{}".format(split_uri[2], radio['position'])) for radio in self.lib.data['radio_banks'][split_uri[2]]
                 ]
             if split_uri[1] == "podcasts":
                 for podcast in self.lib.data['podcasts']:
-                    if split_uri[2] == podcast['name']:
+                    if podcast['position'] == int(split_uri[2]):
                         return [
                             models.Ref.track(name=episode['title'], uri="redbox:podcasts:{}:{}".format(split_uri[2], episode['title'])) 
                                 for episode in podcast['episodes']
@@ -126,12 +126,12 @@ class RedBoxPlaybackProvider(backend.PlaybackProvider):
             if split_uri[1] == "radios":
                 bank_radios = self.lib.data['radio_banks'][split_uri[2]]
                 for rad in bank_radios:
-                    if rad['name'] == split_uri[3]:
+                    if rad['position'] == int(split_uri[3]):
                         return rad['stream_url']
 
             if split_uri[1] == "podcasts":
                 for podcast in self.lib.data['podcasts']:
-                    if split_uri[2] == podcast['name']:
+                    if int(split_uri[2]) == podcast['position']:
                         for ep in podcast['episodes']:
                             if split_uri[3] == ep['title']:
                                 return ep['url']

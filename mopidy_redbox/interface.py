@@ -15,6 +15,7 @@ class SerialInterfaceListener(Thread):
 
 
         self.initStateMachine()
+        self.initLibrary()
 
         # opening serial port
         try:
@@ -38,7 +39,9 @@ class SerialInterfaceListener(Thread):
             if raw_byte == "":
                 continue
 
-            print raw_byte
+            # parse byte
+
+        self.serial.close()
 
 
 
@@ -68,9 +71,23 @@ class SerialInterfaceListener(Thread):
             initial='radio'
         )
 
+    def initLibrary(self):
+        # {position:Ref}
+        self.lib = {
+            "podcasts":{},
+            "radio_banks":{}
+        }
+
+        podcasts = self.core.library.browse("redbox:podcasts").get()
 
     def set_volume(self, position=None):
-        pass
+        """
+            @paramn position: volume, between 0 and 100
+        """
+        if position is None:
+            return
+
+        self.core.mixer.set_volume(volume)
 
     def set_radio(self, position=None):
         pass

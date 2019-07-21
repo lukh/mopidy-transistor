@@ -236,6 +236,7 @@ class ControlFrontend(pykka.ThreadingActor, core.CoreListener):
         """
             Select the radio or play noise if needed
         """
+
         def is_inside(val, target, margin):
             return val > (target-margin) and val < (target+margin)
 
