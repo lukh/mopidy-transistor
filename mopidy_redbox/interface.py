@@ -79,6 +79,14 @@ class SerialInterfaceListener(Thread):
         }
 
         podcasts = self.core.library.browse("redbox:podcasts").get()
+        self.lib['podcasts'] = {int(pod.uri.split(":")[-1]):pod for pod in podcasts}
+        
+        
+        banks = self.core.library.browse("redbox:radios").get()
+        for bank in banks:
+            radios = self.core.library.browse(bank.uri).get()
+            self.lib["radio_banks"][bank.name] = {int(radio.uri.split(':')[-1]):radio for radio in radios}
+        
 
     def set_volume(self, position=None):
         """
