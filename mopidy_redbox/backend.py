@@ -1,5 +1,6 @@
 import logging
 import os
+import random
 
 import mopidy
 from mopidy import backend, exceptions, models
@@ -29,7 +30,7 @@ class RedBoxBackend(pykka.ThreadingActor, backend.Backend):
         lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
 
         self.library = RedBoxLibraryProvider(self, lib)
-        self.playback = RedBoxPlaybackProvider(audio, self, lib)
+        self.playback = RedBoxPlaybackProvider(audio, self, lib, config['redbox']['noise_folder'])
 
 
 
@@ -50,6 +51,9 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
     def lookup(self, uri):
         if not uri.startswith("redbox:"):
             return []
+
+        if uri == "redbox:noise":
+            return [models.Track(name="Random Noise", uri=uri)]
 
         split_uri = uri.split(":")
 
@@ -76,6 +80,9 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
         if not uri.startswith("redbox:"):
             return []
 
+        if uri == "redbox:noise":
+            return [models.Ref.track(name="Random Noise", uri="redbox:noise")]
+
         split_uri = uri.split(":")
 
         # root
@@ -83,7 +90,8 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
             if split_uri[1] == "":
                 return [
                     models.Ref.directory(name="Radios", uri="redbox:radios"),
-                    models.Ref.directory(name="Podcast", uri="redbox:podcasts")
+                    models.Ref.directory(name="Podcast", uri="redbox:podcasts"),
+                    models.Ref.directory(name="Noise", uri="redbox:noise")
                 ]
 
             if split_uri[1] == "radios":
@@ -112,13 +120,18 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
 
 
 class RedBoxPlaybackProvider(backend.PlaybackProvider):
-    def __init__(self, audio, backend, lib):
+    def __init__(self, audio, backend, lib, noise_folder):
         super(RedBoxPlaybackProvider,  self).__init__(audio, backend)
         self.lib = lib
+        self.noises = self.find_noise_files(noise_folder)
 
     def translate_uri(self, uri):
         if not uri.startswith("redbox:"):
             return None
+
+        if uri == "redbox:noise":
+            fn = self.noises[random.randint(0, len(self.noises)-1)]
+            return "file://"+fn
 
         split_uri = uri.split(":")
 
@@ -137,3 +150,20 @@ class RedBoxPlaybackProvider(backend.PlaybackProvider):
                                 return ep['url']
 
         return None
+
+
+    def find_noise_files(self, path):
+        folder = path
+        if not os.path.isdir(folder):
+            logger.warning("Bad Noise folder: {}".format(folder))
+            return []
+
+        # get random file in this directory
+        onlyfiles = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and os.path.splitext(f)[-1].lower() in [".wav", ".mp3"]]
+        if len(onlyfiles) == 0:
+            logger.warning("No files found in FM Noise folder: {}.".format(folder))
+            return []
+
+        return [os.path.join(folder, fn) for fn in onlyfiles]
+
+

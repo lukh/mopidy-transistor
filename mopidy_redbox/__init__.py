@@ -32,6 +32,9 @@ class Extension(ext.Extension):
         schema['serial_baudrate'] = config.Integer()
 
         schema['podcasts_timeout'] = config.Integer()
+        
+        schema['noise_folder'] = config.Path()
+        
         return schema
 
     def setup(self, registry):

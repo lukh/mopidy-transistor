@@ -55,26 +55,26 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
             states=[
                 State('turn_off', on_enter=["turn_off_system"]), 
                 State('radio'), 
-                State('rss'), 
+                State('podcast'), 
             ], 
             transitions=[
                 { 'trigger': 'power_off', 'source': '*', 'dest': 'turn_off' },
 
-                { 'trigger': 'press_radio', 'source': ['rss', 'radio'], 'dest': 'radio' },
-                { 'trigger': 'press_rss', 'source': ['rss', 'radio'], 'dest': 'rss' },
+                { 'trigger': 'press_radio', 'source': ['podcast', 'radio'], 'dest': 'radio' },
+                { 'trigger': 'press_podcast', 'source': ['podcast', 'radio'], 'dest': 'podcast' },
 
                 { 'trigger': 'tuner', 'source': 'radio', 'dest': 'radio', 'after':'set_radio' },
-                { 'trigger': 'tuner', 'source': 'rss', 'dest': 'rss', 'after':'set_podcast' },
+                { 'trigger': 'tuner', 'source': 'podcast', 'dest': 'podcast', 'after':'set_podcast' },
 
                 { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
             
                 { 'trigger': 'next_radio_bank', 'source': 'radio', 'dest':None, 'after':'set_next_radio_bank'},
                 { 'trigger': 'previous_radio_bank', 'source': 'radio', 'dest':None, 'after':'set_previous_radio_bank'},
 
-                { 'trigger': 'next_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_next_in_podcast' },
-                { 'trigger': 'previous_podcast', 'source': 'rss', 'dest': 'rss', 'after':'set_previous_in_podcast' },
+                { 'trigger': 'next_podcast', 'source': 'podcast', 'dest': 'podcast', 'after':'set_next_in_podcast' },
+                { 'trigger': 'previous_podcast', 'source': 'podcast', 'dest': 'podcast', 'after':'set_previous_in_podcast' },
             ], 
-            initial='radio'
+            initial='podcast'
         )
 
     def initLibrary(self):
@@ -160,11 +160,11 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     ####################################################################
     def processPotentiometerVolume(self, in_potentiometervalue):
         position = int(100*(float(in_potentiometervalue) / 32767.0))
-        self.set_volume(position=position)
+        self.volume(position=position)
 
     def processPotentiometerTuner(self, in_potentiometervalue):
         position = int(100*(float(in_potentiometervalue) / 32767.0))
-        self.set_radio(position=position)
+        self.tuner(position=position)
 
     def processSwitch(self, in_switchindex, in_switchvalue):
         pass
@@ -195,7 +195,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
         radios = self.lib["radio_banks"][self._radio_bank]
 
-        found_pos = self.find_closest_playable(position, radios.keys(), margin=2)
+        found_pos = self.find_closest_playable(position, radios.keys())
         if found_pos is not None:
             if self._curr_played_position != found_pos:
                 ref_radio = radios[found_pos]
@@ -209,15 +209,47 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
         else:
             if self._curr_played_position != found_pos:
-                # TODO Play the noise...
+
+                self.core.tracklist.clear()
+                self.core.tracklist.add(uris=["redbox:noise"])
+                self.core.playback.play(tl_track=None, tlid=None)
+
                 self._curr_played_position = found_pos
 
 
     def set_podcast(self, position=None):
-        pass
+        podcasts = self.lib['podcasts']
 
-    def play_podcast_episode(self):
-        pass
+        found_pos = self.find_closest_playable(position, podcasts.keys())
+        if found_pos is not None:
+            if self._curr_played_position != found_pos:
+                ref_pod = podcasts[found_pos]
+
+                logger.info("Playing" + str(ref_pod))
+
+                episodes = self.core.library.browse(ref_pod.uri).get()
+                uris =  [ep.uri for ep in episodes]
+                
+                self.core.tracklist.clear()
+                self.core.tracklist.add(uris=uris)
+                self.core.playback.play(tl_track=None, tlid=None)
+
+                self._curr_played_position = found_pos
+
+        else:
+            if self._curr_played_position != found_pos:
+                
+                self.core.tracklist.clear()
+                self.core.tracklist.add(uris=["redbox:noise"])
+                self.core.playback.play(tl_track=None, tlid=None)
+
+                self._curr_played_position = found_pos
+
+    def set_next_in_podcast(self, **kwargs):
+        self.core.playback.next()
+
+    def set_previous_in_podcast(self, **kwargs):
+        self.core.playback.previous()
 
     def turn_off_system(self, **kwargs):
         pass
