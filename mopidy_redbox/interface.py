@@ -96,15 +96,17 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         except Exception as e:
             raise FrontendError("Impossible to open serial port {}: {}".format(serial_port, str(e)))
 
-        self._parser = mp.make_parser_cls(REDBoxMsg().size)
+        self._parser = mp.make_parser_cls(REDBoxMsg().size)()
 
 
 
     def run(self):
         while not self.stop:
-            raw_byte = self.serial.read()
-            if raw_byte == "":
+            ser_in = self.serial.read()
+            if ser_in == "":
                 continue
+
+            raw_byte = ord(ser_in)
 
             msg = REDBoxMsg()
 
@@ -125,10 +127,12 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     ################### Serial Message Implementation  #################
     ####################################################################
     def processPotentiometerVolume(self, in_potentiometervalue):
-        pass
+        position = int(100*(float(in_potentiometervalue) / 32767.0))
+        self.set_volume(position=position)
 
     def processPotentiometerTuner(self, in_potentiometervalue):
-        pass
+        position = int(100*(float(in_potentiometervalue) / 32767.0))
+        self.set_radio(position=position)
 
     def processSwitch(self, in_switchindex, in_switchvalue):
         pass
@@ -146,7 +150,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         if position is None:
             return
 
-        self.core.mixer.set_volume(volume)
+        self.core.mixer.set_volume(position)
 
     def set_radio(self, position=None):
         pass

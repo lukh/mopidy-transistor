@@ -37,10 +37,10 @@ class REDBoxMasterRouter(object):
         def process(self, in_msg):
             if in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_UserAction:
                 if in_msg.getUserAction() == REDBoxMsg.UserAction.UserAction_Potentiometer:
-                    if msg.getPotentiometer() == REDBoxMsg.Potentiometer.Potentiometer_Volume:
-                        processPotentiometerVolume(in_msg.getPotentiometerValue())
-                    elif msg.getPotentiometer() == REDBoxMsg.Potentiometer.Potentiometer_Tuner:
-                        processPotentiometerTuner(in_msg.getPotentiometerValue())
+                    if in_msg.getPotentiometer() == REDBoxMsg.Potentiometer.Potentiometer_Volume:
+                        self.processPotentiometerVolume(in_msg.getPotentiometerValue())
+                    elif in_msg.getPotentiometer() == REDBoxMsg.Potentiometer.Potentiometer_Tuner:
+                        self.processPotentiometerTuner(in_msg.getPotentiometerValue())
 
 
                 elif in_msg.getUserAction() == REDBoxMsg.UserAction.UserAction_Switch:
