@@ -29,9 +29,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
         self._data_path = os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'data.json')
 
-
-
-        self._curr_played_position = 0
+        self._curr_played_position = 0 # the position used as a key for radio and podcast
+        self._curr_position = 0 # the raw position for updating when changing mode or banks
 
 
         self.initStateMachine()
@@ -58,7 +57,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
                 State('podcast'), 
             ], 
             transitions=[
-                { 'trigger': 'power_off', 'source': '*', 'dest': 'turn_off' },
+                { 'trigger': 'power_off', 'source': '*', 'dest': 'turn_off'},
 
                 { 'trigger': 'press_radio', 'source': ['podcast', 'radio'], 'dest': 'radio' },
                 { 'trigger': 'press_podcast', 'source': ['podcast', 'radio'], 'dest': 'podcast' },
@@ -68,13 +67,10 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
                 { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
             
-                { 'trigger': 'next_radio_bank', 'source': 'radio', 'dest':None, 'after':'set_next_radio_bank'},
-                { 'trigger': 'previous_radio_bank', 'source': 'radio', 'dest':None, 'after':'set_previous_radio_bank'},
-
-                { 'trigger': 'next_podcast', 'source': 'podcast', 'dest': 'podcast', 'after':'set_next_in_podcast' },
-                { 'trigger': 'previous_podcast', 'source': 'podcast', 'dest': 'podcast', 'after':'set_previous_in_podcast' },
+                { 'trigger': 'next', 'source': ['radio', 'podcast'], 'dest':None, 'after':'set_next'},
+                { 'trigger': 'previous', 'source': ['radio', 'podcast'], 'dest':None, 'after':'set_previous'}
             ], 
-            initial='podcast'
+            initial='radio'
         )
 
     def initLibrary(self):
@@ -97,7 +93,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         
 
         # load default bank
-        self._radio_bank = None
+        self._selected_radio_bank = None
+        self._curr_played_bank = None
         if not os.path.isfile(self._data_path) and len(self.lib["radio_banks"]) > 0:
             with open(self._data_path, 'w') as fp:
                 json.dump({"bank":self.lib["radio_banks"].keys()[0]}, fp)
@@ -105,7 +102,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         if os.path.isfile(self._data_path):
             with open(self._data_path) as fp:
                 data = json.load(fp)
-                self._radio_bank = data['bank']
+                self._selected_radio_bank = data['bank']
+                self._curr_played_bank = data['bank']
 
 
     def initCommunication(self, serial_port, serial_baudrate):
@@ -166,8 +164,20 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         position = int(100*(float(in_potentiometervalue) / 32767.0))
         self.tuner(position=position)
 
-    def processSwitch(self, in_switchindex, in_switchvalue):
-        pass
+    def processSwitchPower(self):
+        self.power_off()
+
+    def processSwitchRadio(self):
+        self.press_radio()
+
+    def processSwitchPodcast(self):
+        self.press_podcast()
+
+    def processSwitchPrevious(self):
+        self.previous()
+
+    def processSwitchNext(self):
+        self.next()
 
     def processSendProtocolVersion(self, in_sendprotocolversionmajor, in_sendprotocolversionminor):
         pass
@@ -188,16 +198,18 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         """
             @paramn position: volume, between 0 and 100
         """
-        if self._radio_bank is None:
+        if self._selected_radio_bank is None:
             logger.warning("No bank selected...")
             return
 
+        self._curr_position = position
 
-        radios = self.lib["radio_banks"][self._radio_bank]
+
+        radios = self.lib["radio_banks"][self._selected_radio_bank]
 
         found_pos = self.find_closest_playable(position, radios.keys())
         if found_pos is not None:
-            if self._curr_played_position != found_pos:
+            if self._curr_played_position != found_pos or self._curr_played_bank != self._selected_radio_bank:
                 ref_radio = radios[found_pos]
                 logger.info("Playing" + str(ref_radio))
                 
@@ -206,10 +218,10 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
                 self.core.playback.play(tl_track=None, tlid=None)
 
                 self._curr_played_position = found_pos
+                self._curr_played_bank = self._selected_radio_bank
 
         else:
             if self._curr_played_position != found_pos:
-
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uris=["redbox:noise"])
                 self.core.playback.play(tl_track=None, tlid=None)
@@ -218,6 +230,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
 
     def set_podcast(self, position=None):
+        self._curr_position = position
+
         podcasts = self.lib['podcasts']
 
         found_pos = self.find_closest_playable(position, podcasts.keys())
@@ -245,11 +259,38 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
                 self._curr_played_position = found_pos
 
-    def set_next_in_podcast(self, **kwargs):
-        self.core.playback.next()
 
-    def set_previous_in_podcast(self, **kwargs):
-        self.core.playback.previous()
+    def set_next(self, **kwargs):
+        if self.state == "podcast":
+            self.core.playback.next()
+
+        elif self.state == "radio":
+            try:
+                curr_index = self.lib["radio_banks"].keys().index(self._selected_radio_bank)
+            except:
+                curr_index = 0
+            next_index = curr_index + 1
+            if next_index == len(self.lib["radio_banks"]):
+                next_index = 0
+
+            self._selected_radio_bank = self.lib["radio_banks"].keys()[next_index]
+            self.tuner(position=self._curr_position)
+
+    def set_previous(self, **kwargs):
+        if self.state == "podcast":
+            self.core.playback.previous()
+
+        else:
+            try:
+                curr_index = self.lib["radio_banks"].keys().index(self._selected_radio_bank)
+            except:
+                curr_index = 0
+            next_index = curr_index - 1
+            if next_index < 0:
+                next_index = len(self.lib["radio_banks"])-1
+
+            self._selected_radio_bank = self.lib["radio_banks"].keys()[next_index]
+            self.tuner(position=self._curr_position)
 
     def turn_off_system(self, **kwargs):
-        pass
+        logger.warning("Turning Off")

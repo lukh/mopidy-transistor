@@ -25,8 +25,21 @@ class REDBoxMasterRouter(object):
             raise NotImplementedError
 
 
-        def processSwitch(self, in_switchindex, in_switchvalue):
+        def processSwitchPower(self):
             raise NotImplementedError
+
+        def processSwitchRadio(self):
+            raise NotImplementedError
+
+        def processSwitchPodcast(self):
+            raise NotImplementedError
+
+        def processSwitchPrevious(self):
+            raise NotImplementedError
+
+        def processSwitchNext(self):
+            raise NotImplementedError
+
 
         def processSendProtocolVersion(self, in_sendprotocolversionmajor, in_sendprotocolversionminor):
             raise NotImplementedError
@@ -44,7 +57,16 @@ class REDBoxMasterRouter(object):
 
 
                 elif in_msg.getUserAction() == REDBoxMsg.UserAction.UserAction_Switch:
-                    processSwitch(in_msg.getSwitchIndex(), in_msg.getSwitchValue())
+                    if in_msg.getSwitch() == REDBoxMsg.Switch.Switch_Power:
+                        self.processSwitchPower()
+                    elif in_msg.getSwitch() == REDBoxMsg.Switch.Switch_Radio:
+                        self.processSwitchRadio()
+                    elif in_msg.getSwitch() == REDBoxMsg.Switch.Switch_Podcast:
+                        self.processSwitchPodcast()
+                    elif in_msg.getSwitch() == REDBoxMsg.Switch.Switch_Previous:
+                        self.processSwitchPrevious()
+                    elif in_msg.getSwitch() == REDBoxMsg.Switch.Switch_Next:
+                        self.processSwitchNext()
 
 
 

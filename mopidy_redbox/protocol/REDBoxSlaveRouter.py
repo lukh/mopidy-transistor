@@ -43,19 +43,88 @@ class REDBoxSlaveRouter(object):
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Va |Va |Id |Id |Id |Id |Us |Ms  ||   |   |   |   |   |   |Va |Va  ||   |   |   |   |   |   |   |    |
+        # |   |   |   |Sw |Sw |Sw |Us |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sw |Sw |Sw |Us |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
-        def makeSwitch(in_switchindex, in_switchvalue):
+        def makeSwitchPower():
             msg = REDBoxMsg()
 
 
             msg.setMsgType(REDBoxMsg.MsgType.MsgType_UserAction)
             msg.setUserAction(REDBoxMsg.UserAction.UserAction_Switch)
 
-            msg.setSwitchIndex(in_switchindex)
-            msg.setSwitchValue(in_switchvalue)
+            msg.setSwitch(REDBoxMsg.Switch.Switch_Power)
+
 
             return msg
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sw |Sw |Sw |Us |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeSwitchRadio():
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_UserAction)
+            msg.setUserAction(REDBoxMsg.UserAction.UserAction_Switch)
+
+            msg.setSwitch(REDBoxMsg.Switch.Switch_Radio)
+
+
+            return msg
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sw |Sw |Sw |Us |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeSwitchPodcast():
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_UserAction)
+            msg.setUserAction(REDBoxMsg.UserAction.UserAction_Switch)
+
+            msg.setSwitch(REDBoxMsg.Switch.Switch_Podcast)
+
+
+            return msg
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sw |Sw |Sw |Us |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeSwitchPrevious():
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_UserAction)
+            msg.setUserAction(REDBoxMsg.UserAction.UserAction_Switch)
+
+            msg.setSwitch(REDBoxMsg.Switch.Switch_Previous)
+
+
+            return msg
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sw |Sw |Sw |Us |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeSwitchNext():
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_UserAction)
+            msg.setUserAction(REDBoxMsg.UserAction.UserAction_Switch)
+
+            msg.setSwitch(REDBoxMsg.Switch.Switch_Next)
+
+
+            return msg
+
+
  
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
@@ -77,7 +146,7 @@ class REDBoxSlaveRouter(object):
 
 
 
-        def processQueryProtocolVersion(self, ):
+        def processQueryProtocolVersion(self):
             raise NotImplementedError
 
 

@@ -59,23 +59,20 @@ class REDBoxMsg(mp.Message):
     def setPotentiometerValue(self, in_potentiometervalue):
         self.set(8, 16, in_potentiometervalue)
         
-    # SwitchIndex
+    # Switch
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |Id |Id |Id |Id |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
-    def getSwitchIndex(self):
-        return self.get(2, 4)
-    def setSwitchIndex(self, in_switchindex):
-        self.set(2, 4, in_switchindex)
-        
-    # SwitchValue
-    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |Va |Va |   |   |   |   |   |    ||   |   |   |   |   |   |Va |Va  ||   |   |   |   |   |   |   |    |
-    def getSwitchValue(self):
-        return self.get(6, 4)
-    def setSwitchValue(self, in_switchvalue):
-        self.set(6, 4, in_switchvalue)
+    # |   |   |   |Sw |Sw |Sw |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    class Switch(Enum):
+        Switch_Power = 0
+        Switch_Radio = 1
+        Switch_Podcast = 2
+        Switch_Previous = 3
+        Switch_Next = 4
+    def getSwitch(self):
+        return REDBoxMsg.Switch( self.get(2, 3)  )
+    def setSwitch(self, in_switch):
+        self.set(2, 3, in_switch.value)
         
     # System
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |

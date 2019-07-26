@@ -29,13 +29,19 @@ class Library(object):
                 'radio_banks': {
                     "AM":[
                         {"name":"FIP", "stream_url":"http://direct.fipradio.fr/live/fip-midfi.mp3", "position":64},
-                        {"name":"Meeeuh", "stream_url":"http://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3", "position":124}
+                        {"name":"Meeeuh", "stream_url":"http://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3", "position":32}
                     ],
-                    "FM":[]
+                    "FM":[
+                        {"name":"Inter", "stream_url":"http://direct.franceinter.fr/live/franceinter-midfi.mp3", "position":32},
+                        {"name":"Culture", "stream_url":"http://direct.franceculture.fr/live/franceculture-midfi.mp3", "position":64},
+
+                    ]
                 },
                 "podcasts":[
                     {"name":"TEDx", "feed_url":"http://www.npr.org/rss/podcast.php?id=510298", "episodes":[], "position":64},
-                    {"name":"Revolt", "feed_url":"http://wordsmith.podomatic.com/rss2.xml", "episodes":[], "position":200},
+                    {"name":"Revolt", "feed_url":"http://wordsmith.podomatic.com/rss2.xml", "episodes":[], "position":32},
+                    {"name":"Neo Geo", "feed_url":"http://feeds.feedburner.com/NeoGeoNova", "position":10},
+                    {"name":"Juke Box", "feed_url":"http://radiofrance-podcast.net/podcast09/rss_16999.xml", "position":20}
                 ]
             }
             self.save()
