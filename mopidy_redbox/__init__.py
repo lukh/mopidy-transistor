@@ -3,8 +3,11 @@ from __future__ import unicode_literals
 import logging
 import os
 
-from mopidy import config, ext
 import tornado.web
+
+from mopidy import config, ext
+
+import web
 
 
 __version__ = '0.0.1'
@@ -43,4 +46,29 @@ class Extension(ext.Extension):
 
         from .frontend import RedBoxFrontend
         registry.add('frontend', RedBoxFrontend)
+
+        registry.add('http:app', {
+            'name': self.ext_name,
+            'factory':self.web_factory
+        })
+
+        # registry.add('http:static', {
+        #     'name': self.ext_name,
+        #     'path': os.path.join(os.path.dirname(__file__), 'site'),
+        # })
+
+
+    def web_factory(self, config, core):
+        return [
+            ('/', web.MainHandler, {}),
+            ('/browse', web.BrowseHandler, {'core':core}),
+            
+            (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site')}),
+            
+            # (r'/css/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/css')}),
+            # (r'/js/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/js')}),
+            # (r'/vendor/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/vendor')}),
+            # (r'/images/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/images')}),
+        ]
+
 

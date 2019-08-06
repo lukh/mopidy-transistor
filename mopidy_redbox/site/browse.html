@@ -1,0 +1,19 @@
+{% extends "base.html"%}
+{% block body %}
+
+<table class="table">
+    <thead id="radio-list-header">
+    <tr>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for d in data %}
+    <tr>
+        <td><a href="/redbox/browse?uri={{ escape(d.uri) }}">{{ escape(d.name) }}</a></td>
+    </tr>
+    {% end %}
+    </tbody>
+</table> 
+
+{% end %}

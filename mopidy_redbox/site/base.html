@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Redbox Configuration</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/redbox/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/redbox/css/simple-sidebar.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper" class="toggled">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="/redbox">
+                        Redbox
+                    </a>
+                </li>
+                <li>
+                    <img src="/redbox/images/redbox.png">
+                </li>
+                <li>
+                    <a href="/redbox">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/redbox/browse">Browse Library</a>
+                </li>
+                <li>
+                    <a href="/redbox/radios">Radios</a>
+                </li>
+                <li>
+                    <a href="/redbox/podcasts">Podcasts</a
+                </li>
+                <li>
+                    <a href="/redbox/settings">Settings</a>
+                </li>
+                <li>
+                    <a href="/redbox">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                {% block body %}Not defined{% end %}
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+        
+        <!-- <div id="footer">
+            Illustration credit: <a rel="nofollow" href="https://vecteezy.com">Vecteezy!</a> 
+        </div> -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Mopidy API and Redbox JS-->
+    <script type="text/javascript" src="vendor/mopidy/mopidy.js"></script>
+    <script type="text/javascript" src="js/redbox.js"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+
+</body>
+
+</html>
