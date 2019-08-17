@@ -1,19 +1,17 @@
 {% extends "base.html"%}
 {% block body %}
+<script type="text/javascript" src="js/browse.js"></script>
 
-<table class="table">
-    <thead id="radio-list-header">
-    <tr>
-        <th>Name</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for d in data %}
-    <tr>
-        <td><a href="/redbox/browse?uri={{ escape(d.uri) }}">{{ escape(d.name) }}</a></td>
-    </tr>
-    {% end %}
-    </tbody>
-</table> 
+<table id="browse" class="table">
+        <thead id="radio-list-header">
+        <tr>
+            <th></th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table> 
+
 
 {% end %}

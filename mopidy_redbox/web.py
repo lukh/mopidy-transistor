@@ -13,6 +13,4 @@ class BrowseHandler(tornado.web.RequestHandler):
         self.core = core
 
     def get(self):
-        uri = None
-        data = self.core.library.browse(uri).get()
-        self.render("site/browse.html", data=data)
+        self.render("site/browse.html")
