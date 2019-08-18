@@ -40,12 +40,8 @@ function browseTracks(uri_base=null) {
 
             // Insert a row in the table at the last row
             var newRow = tableRef.insertRow();
-            newRow.id = track.uri;
-
-            var cellType  = newRow.insertCell(0);
-            var typeDiv = document.createElement("div");
             if(track.type == "directory" || track.type == "album"){
-                typeDiv.innerHTML = track.type == "directory" ? '<i class="fas fa-folder"></i>' : '<i class="fas fa-compact-disc"></i>';
+                newRow.id = track.uri;
                 newRow.onclick = function(newRow){
                     return function() { 
                         browseStack.push(uri_base);
@@ -59,14 +55,43 @@ function browseTracks(uri_base=null) {
                     };
                 }(newRow);
             }
+            // cell 0
+            var cellType  = newRow.insertCell(0);
+            var typeDiv = document.createElement("div");
+            if(track.type == "directory" || track.type == "album"){
+                typeDiv.innerHTML = track.type == "directory" ? '<i class="fas fa-folder"></i>' : '<i class="fas fa-compact-disc"></i>';
+            }
             else if(track.type == "track"){
                 typeDiv.innerHTML = '<i class="fas fa-play-circle"></i>';
+                typeDiv.id = track.uri;
+                typeDiv.onclick = function(typeDiv){
+                    return function() {
+                        mopidy.tracklist.clear();
+                        mopidy.tracklist.add({uris:[typeDiv.id]});
+                        mopidy.playback.play();
+                    };
+                }(typeDiv);
             }
             cellType.appendChild(typeDiv);
 
+            // cell 1
             var cellName  = newRow.insertCell(1);
             var nameText  = document.createTextNode(track.name);
             cellName.appendChild(nameText);
+
+            // cell 2
+            if(track.type == "track"){
+                var cellAdd  = newRow.insertCell(2);
+                var addDiv = document.createElement("div");
+                addDiv.innerHTML = '<i class="fas fa-plus-circle"></i>';
+                addDiv.id = track.uri;
+                addDiv.onclick = function(addDiv){
+                    return function() {
+                        mopidy.tracklist.add({uris:[addDiv.id]});
+                    };
+                }(typeDiv);
+                cellAdd.appendChild(addDiv);
+            }
 
         }
     };
