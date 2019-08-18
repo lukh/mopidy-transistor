@@ -3,21 +3,27 @@ var browseStack = [];
 
 function browseTracks(uri_base=null) {
     const printTracks = tracks => {
+        // // header
+        var headerRef = document.getElementById("browse-header");
+
+        // Table
         var tableRef = document.getElementById('browse').getElementsByTagName('tbody')[0];
         while ( tableRef.rows.length > 0 ) { tableRef.deleteRow(0); }
-
-        // Insert a row in the table at the last row
+        // Back function
         if(browseStack.length > 0){
             var newRow = tableRef.insertRow();
             newRow.id = browseStack.length > 1 ? browseStack[browseStack.length - 1] : null;
 
             var cellType  = newRow.insertCell(0);
             var typeDiv = document.createElement("div");
-            typeDiv.innerHTML = '...';
+            typeDiv.innerHTML = '<i class="fas fa-arrow-circle-up"></i>';
             newRow.onclick = function(newRow){
                 return function() {
                     browseStack.pop();
-                    console.log(newRow.id, "list", browseStack);
+
+                    var hrefs = headerRef.getElementsByClassName("browse-header-entry")
+                    headerRef.removeChild(hrefs[hrefs.length - 1]);
+
                     browseTracks(newRow.id == 'null' ? null : newRow.id);
                 };
             }(newRow);
@@ -39,10 +45,16 @@ function browseTracks(uri_base=null) {
             var cellType  = newRow.insertCell(0);
             var typeDiv = document.createElement("div");
             if(track.type == "directory" || track.type == "album"){
-                typeDiv.innerHTML = track.type == "directory" ? '<i class="far fa-folder"></i>' : '<i class="fas fa-compact-disc"></i>';
+                typeDiv.innerHTML = track.type == "directory" ? '<i class="fas fa-folder"></i>' : '<i class="fas fa-compact-disc"></i>';
                 newRow.onclick = function(newRow){
                     return function() { 
                         browseStack.push(uri_base);
+
+                        href = document.createElement("i");
+                        href.className = "browse-header-entry fas fa-chevron-right";
+                        href.innerHTML = newRow.cells[1].innerText;
+                        headerRef.appendChild(href);
+
                         browseTracks(newRow.id);
                     };
                 }(newRow);
