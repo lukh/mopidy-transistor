@@ -1,10 +1,8 @@
+
 function browseTracks(uri_base=null) {
     const printTracks = tracks => {
         var tableRef = document.getElementById('browse').getElementsByTagName('tbody')[0];
-        while ( tableRef.rows.length > 0 )
-        {
-            tableRef.deleteRow(0);
-        }
+        while ( tableRef.rows.length > 0 ) { tableRef.deleteRow(0); }
 
         // list
         for (t_id in tracks){
@@ -14,11 +12,10 @@ function browseTracks(uri_base=null) {
             var newRow   = tableRef.insertRow();
             newRow.id = track.uri;
 
-
             var cellType  = newRow.insertCell(0);
             var typeDiv = document.createElement("div");
-            if(track.type == "directory"){
-                typeDiv.innerHTML = '<i class="far fa-folder"></i>';
+            if(track.type == "directory" || track.type == "album"){
+                typeDiv.innerHTML = track.type == "directory" ? '<i class="far fa-folder"></i>' : '<i class="fas fa-compact-disc"></i>';
                 newRow.onclick = function(newRow){
                     return function() { 
                         browseTracks(newRow.id);
@@ -40,7 +37,6 @@ function browseTracks(uri_base=null) {
     const failureHandler = () => {
       console.warn("Something went wrong");
     };
-  
     mopidy.library.browse([uri_base]).then(printTracks, failureHandler);
   }
 
