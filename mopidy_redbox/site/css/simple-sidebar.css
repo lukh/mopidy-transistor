@@ -102,6 +102,12 @@ body {
   background: none;
 }
 
+
+#footer {
+  background: rgb(94, 2, 2);
+  color: #fff;
+}
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;
@@ -120,9 +126,10 @@ body {
     position: relative;
   }
   #footer {
+    padding-top: 10px;
     padding-left: 20px;
     position:absolute;
-    bottom: 2%;
+    bottom: 0%;
     width: 100%;
   }
   #wrapper.toggled #page-content-wrapper {
