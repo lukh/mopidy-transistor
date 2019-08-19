@@ -49,11 +49,14 @@ mopidy.on("state:online", function () {
        .getConsume()
        .then(state => mopidy.tracklist.setConsume([!state]));
 
-    // Event Hooks - Ui
-    el("volume").onchange = () => {
-        var vol = parseInt(el("volume").value);
+    var volumeElement = el("volume")
+    volumeElement.onchange = () => {
+        var vol = parseInt(volumeElement.value);
         mopidy.playback.setVolume([vol]);
     }
+    mopidy.playback.getVolume().then((vol) => {
+      volumeElement.value = vol;
+    });
 });
 
 mopidy.on("state:offline", () => {
