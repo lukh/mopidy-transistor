@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="/redbox/css/simple-sidebar.css" rel="stylesheet">
+    <link href="/redbox/css/redbox.css" rel="stylesheet">
 
 </head>
 
@@ -68,9 +69,30 @@
         <!-- /#page-content-wrapper -->
 
         
-        <!-- <div id="footer">
-            Illustration credit: <a rel="nofollow" href="https://vecteezy.com">Vecteezy!</a> 
-        </div> -->
+        <div id="footer">
+            <p class="current">
+                <span id="current-track">Unknown</span><br>
+                <span id="current-artist">Unknown</span> -
+                <span id="current-album">Unknown</span><br>
+            </p>
+            <div class="player">
+                <div class="controls">
+                <p id="playback-controls">
+                    <button id="previous" title="Previous"><i class="fas fa-step-backward"></i></button>
+                    <button id="play" title="Play"><i class="fas fa-play"></i></button>
+                    <button id="pause" title="Pause"><i class="fas fa-pause"></i></button>
+                    <button id="next" title="Next"><i class="fas fa-step-forward"></i></button>
+                </p>
+                <p id="tracklist-mode">
+                    <button id="repeat" title="Repeat"><i class="fas fa-redo"></i></button>
+                    <button id="random" title="Random"><i class="fas fa-random"></i></button>
+                    <button id="single" title="Single"><i class="fas fa-bullseye"></i></button>
+                    <button id="consume" title="Consume"><i class="fas fa-cookie-bite"></i></button>
+                </p>
+                </div>
+            </div>
+            <span id="playback-state"></span><br>
+        </div>
 
     </div>
     <!-- /#wrapper -->
