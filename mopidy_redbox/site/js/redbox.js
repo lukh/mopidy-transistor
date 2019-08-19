@@ -22,7 +22,7 @@ function el(id) {
  }
 
 
-// Events Hook
+// Events Hook - Mopidy
 mopidy.on("state:online", function () {
    mopidy.playback.getState().then(updatePlaybackState);
    mopidy.playback.getCurrentTrack().then(updateCurrentTrack);
@@ -49,9 +49,14 @@ mopidy.on("state:online", function () {
        .getConsume()
        .then(state => mopidy.tracklist.setConsume([!state]));
 
- });
+    // Event Hooks - Ui
+    el("volume").onchange = () => {
+        var vol = parseInt(el("volume").value);
+        mopidy.playback.setVolume([vol]);
+    }
+});
 
- mopidy.on("state:offline", () => {
+mopidy.on("state:offline", () => {
   hide(".online-only");
   show(".offline-only");
 });
@@ -77,6 +82,11 @@ mopidy.on("event:trackPlaybackResumed", () => {});
 mopidy.on("event:streamTitleChanged", ( title ) => {
    el("current-track").innerText = title.title;   
 });
+
+mopidy.on('event:volumeChanged', function(event) {
+  el("volume").value = event.volume;
+});
+
 
 
 // Tools
