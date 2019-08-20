@@ -15,6 +15,22 @@
   overflow: auto;
 }
 
+.sidebar .sidebar-header{
+  display: inline-block;
+  width: inherit;
+  vertical-align: middle;
+}
+.sidebar .sidebar-header .logo{
+  display: block;
+  float:left;
+  padding:16px;
+}
+.sidebar .sidebar-header .menu{
+  display: block;
+  float:right;
+  padding:16px;
+}
+
 /* Sidebar links */
 .sidebar a {
   display: block;
@@ -62,7 +78,7 @@ div.content {
 .footer .footer-center,
 .footer .footer-right{
   padding: 8px;
-display: inline-block;
+  display: inline-block;
 }
 
 .footer .footer-left{
