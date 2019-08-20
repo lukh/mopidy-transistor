@@ -5,7 +5,7 @@ class MainHandler(tornado.web.RequestHandler):
         pass
 
     def get(self):
-        self.render("site/index.html")
+        self.render("site/index.html", page="index")
         
 
 class BrowseHandler(tornado.web.RequestHandler):
@@ -13,4 +13,4 @@ class BrowseHandler(tornado.web.RequestHandler):
         self.core = core
 
     def get(self):
-        self.render("site/browse.html")
+        self.render("site/browse.html", page="browse")
