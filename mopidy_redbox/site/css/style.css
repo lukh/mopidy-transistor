@@ -18,7 +18,7 @@
 /* Sidebar links */
 .sidebar a {
   display: block;
-  color: black;
+  color: white;
   padding: 16px;
   text-decoration: none;
 }
@@ -26,7 +26,6 @@
 /* Active/current link */
 .sidebar a.active {
   background-color: var(--redbox-light-color);
-  color: white;
 }
 
 /* Links on mouse-over */
@@ -65,7 +64,7 @@ div.content {
 }
 
 .footer-wrapper a{
-  color: black;
+  color: white;
 }
 
 .footer .footer-left,
