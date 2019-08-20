@@ -1,14 +1,23 @@
+{% set navigation_bar = [
+    ('/redbox', 'index', 'Dashboard'),
+    ('/redbox/browse', 'browse', 'Browse'),
+    ('/redbox/radios', 'radios', 'Radios'),
+    ('/redbox/podcasts', 'podcasts', 'Podcasts'),
+    ('/redbox/settings', 'settings', 'Settings'),
+    ('/redbox/about', 'about', 'About'),
+] %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <title>Redbox Configuration</title>
+    <link rel="icon" type="image/png" href="/redbox/images/radio.png">
 
     <!-- Custom styles for this template -->
     <link href="/redbox/css/style.css" rel="stylesheet">
@@ -50,12 +59,10 @@
         <div class="sidebar-icon"><img src="/redbox/images/radio.png"></div>
         <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"             title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"             title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
 
-        <a {% if page == 'index' %}class="active"{% end if %} href="/redbox">Dashboard</a>
-        <a {% if page == 'browse' %}class="active"{% end if %}href="/redbox/browse">Browse</a>
-        <a {% if page == 'radios' %}class="active"{% end if %}href="/redbox/radios">Radios</a>
-        <a {% if page == 'podcasts' %}class="active"{% end if %}href="/redbox/podcasts">Podcasts</a>
-        <a {% if page == 'settings' %}class="active"{% end if %}href="/redbox/settings">Settings</a>
-        <a {% if page == 'about' %}class="active"{% end if %}href="/redbox/contact">About</a>
+        {% for href, id, caption in navigation_bar %}
+        <a {% if active_page == id %}class="active"{% end if %} href="{{ href }}">{{caption}}</a>
+        {% end for %}
+
         <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
             <i class="fa fa-bars"></i>
         </a>
