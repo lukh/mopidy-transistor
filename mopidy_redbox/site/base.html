@@ -14,7 +14,7 @@
     <link href="/redbox/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="/redbox/css/simple-sidebar.css" rel="stylesheet">
+    <link href="/redbox/css/style.css" rel="stylesheet">
     <link href="/redbox/css/redbox.css" rel="stylesheet">
 
 </head>
@@ -24,80 +24,56 @@
     <script type="text/javascript" src="vendor/mopidy/mopidy.js"></script>
     <script type="text/javascript" src="js/redbox.js"></script>
 
-
-    <div id="wrapper" class="toggled">
-
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="/redbox">
-                        Redbox
-                    </a>
-                </li>
-                <li>
-                    <img src="/redbox/images/redbox.png">
-                </li>
-                <li>
-                    <a href="/redbox">Dashboard</a>
-                </li>
-                <li>
-                    <a href="/redbox/browse">Browse Library</a>
-                </li>
-                <li>
-                    <a href="/redbox/radios">Radios</a>
-                </li>
-                <li>
-                    <a href="/redbox/podcasts">Podcasts</a
-                </li>
-                <li>
-                    <a href="/redbox/settings">Settings</a>
-                </li>
-                <li>
-                    <a href="/redbox">Contact</a>
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                {% block body %}Not defined{% end %}
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
-
-        
-        <div id="footer">
-            <p class="current">
-                <span id="current-track">Unknown</span><br>
-                <span id="current-artist">Unknown</span> -
-                <span id="current-album">Unknown</span><br>
-            </p>
-            <div class="player">
-                <div class="controls">
-                <p id="playback-controls">
-                    <button id="previous" title="Previous"><i class="fas fa-step-backward"></i></button>
-                    <button id="play" title="Play"><i class="fas fa-play"></i></button>
-                    <button id="pause" title="Pause"><i class="fas fa-pause"></i></button>
-                    <button id="next" title="Next"><i class="fas fa-step-forward"></i></button>
-                </p>
-                <p id="tracklist-mode">
-                    <button id="repeat" title="Repeat"><i class="fas fa-redo"></i></button>
-                    <button id="random" title="Random"><i class="fas fa-random"></i></button>
-                    <button id="single" title="Single"><i class="fas fa-bullseye"></i></button>
-                    <button id="consume" title="Consume"><i class="fas fa-cookie-bite"></i></button>
-                </p>
-                </div>
-            </div>
-            <span id="playback-state"></span><br>
-            <span>Volume</span><input type="range" min="0" max="100" step="5" id="volume" class="slider">
-
-        </div>
-
+    <!-- The sidebar -->
+    <div class="sidebar">
+        <img src="/redbox/images/redbox.png">
+        <a class="active" href="/redbox">Dashboard</a>
+        <a href="/redbox/browse">Browse</a>
+        <a href="/redbox/radios">Radios</a>
+        <a href="/redbox/podcasts">Podcasts</a>
+        <a href="/redbox/settings">Settings</a>
+        <a href="/redbox/contact">Contact</a>
     </div>
-    <!-- /#wrapper -->
+
+    <div class="content">
+        {% block body %}Not defined{% end %}
+    </div>
+
+
+
+    <div class="footer">
+        <div class="footer-left">
+                <div class="player">
+                    <div class="controls">
+                    <div id="playback-controls">
+                        <button id="previous" title="Previous"><i class="fas fa-step-backward"></i></button>
+                        <button id="play" title="Play"><i class="fas fa-play"></i></button>
+                        <button id="pause" title="Pause"><i class="fas fa-pause"></i></button>
+                        <button id="next" title="Next"><i class="fas fa-step-forward"></i></button>
+                    </div>
+                    <div id="tracklist-mode">
+                        <button id="repeat" title="Repeat"><i class="fas fa-redo"></i></button>
+                        <button id="random" title="Random"><i class="fas fa-random"></i></button>
+                        <button id="single" title="Single"><i class="fas fa-bullseye"></i></button>
+                        <button id="consume" title="Consume"><i class="fas fa-cookie-bite"></i></button>
+                    </div>
+                    </div>
+                </div>
+        </div>
+        <div class="footer-center">
+            <p class="current">
+                <div id="current-track">Unknown</div>
+                <div>
+                    <span id="current-artist">Unknown</span> -
+                    <span id="current-album">Unknown</span>
+                </div>
+            </p>
+        </div>
+        <div class="footer-right">
+            <div id="playback-state"></div><div>Volume</div><input type="range" min="0" max="100" step="5" id="volume" class="slider">
+        </div>
+    </div>
+
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
