@@ -64,6 +64,10 @@ div.content {
   vertical-align: middle;
 }
 
+.footer-wrapper a{
+  color: black;
+}
+
 .footer .footer-left,
 .footer .footer-center,
 .footer .footer-right{

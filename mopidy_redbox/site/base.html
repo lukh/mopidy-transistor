@@ -37,10 +37,13 @@
 
         function toggleFooter() {
             var x = document.getElementById("footer_id");
+            var toggle = document.getElementById("toggle-footer");
             if (x.className === "footer") {
                 x.className += " responsive";
+                toggle.className = "fas fa-minus-circle";
             } else {
                 x.className = "footer";
+                toggle.className = "fas fa-plus-circle";
             }
         }
     </script>
@@ -98,7 +101,7 @@
             </div>
         </div>
         <a href="javascript:void(0);" class="icon" onclick="toggleFooter()">
-            <i class="fas fa-plus-circle"></i>
+            <i id="toggle-footer" class="fas fa-plus-circle"></i>
         </a>
     </div>
 
