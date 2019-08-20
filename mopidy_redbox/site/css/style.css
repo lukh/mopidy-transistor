@@ -1,0 +1,118 @@
+:root{
+  --redbox-dark-color: #118070;
+  --redbox-light-color: #32b39b;
+}
+/* The side navigation menu */
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: var(--redbox-dark-color);
+  position: fixed;
+  top:0px;
+  left: 0px;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Sidebar links */
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+/* Active/current link */
+.sidebar a.active {
+  background-color: var(--redbox-light-color);
+  color: white;
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.content {
+  margin-left: 200px;
+  padding: 16px 16px;
+  height: 1000px;
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--redbox-light-color);
+  color: white;
+  text-align: center;
+}
+
+.footer .footer-left,
+.footer .footer-center,
+.footer .footer-right{
+  padding: 16px;
+display: inline-block;
+}
+
+.footer .footer-left{
+  float: left;
+}
+
+.footer .footer-center{
+  float:center;
+}
+
+.footer .footer-right{
+  float: right;
+}
+
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+/* @media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+} */
+
+/* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+
+  div.content {margin-left: 0;}
+
+  .footer .footer-left,
+  .footer .footer-center,
+  .footer .footer-right{
+      display: block;
+  }
+  .footer .footer-left{
+      float: none;
+  }
+    
+  .footer .footer-center{
+      float:none;
+  }
+  
+  .footer .footer-right{
+      float: none;
+  }
+} 
