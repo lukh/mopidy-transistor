@@ -33,7 +33,9 @@
             } else {
                 x.className = "sidebar";
             }
+        }
 
+        function toggleFooter() {
             var x = document.getElementById("footer_id");
             if (x.className === "footer") {
                 x.className += " responsive";
@@ -62,38 +64,42 @@
     </div>
 
 
-
-    <div class="footer" id="footer_id">
-        <div class="footer-left">
-                <div class="player">
-                    <div class="controls">
-                    <div id="playback-controls">
-                        <button id="previous" title="Previous"><i class="fas fa-step-backward"></i></button>
-                        <button id="play" title="Play"><i class="fas fa-play"></i></button>
-                        <button id="pause" title="Pause"><i class="fas fa-pause"></i></button>
-                        <button id="next" title="Next"><i class="fas fa-step-forward"></i></button>
+    <div class="footer-wrapper">
+        <div class="footer" id="footer_id">
+            <div class="footer-left">
+                    <div class="player">
+                        <div class="controls">
+                        <div id="playback-controls">
+                            <button id="previous" title="Previous"><i class="fas fa-step-backward"></i></button>
+                            <button id="play" title="Play"><i class="fas fa-play"></i></button>
+                            <button id="pause" title="Pause"><i class="fas fa-pause"></i></button>
+                            <button id="next" title="Next"><i class="fas fa-step-forward"></i></button>
+                        </div>
+                        <div id="tracklist-mode">
+                            <button id="repeat" title="Repeat"><i class="fas fa-redo"></i></button>
+                            <button id="random" title="Random"><i class="fas fa-random"></i></button>
+                            <button id="single" title="Single"><i class="fas fa-bullseye"></i></button>
+                            <button id="consume" title="Consume"><i class="fas fa-cookie-bite"></i></button>
+                        </div>
+                        </div>
                     </div>
-                    <div id="tracklist-mode">
-                        <button id="repeat" title="Repeat"><i class="fas fa-redo"></i></button>
-                        <button id="random" title="Random"><i class="fas fa-random"></i></button>
-                        <button id="single" title="Single"><i class="fas fa-bullseye"></i></button>
-                        <button id="consume" title="Consume"><i class="fas fa-cookie-bite"></i></button>
+            </div>
+            <div class="footer-center">
+                <p class="current">
+                    <div id="current-track">Unknown</div>
+                    <div>
+                        <span id="current-artist">Unknown</span> -
+                        <span id="current-album">Unknown</span>
                     </div>
-                    </div>
-                </div>
+                </p>
+            </div>
+            <div class="footer-right">
+                <div id="playback-state"></div><div>Volume</div><input type="range" min="0" max="100" step="5" id="volume" class="slider">
+            </div>
         </div>
-        <div class="footer-center">
-            <p class="current">
-                <div id="current-track">Unknown</div>
-                <div>
-                    <span id="current-artist">Unknown</span> -
-                    <span id="current-album">Unknown</span>
-                </div>
-            </p>
-        </div>
-        <div class="footer-right">
-            <div id="playback-state"></div><div>Volume</div><input type="range" min="0" max="100" step="5" id="volume" class="slider">
-        </div>
+        <a href="javascript:void(0);" class="icon" onclick="toggleFooter()">
+            <i class="fas fa-plus-circle"></i>
+        </a>
     </div>
 
 
