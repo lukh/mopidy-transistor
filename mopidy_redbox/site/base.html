@@ -24,18 +24,37 @@
     <script type="text/javascript" src="vendor/mopidy/mopidy.js"></script>
     <script type="text/javascript" src="js/redbox.js"></script>
 
+    <script type="text/javascript">
+    /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+        function toggleMenu() {
+            var x = document.getElementById("menu");
+            if (x.className === "sidebar") {
+                x.className += " responsive";
+            } else {
+                x.className = "sidebar";
+            }
+
+            var x = document.getElementById("footer_id");
+            if (x.className === "footer") {
+                x.className += " responsive";
+            } else {
+                x.className = "footer";
+            }
+        }
+    </script>
+
     <!-- The sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <img class="logo" src="/redbox/images/redbox.png">
-            <i class="menu 5x fas fa-ellipsis-h"></i>
-        </div>
+    <div class="sidebar" id="menu">
+        <img src="/redbox/images/redbox.png">
         <a class="active" href="/redbox">Dashboard</a>
         <a href="/redbox/browse">Browse</a>
         <a href="/redbox/radios">Radios</a>
         <a href="/redbox/podcasts">Podcasts</a>
         <a href="/redbox/settings">Settings</a>
         <a href="/redbox/contact">Contact</a>
+        <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </a>
     </div>
 
     <div class="content">
@@ -44,7 +63,7 @@
 
 
 
-    <div class="footer">
+    <div class="footer" id="footer_id">
         <div class="footer-left">
                 <div class="player">
                     <div class="controls">
