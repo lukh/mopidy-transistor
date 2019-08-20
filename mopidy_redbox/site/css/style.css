@@ -34,7 +34,11 @@
   color: white;
 }
 
-/* Sidebar links */
+.sidebar .sidebar-icon{
+  width:300px;
+  text-align: center;
+}
+
 .sidebar img {
   padding: 16px;
 }
@@ -116,7 +120,7 @@ div.content {
     display: block;
   }
 
-  .sidebar img {
+  .sidebar .sidebar-icon {
     display: none;
   }
 
