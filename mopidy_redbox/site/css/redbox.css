@@ -1,3 +1,32 @@
+.redbox-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top:16px;
+    table-layout: fixed;
+  }
+
+.redbox-table .browse-type{
+    width : 20px;
+}
+  
+.redbox-table td, .redbox-table th {
+    border: 0px;
+    padding: 8px;
+}
+
+.redbox-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.redbox-table tr:hover {background-color: #ddd;}
+
+.redbox-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #32b39b;
+    color: white;
+}
+
+
 .browse-header-entry{
     padding: 0px 4px;
 }
