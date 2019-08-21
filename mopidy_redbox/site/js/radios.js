@@ -36,4 +36,23 @@ function addBank() {
     bankList.appendChild(newBankDiv);
 }
 
+function deleteBank(bank) {
+    minus = document.getElementById("radio-tab-del-"+bank);
+    minus.style.display = "none";
+
+    tab = document.getElementById("radios-tab-" + bank);
+    var form = document.createElement("form");
+    form.setAttribute('method',"post");
+    form.setAttribute('action',"radios");
+
+    var i = document.createElement("button"); //input element, text
+    i.setAttribute('type',"submit");
+    i.setAttribute('name',"del_bank");
+    i.setAttribute('value', bank);
+    i.innerText = "Delete";
+    form.appendChild(i);
+
+    tab.appendChild(form);
+}
+
   

@@ -6,10 +6,8 @@
 <div class="radios-tablink-group">
 <div id="radios-banks">
 {% for bank in radios %}
-<div class="radios-tablink {{ 'active' if radio_bank == bank else '' }}" onclick="openPage('{{bank}}', this)">
-    <!-- <form method="post" action="radios">
-        <button name="delete-bank" type="submit" value="{{bank}}"><i class="fas fa-minus-circle"></i></button>
-    </form> -->
+<div id="radios-tab-{{bank}}" class="radios-tablink {{ 'active' if radio_bank == bank else '' }}" onclick="openPage('{{bank}}', this)">
+    <i id="radio-tab-del-{{ bank}}" class="fas fa-minus-circle" onclick="deleteBank('{{bank}}')"></i>
     {{ bank }}
 </div>
 {%end for %}

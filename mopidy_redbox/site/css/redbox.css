@@ -33,7 +33,7 @@
     padding: 0px 4px;
 }
 
-button{
+.player button{
     background: none;
     color: inherit;
     border: none;
@@ -71,6 +71,21 @@ button{
 
   .radios-tablink i{
     margin-right: 10px;
+  }
+
+  .radios-tablink form{
+    display: inline;
+  }
+
+  .radios-tablink button{
+    background-color: #f44336; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding:4px 8px;
+    margin-left: 4px;
   }
   
   .radios-add-bank{
