@@ -1,4 +1,33 @@
 {% extends "base.html"%}
 {% block body %}
+<script type="text/javascript" src="js/radios.js"></script>
 
+<div class="radios-tablink-group">
+{% for bank in radios %}
+<div class="radios-tablink" onclick="openPage('{{bank}}', this, 'red')">{{bank}}</div>
+{%end for %}
+</div>
+
+{% for bank in radios %}
+<div id="{{bank}}" class="radios-tabcontent">
+  <table id="radio" class="redbox-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Position</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for radio in radios[bank] %}
+        <tr>
+            <td>{{ radio["name"] }}</td>
+            <td>{{ radio["stream_url"] }}</td>
+            <td>{{ radio["position"] }}</td>
+        </tr>
+        {%end for %}
+    </tbody>
+</table> 
+</div>
+{%end for %}
 {% end %}

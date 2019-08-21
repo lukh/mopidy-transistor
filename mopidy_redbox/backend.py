@@ -28,7 +28,8 @@ class RedBoxBackend(pykka.ThreadingActor, backend.Backend):
         super(RedBoxBackend, self).__init__()
 
         lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
-
+        lib.update_podcasts()
+        
         self.library = RedBoxLibraryProvider(self, lib)
         self.playback = RedBoxPlaybackProvider(audio, self, lib, config['redbox']['noise_folder'])
 

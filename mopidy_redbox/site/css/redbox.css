@@ -28,7 +28,7 @@
     color: white;
 }
 
-
+/* Browse related */
 .browse-header-entry{
     padding: 0px 4px;
 }
@@ -42,3 +42,31 @@ button{
     cursor: pointer;
     outline: inherit;
 }
+
+
+/* Radios Related */
+/* Style tab links */
+.radios-tablink-group{
+    background-color:var(--redbox-dark-color);
+    overflow: hidden;
+}
+
+.radios-tablink {
+    background-color:var(--redbox-light-color);
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  .radios-tablink:hover {
+    background-color: #777;
+  }
+  
+  /* Style the tab content (and add height:100% for full page content) */
+  .radios-tabcontent {
+    display: none;
+  }
+  

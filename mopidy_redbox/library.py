@@ -48,9 +48,6 @@ class Library(object):
 
         self.data = internal_storage.load(self._json_file)
 
-        self.update_podcasts()
-
-
 
     def update_podcasts(self):
         def run():
