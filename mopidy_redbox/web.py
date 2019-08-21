@@ -20,7 +20,8 @@ class BrowseHandler(tornado.web.RequestHandler):
 
 
 class RadioHandler(tornado.web.RequestHandler):
-    def initialize(self, config):
+    def initialize(self, core, config):
+        self.core = core
         self.lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
 
     def get(self, radio_bank=None):
@@ -42,11 +43,25 @@ class RadioHandler(tornado.web.RequestHandler):
             if del_bank in self.lib.data['radio_banks']:
                 del self.lib.data['radio_banks'][del_bank]
                 self.lib.save()
+                self.core.library.refresh('redbox:')
 
         new_bank = self.get_argument('new_bank', None)
         if new_bank:
             if new_bank not in self.lib.data['radio_banks']:
                 self.lib.data['radio_banks'][new_bank] = []
                 self.lib.save()
+                self.core.library.refresh('redbox:')
+
+
+        add_radio = self.get_argument('add_radio', None)
+        if add_radio:
+            if add_radio in self.lib.data['radio_banks']:
+                self.lib.data['radio_banks'][add_radio].append({
+                    "name":self.get_argument("name"),
+                    "position":int(self.get_argument("position")),
+                    "stream_url":self.get_argument("url"),
+                })
+                self.lib.save()
+                self.core.library.refresh('redbox:')
 
         self.redirect('radios')

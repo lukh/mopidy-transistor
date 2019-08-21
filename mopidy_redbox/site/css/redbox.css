@@ -120,6 +120,7 @@
  .radios-table {
    width:100%;
    table-layout:auto;
+   margin-bottom: 50px;
  }
 
  .radios-table-col-position{
@@ -137,3 +138,7 @@
     width: 20px;
   }
  
+
+  .radios-addradio{
+    display: inline-block;
+  }

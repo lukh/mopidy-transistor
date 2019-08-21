@@ -40,6 +40,15 @@
         {%end for %}
     </tbody>
 </table> 
+
+<form id="radios-addradio" action="radios" method="post">
+    Position (0-100)<input type="number" name="position" max=100 min=0>
+    Name<input type="text" name="name">
+    URL<input type="text" name="url">
+    <button type="submit" name="add_radio" value="{{radio_bank if radio_bank else ''}}">Add New Radio</button>
+</form>
+
+
 </div>
 {%end for %}
 {% end %}
