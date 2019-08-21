@@ -17,4 +17,23 @@ function openPage(pageName, elmnt, color) {
     elmnt.className = "radios-tablink active";
 }
 
+function addBank() {
+    var bankList = document.getElementById("radios-banks");
+    newBankDiv = document.createElement("div");
+
+    var form = document.createElement("form");
+    form.setAttribute('method',"post");
+    form.setAttribute('action',"radios");
+
+    var i = document.createElement("input"); //input element, text
+    i.setAttribute('type',"text");
+    i.setAttribute('name',"new_bank");
+    form.appendChild(i);
+
+    newBankDiv.appendChild(form);
+
+    newBankDiv.className = "radios-new-bank";
+    bankList.appendChild(newBankDiv);
+}
+
   

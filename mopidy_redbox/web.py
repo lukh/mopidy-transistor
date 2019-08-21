@@ -34,3 +34,6 @@ class RadioHandler(tornado.web.RequestHandler):
             radio_bank = None
 
         self.render("site/radios.html", active_page="radios", radios=radios, radio_bank=radio_bank)
+
+    def post(self, *args, **kwargs):
+        print args, kwargs

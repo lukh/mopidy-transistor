@@ -4,13 +4,19 @@
 <h3>Radios Configuration</h3>
 <h4>Banks</h4>
 <div class="radios-tablink-group">
-<div id=radios-banks">
+<div id="radios-banks">
 {% for bank in radios %}
-<div class="radios-tablink {{ 'active' if radio_bank == bank else '' }}" onclick="openPage('{{bank}}', this)">{{bank}}</div>
+<div class="radios-tablink {{ 'active' if radio_bank == bank else '' }}" onclick="openPage('{{bank}}', this)">
+    <!-- <form method="post" action="radios">
+        <button name="delete-bank" type="submit" value="{{bank}}"><i class="fas fa-minus-circle"></i></button>
+    </form> -->
+    {{ bank }}
+</div>
 {%end for %}
 </div>
 <div class="radios-add-bank"><i class="fas fa-plus-circle" onclick="addBank()")></i></div>
 </div>
+
 <h4>Radios</h4>
 {% for bank in radios %}
 <div id="{{bank}}" class="radios-tabcontent {{ 'active' if radio_bank == bank else '' }}">
