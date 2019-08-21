@@ -52,7 +52,7 @@ button{
 }
 
 .radios-tablink {
-    background-color:var(--redbox-light-color);
+    background-color:var(--redbox-dark-color);
     float: left;
     color: #f2f2f2;
     text-align: center;
@@ -65,8 +65,16 @@ button{
     background-color: #777;
   }
   
+  .radios-tablink.active {
+    background-color: var(--redbox-light-color);
+  }
+
   /* Style the tab content (and add height:100% for full page content) */
   .radios-tabcontent {
     display: none;
+  }
+
+  .radios-tabcontent.active {
+    display: block;
   }
   
