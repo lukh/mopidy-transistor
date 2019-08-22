@@ -39,16 +39,16 @@
         </tr>
         {%end for %}
     </tbody>
-</table> 
+    </table> 
+</div>
+{%end for %}
+
+<i class="fas fa-plus-circle" onclick="addRadio()")>Add radio</i>
 
 <form id="radios-addradio" action="radios" method="post">
     <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
     <label for="name">Name</label><input type="text" name="name"><br>
     <label for="url">URL</label><input type="text" name="url"><br>
-    <button type="submit" name="add_radio" value="{{radio_bank if radio_bank else ''}}">Add New Radio</button>
+    <button id="radios-addradio-button" type="submit" name="add_radio" value="{{radio_bank if radio_bank else ''}}">Add New Radio</button>
 </form>
-
-
-</div>
-{%end for %}
 {% end %}

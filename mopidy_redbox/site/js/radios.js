@@ -15,6 +15,12 @@ function openPage(pageName, elmnt, color) {
     }
     // Add the specific color to the button used to open the tab content
     elmnt.className = "radios-tablink active";
+
+    // update value of add radio button
+    document.getElementById("radios-addradio-button").setAttribute("value", pageName); 
+
+    //hide add radio form
+    document.getElementById("radios-addradio").style.display = "none";
 }
 
 function addBank() {
@@ -55,4 +61,7 @@ function deleteBank(bank) {
     tab.appendChild(form);
 }
 
-  
+function addRadio() {
+    form = document.getElementById("radios-addradio");
+    form.style.display = "block";
+}
