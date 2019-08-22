@@ -65,3 +65,21 @@ function addRadio() {
     form = document.getElementById("radios-addradio");
     form.style.display = "block";
 }
+
+function deleteRadio(bank, radio) {
+    entry = document.getElementById("delete-"+bank+"-"+radio);
+    entry.style.width = "100px";
+    var form = document.createElement("form");
+    form.setAttribute('method',"post");
+    form.setAttribute('action',"radios");
+
+    var i = document.createElement("button"); //input element, text
+    i.setAttribute('type',"submit");
+    i.setAttribute('name',"del_radio");
+    i.setAttribute('value', radio);
+    i.innerText = "Delete";
+    form.appendChild(i);
+
+    entry.appendChild(form);
+
+}

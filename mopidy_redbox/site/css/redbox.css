@@ -136,7 +136,7 @@
     width: 20px;
   }
 
-  .radios-table-col-update{
+  .radios-table-col-delete{
     width: 20px;
   }
 
@@ -182,4 +182,21 @@
   
   #radios-addradio button[type=submit]:hover {
     background-color: var(--redbox-dark-color);
+  }
+
+  .delete-radio form{
+    display: inline;
+  }
+
+  .delete-radio button{
+    background-color: #f44336; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1px 8px;
+    margin: 0px 4px;
+    border-radius: 2px;
+    cursor: pointer;
   }

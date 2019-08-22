@@ -35,7 +35,7 @@
             <td>{{ radio["name"] }}</td>
             <td>{{ radio["stream_url"] }}</td>
             <td><i class="fas fa-pen"></i></td>
-            <td><i class="fas fa-trash"></i></td>
+            <td class="delete-radio" id="delete-{{bank}}-{{ radio["name"] }}"><i class="fas fa-trash" onclick="deleteRadio('{{bank}}', '{{ radio["name"] }}')"></i></td>
         </tr>
         {%end for %}
     </tbody>
