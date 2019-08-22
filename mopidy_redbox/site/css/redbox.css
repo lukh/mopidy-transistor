@@ -84,8 +84,10 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    padding:4px 8px;
-    margin-left: 4px;
+    padding: 1px 8px;
+    margin: 0px 4px;
+    border-radius: 2px;
+    cursor: pointer;
   }
   
   .radios-add-bank{
@@ -137,8 +139,32 @@
   .radios-table-col-update{
     width: 20px;
   }
- 
 
   .radios-addradio{
     display: inline-block;
+  }
+
+  #radios-addradio input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  #radios-addradio button[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #radios-addradio button[type=submit]:hover {
+    background-color: #45a049;
   }

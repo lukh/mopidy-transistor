@@ -42,9 +42,9 @@
 </table> 
 
 <form id="radios-addradio" action="radios" method="post">
-    Position (0-100)<input type="number" name="position" max=100 min=0>
-    Name<input type="text" name="name">
-    URL<input type="text" name="url">
+    <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
+    <label for="name">Name</label><input type="text" name="name"><br>
+    <label for="url">URL</label><input type="text" name="url"><br>
     <button type="submit" name="add_radio" value="{{radio_bank if radio_bank else ''}}">Add New Radio</button>
 </form>
 
