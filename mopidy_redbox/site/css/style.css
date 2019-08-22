@@ -1,5 +1,7 @@
 @import "config.css";
 
+*{font-family: 'Fira Sans', sans-serif;}
+
 /* The side navigation menu */
 .sidebar {
   margin: 0;
