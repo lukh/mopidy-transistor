@@ -73,9 +73,17 @@ function deleteRadio(bank, radio) {
     form.setAttribute('method',"post");
     form.setAttribute('action',"radios");
 
+    var i = document.createElement("input"); //input element, text
+    i.setAttribute('type',"text");
+    i.setAttribute('name',"del_radio_bank");
+    i.setAttribute('value', bank);
+    i.innerText = "";
+    i.style.display = "none";
+    form.appendChild(i);
+
     var i = document.createElement("button"); //input element, text
     i.setAttribute('type',"submit");
-    i.setAttribute('name',"del_radio");
+    i.setAttribute('name',"del_radio_radio");
     i.setAttribute('value', radio);
     i.innerText = "Delete";
     form.appendChild(i);
