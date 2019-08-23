@@ -43,7 +43,7 @@
 </div>
 {%end for %}
 
-<i class="fas fa-plus-circle" onclick="addRadio()")>Add radio</i>
+<span onclick="addRadio()"><i id="radios-addradio-show" class="fas fa-plus-circle"></i> Add radio</span>
 
 <form id="radios-addradio" action="radios" method="post">
     <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>

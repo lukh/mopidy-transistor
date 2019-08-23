@@ -63,7 +63,15 @@ function deleteBank(bank) {
 
 function addRadio() {
     form = document.getElementById("radios-addradio");
-    form.style.display = "block";
+    button = document.getElementById("radios-addradio-show");
+    if(form.style.display != "block"){
+        form.style.display = "block";
+        button.className = "fas fa-minus-circle";
+    }
+    else{
+        form.style.display = "none";
+        button.className = "fas fa-plus-circle";
+    }
 }
 
 function deleteRadio(bank, radio) {
