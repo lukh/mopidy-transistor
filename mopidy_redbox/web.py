@@ -15,12 +15,20 @@ class AboutHandler(tornado.web.RequestHandler):
         pass
 
     def get(self):
-        self.render("site/about.html", active_page="about")     
+        self.render("site/about.html", active_page="about")
+
+class SettingsHandler(tornado.web.RequestHandler):
+    def initialize(self, config):
+        pass
+
+    def get(self):
+        self.render("site/settings.html", active_page="settings")
+
 
 class BrowseHandler(tornado.web.RequestHandler):
-    def initialize(self, core):
-        self.core = core
-
+    def initialize(self):
+        pass
+        
     def get(self):
         self.render("site/browse.html", active_page="browse")
 

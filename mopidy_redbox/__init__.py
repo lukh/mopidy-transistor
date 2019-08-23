@@ -52,26 +52,16 @@ class Extension(ext.Extension):
             'factory':self.web_factory
         })
 
-        # registry.add('http:static', {
-        #     'name': self.ext_name,
-        #     'path': os.path.join(os.path.dirname(__file__), 'site'),
-        # })
-
-
     def web_factory(self, config, core):
         return [
             ('/', web.MainHandler, {}),
-            ('/browse', web.BrowseHandler, {'core':core}),
+            ('/browse', web.BrowseHandler, {}),
             ('/radios', web.RadioHandler, {'core':core, 'config':config}),
             ('/podcasts', web.PodcastHandler, {'core':core, 'config':config}),
             ('/about', web.AboutHandler, {}),
+            ('/settings', web.SettingsHandler, {'config':config}),
             
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site')}),
-            
-            # (r'/css/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/css')}),
-            # (r'/js/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/js')}),
-            # (r'/vendor/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/vendor')}),
-            # (r'/images/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site/images')}),
         ]
 
 
