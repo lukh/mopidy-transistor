@@ -140,10 +140,6 @@
     width: 20px;
   }
 
-  .radios-addradio{
-    display: inline-block;
-  }
-
   #radios-addradio{
     width:30%;
     display:none;
@@ -189,6 +185,56 @@
   #radios-addradio button[type=submit]:hover {
     background-color: var(--redbox-dark-color);
   }
+
+
+  #radios-modifyradio{
+    width:30%;
+    display:none;
+  }
+  @media screen and (max-width: 800px) {
+    #radios-modifyradio{
+      width:100%;
+    }
+  }
+
+
+  #radios-modifyradio input[type=number] {
+    width: 100%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  #radios-modifyradio input[type=text], select {
+    width: 100%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  #radios-modifyradio button[type=submit] {
+    width: 100%;
+    background-color: var(--redbox-dark-color);
+    color: white;
+    padding: 8px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #radios-modifyradio button[type=submit]:hover {
+    background-color: var(--redbox-dark-color);
+  }
+
+
+
 
   .delete-radio form{
     display: inline;

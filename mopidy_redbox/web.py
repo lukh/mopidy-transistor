@@ -79,4 +79,24 @@ class RadioHandler(tornado.web.RequestHandler):
                     self.lib.save()
                     self.core.library.refresh('redbox:')
 
+
+        modify_radio_bank = self.get_argument('modify_radio_bank', None)
+        if modify_radio_bank:
+            id = int(self.get_argument('id', None))
+            position = int(self.get_argument('position', None))
+            name = self.get_argument('name', None)
+            url = self.get_argument('url', None)
+            if modify_radio_bank in self.lib.data['radio_banks']:
+                radios = self.lib.data['radio_banks'][modify_radio_bank]
+                if(id < len(radios)):
+                    radio = radios[id]
+
+                    print radio
+                    radio['name'] = name
+                    radio['position'] = position
+                    radio['stream_url'] = url
+
+                    self.lib.save()
+                    self.core.library.refresh('redbox:')
+
         self.redirect('radios')

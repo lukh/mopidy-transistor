@@ -99,3 +99,15 @@ function deleteRadio(bank, radio) {
     entry.appendChild(form);
 
 }
+
+function updateRadio(bank, id, radio, position, url) {
+    form = el("radios-modifyradio");
+    form.style.display = "block";
+
+    form.elements["id"].value = id;
+    form.elements["position"].value = position;
+    form.elements["name"].value = radio;
+    form.elements["url"].value = url;
+    form.elements["modify_radio_bank"].value = bank;
+}
+    
