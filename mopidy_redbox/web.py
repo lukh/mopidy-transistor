@@ -9,7 +9,13 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
         self.render("site/index.html", active_page="index")
-        
+
+class AboutHandler(tornado.web.RequestHandler):
+    def initialize(self):
+        pass
+
+    def get(self):
+        self.render("site/about.html", active_page="about")     
 
 class BrowseHandler(tornado.web.RequestHandler):
     def initialize(self, core):
