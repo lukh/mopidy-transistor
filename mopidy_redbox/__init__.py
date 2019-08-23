@@ -63,6 +63,7 @@ class Extension(ext.Extension):
             ('/', web.MainHandler, {}),
             ('/browse', web.BrowseHandler, {'core':core}),
             ('/radios', web.RadioHandler, {'core':core, 'config':config}),
+            ('/podcasts', web.PodcastHandler, {'core':core, 'config':config}),
             ('/about', web.AboutHandler, {}),
             
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site')}),

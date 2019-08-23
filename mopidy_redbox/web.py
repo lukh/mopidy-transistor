@@ -100,3 +100,44 @@ class RadioHandler(tornado.web.RequestHandler):
                     self.core.library.refresh('redbox:')
 
         self.redirect('radios')
+
+
+
+
+class PodcastHandler(tornado.web.RequestHandler):
+    def initialize(self, core, config):
+        self.core = core
+        self.lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
+
+    def get(self):
+        self.lib.load()
+        podcasts = self.lib.data['podcasts']
+        
+        self.render("site/podcasts.html", active_page="podcasts", podcasts=podcasts)
+
+    def post(self, *args, **kwargs):
+        podcasts = self.lib.data['podcasts']
+
+        del_podcast = self.get_argument("del_podcast", None)
+        if del_podcast is not None:
+            id = int(del_podcast)
+            if(id < podcasts):
+                del podcasts[id]
+
+                self.lib.save()
+                self.core.library.refresh('redbox:')
+
+        add_podcast = self.get_argument("add_podcast", None)
+        if add_podcast is not None:
+            podcasts.append(
+                {
+                    "name":self.get_argument("name"),
+                    "position":int(self.get_argument("position")),
+                    "feed_url":self.get_argument("url"),
+                    "episodes":[],
+                }
+            )
+            self.lib.save()
+            self.core.library.refresh('redbox:')
+
+        self.redirect('podcasts')

@@ -252,3 +252,141 @@
     border-radius: 2px;
     cursor: pointer;
   }
+
+
+  /* podcasts Related */
+/* Style tab links */
+
+ .podcasts-table {
+  width:100%;
+  table-layout:auto;
+  margin-bottom: 50px;
+}
+
+.podcasts-table-col-position{
+   width: 50px;
+ }
+ 
+ .podcasts-table-col-name{
+   width: 20%;
+ }
+  .podcasts-table-col-modify{
+   width: 20px;
+ }
+
+ .podcasts-table-col-delete{
+   width: 20px;
+ }
+
+ #podcasts-addpodcast{
+   width:30%;
+   display:none;
+ }
+ @media screen and (max-width: 800px) {
+   #podcasts-addpodcast{
+     width:100%;
+   }
+ }
+
+
+ #podcasts-addpodcast input[type=number] {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+
+ #podcasts-addpodcast input[type=text], select {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+ 
+ #podcasts-addpodcast button[type=submit] {
+   width: 100%;
+   background-color: var(--redbox-dark-color);
+   color: white;
+   padding: 8px 20px;
+   margin: 8px 0;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+ }
+ 
+ #podcasts-addpodcast button[type=submit]:hover {
+   background-color: var(--redbox-dark-color);
+ }
+
+
+ #podcasts-modifypodcast{
+   width:30%;
+   display:none;
+ }
+ @media screen and (max-width: 800px) {
+   #podcasts-modifypodcast{
+     width:100%;
+   }
+ }
+
+
+ #podcasts-modifypodcast input[type=number] {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+
+ #podcasts-modifypodcast input[type=text], select {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+ 
+ #podcasts-modifypodcast button[type=submit] {
+   width: 100%;
+   background-color: var(--redbox-dark-color);
+   color: white;
+   padding: 8px 20px;
+   margin: 8px 0;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+ }
+ 
+ #podcasts-modifypodcast button[type=submit]:hover {
+   background-color: var(--redbox-dark-color);
+ }
+
+
+
+
+ .delete-podcast form{
+   display: inline;
+ }
+
+ .delete-podcast button{
+   background-color: #f44336; /* Green */
+   border: none;
+   color: white;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   padding: 1px 8px;
+   margin: 0px 4px;
+   border-radius: 2px;
+   cursor: pointer;
+ }
