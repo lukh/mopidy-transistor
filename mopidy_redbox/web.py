@@ -65,17 +65,12 @@ class RadioHandler(tornado.web.RequestHandler):
                 self.core.library.refresh('redbox:')
 
         del_radio_bank = self.get_argument('del_radio_bank', None)
-        del_radio_radio = self.get_argument('del_radio_radio', None)
-        if del_radio_radio and del_radio_bank:
+        if del_radio_bank:
+            del_radio_radio_index = int(self.get_argument('del_radio_radio', None))
             if del_radio_bank in self.lib.data['radio_banks']:
                 radios = self.lib.data['radio_banks'][del_radio_bank]
-                r_id = None
-                for id, radio in enumerate(radios):
-                    if radio['name'] == del_radio_radio:
-                        r_id = id
-                        break
-                if r_id is not None:
-                    del radios[r_id]
+                if(del_radio_radio_index < len(radios)):
+                    del radios[del_radio_radio_index]
                     self.lib.save()
                     self.core.library.refresh('redbox:')
 
@@ -91,7 +86,6 @@ class RadioHandler(tornado.web.RequestHandler):
                 if(id < len(radios)):
                     radio = radios[id]
 
-                    print radio
                     radio['name'] = name
                     radio['position'] = position
                     radio['stream_url'] = url

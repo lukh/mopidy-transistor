@@ -74,8 +74,8 @@ function addRadio() {
     }
 }
 
-function deleteRadio(bank, radio) {
-    entry = document.getElementById("delete-"+bank+"-"+radio);
+function deleteRadio(bank, radio_index) {
+    entry = document.getElementById("delete-"+bank+"-"+radio_index);
     entry.style.width = "100px";
     var form = document.createElement("form");
     form.setAttribute('method',"post");
@@ -92,7 +92,7 @@ function deleteRadio(bank, radio) {
     var i = document.createElement("button"); //input element, text
     i.setAttribute('type',"submit");
     i.setAttribute('name',"del_radio_radio");
-    i.setAttribute('value', radio);
+    i.setAttribute('value', radio_index);
     i.innerText = "Delete";
     form.appendChild(i);
 
