@@ -390,3 +390,66 @@
    border-radius: 2px;
    cursor: pointer;
  }
+
+
+ /*Settings*/
+ /* Radios Related */
+/* Style tab links */
+.settings-tablink-group{
+  background-color:var(--redbox-dark-color);
+  overflow: hidden;
+}
+
+.settings-tablink {
+  background-color:var(--redbox-dark-color);
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.settings-tablink:hover {
+  background-color: #777;
+}
+
+.settings-tablink.active {
+  background-color: var(--redbox-light-color);
+}
+
+.settings-tabcontent{
+  display: none;
+}
+
+.settings-tabcontent.active{
+  display: block;
+}
+
+ .settings-form{
+   display: block;
+ }
+ .settings-form input[type=text]{
+  width: 100%;
+  padding: 8px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+ }
+
+ .settings-form label {
+   display: inline-block;
+  padding: 8px 8px;
+}
+
+.settings-form button {
+  width: 100%;
+  background-color: var(--redbox-dark-color);
+  color: white;
+  padding: 8px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

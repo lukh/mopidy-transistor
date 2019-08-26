@@ -37,6 +37,8 @@ class Extension(ext.Extension):
         schema['podcasts_timeout'] = config.Integer()
         
         schema['noise_folder'] = config.Path()
+
+        schema['config_file'] = config.Path()
         
         return schema
 

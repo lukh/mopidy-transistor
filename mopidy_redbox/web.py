@@ -2,6 +2,8 @@ import os
 import tornado.web
 import mopidy_redbox
 import library
+from collections import OrderedDict
+from ConfigParser import SafeConfigParser
 
 class MainHandler(tornado.web.RequestHandler):
     def initialize(self):
@@ -19,16 +21,49 @@ class AboutHandler(tornado.web.RequestHandler):
 
 class SettingsHandler(tornado.web.RequestHandler):
     def initialize(self, config):
-        pass
+        self.config_file = config['redbox']['config_file']
 
     def get(self):
-        self.render("site/settings.html", active_page="settings")
+        parser = SafeConfigParser()
+        parser.read(self.config_file)
+
+        config = OrderedDict()
+
+        for section in parser.sections():
+            if len(parser.items(section)) != 0:
+                config[section] = OrderedDict()
+                for name, value in parser.items(section):
+                    config[section][name] = value
+
+        self.render('site/settings.html', config=config, active_page="settings")
+
+    def post(self, *args, **kwargs):
+        section = self.get_argument("section", None)
+        if section is not None:
+            # all internal settings
+            if section != "wifi":
+                parser = SafeConfigParser()
+                parser.read(self.config_file)
+
+                for name in parser.options(section):
+                    parser.set(section, name, self.get_argument(name))
+
+
+                with open(self.config_file, 'w') as fp:
+                    parser.write(fp)
+
+            # wifi
+            else:
+                pass 
+
+        # redirect the to settings page
+        self.redirect('settings')
 
 
 class BrowseHandler(tornado.web.RequestHandler):
     def initialize(self):
         pass
-        
+
     def get(self):
         self.render("site/browse.html", active_page="browse")
 
