@@ -211,8 +211,6 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         if found_pos is not None:
             if self._curr_played_position != found_pos or self._curr_played_bank != self._selected_radio_bank:
                 ref_radio = radios[found_pos]
-                logger.info("Playing" + str(ref_radio))
-                
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uris=[ref_radio.uri])
                 self.core.playback.play(tl_track=None, tlid=None)
