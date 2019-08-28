@@ -158,7 +158,7 @@ class REDBoxSlaveRouter(object):
 
             elif in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_System:
                 if in_msg.getSystem() == REDBoxMsg.System.System_QueryProtocolVersion:
-                    processQueryProtocolVersion()
+                    self.processQueryProtocolVersion()
 
 
                 elif in_msg.getSystem() == REDBoxMsg.System.System_SendProtocolVersion:

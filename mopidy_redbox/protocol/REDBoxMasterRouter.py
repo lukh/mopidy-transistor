@@ -76,7 +76,7 @@ class REDBoxMasterRouter(object):
                     pass
 
                 elif in_msg.getSystem() == REDBoxMsg.System.System_SendProtocolVersion:
-                    processSendProtocolVersion(in_msg.getSendProtocolVersionMajor(), in_msg.getSendProtocolVersionMinor())
+                    self.processSendProtocolVersion(in_msg.getSendProtocolVersionMajor(), in_msg.getSendProtocolVersionMinor())
 
 
 

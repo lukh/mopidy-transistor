@@ -110,15 +110,16 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         # opening serial port
         try:
             # rtscts=True,dsrdtr=True is for virtual port (using socat)
-            self.serial = serial.Serial(serial_port, serial_baudrate, timeout=0.1, rtscts=False, dsrdtr=False)
+            self.serial = serial.Serial(serial_port, serial_baudrate, timeout=0.1)
         except Exception as e:
             raise FrontendError("Impossible to open serial port {}: {}".format(serial_port, str(e)))
 
         self._parser = mp.make_parser_cls(REDBoxMsg().size)()
 
 
-
     def run(self):
+        self.sendMsg(self.makeQueryProtocolVersion())
+
         while not self.stop:
             ser_in = self.serial.read()
             if ser_in == "":
@@ -180,7 +181,9 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         self.next()
 
     def processSendProtocolVersion(self, in_sendprotocolversionmajor, in_sendprotocolversionminor):
-        pass
+        logger.info("FW Version: {}.{}".format(in_sendprotocolversionmajor, in_sendprotocolversionminor))
+
+        # TODO: Update if needed...
 
     ####################################################################
     #################### State machine calls ###########################
@@ -292,3 +295,14 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
     def turn_off_system(self, **kwargs):
         logger.warning("Turning Off")
+
+
+    ####################################################################
+    ############################## Others ##############################
+    ####################################################################
+    def sendMsg(self, msg):
+        frame = self._parser.encode(msg)
+        buff = bytearray()
+        for d in frame.data:
+            buff.append(d)
+        self.serial.write(buff)
