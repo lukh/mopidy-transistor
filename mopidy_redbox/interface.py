@@ -111,13 +111,19 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         try:
             # rtscts=True,dsrdtr=True is for virtual port (using socat)
             self.serial = serial.Serial(serial_port, serial_baudrate, timeout=0.1)
-        except Exception as e:
-            raise FrontendError("Impossible to open serial port {}: {}".format(serial_port, str(e)))
+        except serial.SerialException as e:
+            self.serial = None
+            logger.error("Can't open serial port {} @ {}: {}".format(serial_port, serial_baudrate, str(e)))
+            logger.warning("It is not possible to communicate with the hardware, but the web front end still work")
+            # raise FrontendError("Impossible to open serial port {}: {}".format(serial_port, str(e)))
 
         self._parser = mp.make_parser_cls(REDBoxMsg().size)()
 
 
     def run(self):
+        if self.serial is None:
+            return
+
         self.sendMsg(self.makeQueryProtocolVersion())
 
         while not self.stop:
@@ -301,6 +307,9 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     ############################## Others ##############################
     ####################################################################
     def sendMsg(self, msg):
+        if self.serial is None:
+            raise FrontendError("Can't send message to the hardware, serial port not opened")
+
         frame = self._parser.encode(msg)
         buff = bytearray()
         for d in frame.data:
