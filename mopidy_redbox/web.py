@@ -5,6 +5,8 @@ import library
 from collections import OrderedDict
 from ConfigParser import SafeConfigParser
 
+import wifi
+
 class MainHandler(tornado.web.RequestHandler):
     def initialize(self):
         pass
@@ -28,14 +30,15 @@ class SettingsHandler(tornado.web.RequestHandler):
         parser.read(self.config_file)
 
         config = OrderedDict()
-
         for section in parser.sections():
             if len(parser.items(section)) != 0:
                 config[section] = OrderedDict()
                 for name, value in parser.items(section):
                     config[section][name] = value
 
-        self.render('site/settings.html', config=config, active_page="settings")
+        ssids = wifi.scan_networks("wlp5s0")
+
+        self.render('site/settings.html', active_page="settings", config=config, ssids=ssids)
 
     def post(self, *args, **kwargs):
         section = self.get_argument("section", None)

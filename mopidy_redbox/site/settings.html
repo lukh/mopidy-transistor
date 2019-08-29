@@ -1,27 +1,45 @@
 {% extends "base.html"%}
 {% block body %}
 <script type="text/javascript" src="js/settings.js"></script>
-<h2>Settings</h2>
 
-<h3>Mopidy</h3>
+
+<h2>Wifi</h2>
+
+<form class="settings-form" method="post" action="settings">
+    <label for="ssid">SSID</label>
+    <select name="ssid">
+        {% for ssid in ssids %}
+        <option value="volvo">{{ escape (ssid) }}</option>
+        {% end for %}
+    </select>
+    <label for="passwd">Password</label>
+    <input type="text" name="passwd">
+    <button type="submit" name="section" value="wifi">Save</button>
+</form>
+
+
+
+
+
+<h2>Mopidy & Extensions</h2>
 
 <div class="settings-tablink-group">
-{% for section in config %}
-<div class="settings-tablink" onclick="openSection('{{escape(section) }}', this)">
-{{ escape(section) }}
-</div>
-{% end %}
+    {% for section in config %}
+        <div class="settings-tablink" onclick="openSection('{{escape(section) }}', this)">
+        {{ escape(section) }}
+        </div>
+    {% end %}
 </div>
 
 {% for section in config %}
 <div id="{{escape(section)}}" class="settings-tabcontent">
 
 <form class="settings-form" method="post" action="settings">
-{% for name in config[section] %}
-<label for="{{ escape(name) }}">{{ escape(name) }}</label>
-<input type="text" name="{{ escape(name) }}" value="{{ escape(config[section][name]) }}">
-{% end %}    
-<button type="submit" name="section" value="{{ escape(section) }}">Save Section</button>
+    {% for name in config[section] %}
+        <label for="{{ escape(name) }}">{{ escape(name) }}</label>
+        <input type="text" name="{{ escape(name) }}" value="{{ escape(config[section][name]) }}">
+    {% end %}    
+    <button type="submit" name="section" value="{{ escape(section) }}">Save Section</button>
 </form>
 
 </div>
