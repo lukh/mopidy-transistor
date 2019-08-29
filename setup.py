@@ -28,7 +28,6 @@ setup(
         'Mopidy >= 1.0',
         'Pykka >= 1.1',
         'pyserial',
-        'numpy',
         'transitions',
         'podcastparser'
     ],
