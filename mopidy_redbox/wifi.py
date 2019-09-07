@@ -88,12 +88,27 @@ def turn_off_ap():
 
 def is_connected_to_internet():
     print "Checking Internet Connection"
+    # ping gateway
     cmd = "ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && echo ok || echo error"
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
     output, err = process.communicate()
-    print output
     
     return output == "ok"
+
+
+def add_network(ssid, passwd):
+    data="""
+network={{
+    ssid="{}"
+    psk="{}"
+    key_mgmt=WPA-PSK
+}}
+
+""".format(ssid, passwd)
+
+    with open("/etc/wpa_supplicant/wpa_supplicant.conf", "a") as ws:
+        ws.write(data)
+
 
 
 
@@ -103,7 +118,12 @@ if __name__ == "__main__":
         if sys.argv[1] == "on":
             turn_on_ap()
 
-        else:
+        elif sys.argv[1] == "off":
+            turn_off_ap()
+
+    elif len(sys.argv) == 4:
+        if sys.argv[1] == "connect":
+            add_network(sys.argv[2], sys.argv[3])
             turn_off_ap()
 
     else:
