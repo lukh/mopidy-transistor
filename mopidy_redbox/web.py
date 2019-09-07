@@ -36,7 +36,7 @@ class SettingsHandler(tornado.web.RequestHandler):
                 for name, value in parser.items(section):
                     config[section][name] = value
 
-        ssids = wifi.scan_networks("wlp5s0")
+        ssids = wifi.scan_networks("wlan0")
 
         self.render('site/settings.html', active_page="settings", config=config, ssids=ssids)
 
@@ -57,7 +57,10 @@ class SettingsHandler(tornado.web.RequestHandler):
 
             # wifi
             else:
-                pass 
+                ssid = self.get_argument('ssid')
+                passwd = self.get_argument('passwd')
+
+                os.popen('redbox_wifi connect {} {}'.format(ssid, passwd))
 
         # redirect the to settings page
         self.redirect('settings')
