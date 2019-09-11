@@ -1,0 +1,24 @@
+{% extends "base.html"%}
+{% block body %}
+
+{% if ssid is None %}
+Wifi SSID is invalid
+{% else %}
+<p>
+Trying to connect to {{ ssid }}.
+</p>
+<p>
+The configuration hotspot is being desactivated.<br>You should reconnect on the network you just configure for the Transistor,
+and reach transistor.local on this network.
+<br>
+This web page will try it automatically in a 10 seconds.
+</p>
+
+
+<script>
+setTimeout("location.href = 'http://localhost:6680';", 10000);
+</script>
+
+{% end if %}
+
+{% end block %}

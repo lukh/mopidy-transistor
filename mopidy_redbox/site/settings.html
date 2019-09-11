@@ -5,13 +5,16 @@
 
 <h2>Wifi</h2>
 
-<form class="settings-form" method="post" action="settings">
-    <label for="ssid">SSID</label>
-    <select name="ssid">
+<form class="settings-form settings-form-wifi" method="post" action="settings">
+    <label for="ssids">SSIDs</label>
+    <select name="ssids">
         {% for ssid in ssids %}
-        <option value="volvo">{{ escape (ssid) }}</option>
+        <option value="{{ escape (ssid) }}">{{ escape (ssid) }}</option>
         {% end for %}
     </select>
+    <label for="ssid_other">Other...</label>
+    <input type="text" name="ssid_other">
+    
     <label for="passwd">Password</label>
     <input type="text" name="passwd">
     <button type="submit" name="section" value="wifi">Save</button>

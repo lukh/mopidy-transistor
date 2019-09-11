@@ -55,15 +55,26 @@ class SettingsHandler(tornado.web.RequestHandler):
                 with open(self.config_file, 'w') as fp:
                     parser.write(fp)
 
+                self.redirect('settings')
+
             # wifi
             else:
-                ssid = self.get_argument('ssid')
+                ssids = self.get_argument('ssids', "")
+                ssid_other = self.get_argument('ssid_other', "")
                 passwd = self.get_argument('passwd')
 
-                os.popen('redbox_wifi connect {} {}'.format(ssid, passwd))
+                if ssids == "" and ssid_other == "":
+                    self.render("site/wifi.html", active_page="", ssid=None)
+                    return
 
-        # redirect the to settings page
-        self.redirect('settings')
+                ssid = ssid_other if ssid_other != "" else ssids
+                self.render("site/wifi.html", active_page="", ssid=ssid)
+
+                # os.popen('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
+                print('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
+
+
+
 
 
 class BrowseHandler(tornado.web.RequestHandler):
