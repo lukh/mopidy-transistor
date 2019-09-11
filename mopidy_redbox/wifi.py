@@ -1,6 +1,9 @@
 #!/usr/bin/python
 import os
 import subprocess
+import wpasupplicantconf as wsc
+
+WIFI_NETWORK_LIST_FILE = "/var/lib/ap_tool/scanned_networks"
 
 def install(ap_name, ap_passwd):
     os.popen("sudo apt install dnsmasq hostapd")
@@ -59,6 +62,7 @@ def turn_on_ap():
     os.popen('sudo echo "interface wlan0" >> /etc/dhcpcd.conf')
     os.popen('sudo echo "    static ip_address=192.168.4.1/24" >> /etc/dhcpcd.conf')
     os.popen('sudo echo "    nohook wpa_supplicant" >> /etc/dhcpcd.conf')
+    # os.popen("sudo systemctl daemon-reload")
     os.popen("sudo systemctl start dhcpcd")
     
     os.popen("sudo systemctl start dnsmasq")
@@ -76,10 +80,10 @@ def turn_off_ap():
     os.popen("ip link set dev wlan0 up")
 
 
-    # dhcpcd  -n "$wifidev"
     os.popen("sudo systemctl stop dhcpcd")
     os.popen("sudo cp /etc/dhcpcd.conf.source /etc/dhcpcd.conf")
-    # edit file dhcpcd remove wlan0 stuff
+    # os.popen("sudo systemctl daemon-reload")
+
     os.popen("sudo systemctl start dhcpcd")
 
 
@@ -97,19 +101,9 @@ def is_connected_to_internet():
 
 
 def add_network(ssid, passwd):
-    data="""
-network={{
-    ssid="{}"
-    psk="{}"
-    key_mgmt=WPA-PSK
-}}
-
-""".format(ssid, passwd)
-
-    with open("/etc/wpa_supplicant/wpa_supplicant.conf", "a") as ws:
-        ws.write(data)
-
-
+    conf = wsc.WpaSupplicantConf("/etc/wpa_supplicant/wpa_supplicant.conf")
+    conf.add_network(ssid, psk='"{}"'.format(passwd), key_mgmt="WPA-PSK")
+    conf.write("/etc/wpa_supplicant/wpa_supplicant.conf")
 
 
 if __name__ == "__main__":
@@ -121,6 +115,10 @@ if __name__ == "__main__":
         elif sys.argv[1] == "off":
             turn_off_ap()
 
+        elif sys.argv[1] == "scan":
+            with open(WIFI_NETWORK_LIST_FILE) as f:
+                print f.read()
+
     elif len(sys.argv) == 4:
         if sys.argv[1] == "connect":
             add_network(sys.argv[2], sys.argv[3])
@@ -128,7 +126,10 @@ if __name__ == "__main__":
 
     else:
         if not is_connected_to_internet():
-            print scan_networks()
+            networks = scan_networks()
+
+            with open(WIFI_NETWORK_LIST_FILE, 'w') as fp:
+                fp.write("\n".join(networks))
 
             turn_on_ap()
 
