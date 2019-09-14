@@ -1,14 +1,33 @@
 {% extends "base.html"%}
 {% block body %}
 
-{% if ssid is None %}
+<h2>Wifi</h2>
+
+{% if ssids is not None %}
+<form class="settings-form settings-form-wifi" method="post" action="wifi">
+    <label for="ssids">SSIDs</label>
+    <select name="ssids">
+        {% for ssid in ssids %}
+        <option value="{{ escape (ssid) }}">{{ escape (ssid) }}</option>
+        {% end for %}
+    </select>
+    <label for="ssid_other">Other...</label>
+    <input type="text" name="ssid_other">
+    
+    <label for="passwd">Password</label>
+    <input type="text" name="passwd">
+    <button type="submit">Save</button>
+</form>
+{% else %}
+
+{% if valid_ssid is None %}
 Wifi SSID is invalid
 {% else %}
 <p>
-Trying to connect to {{ ssid }}.
+Trying to connect to {{ valid_ssid }}.
 </p>
 <p>
-The configuration hotspot is being desactivated.<br>You should reconnect on the network you just configure for the Transistor,
+The configuration hotspot is being desactivated.<br>You should reconnect on the network you just configured for the Transistor,
 and reach transistor.local on this network.
 <br>
 This web page will try it automatically in a 10 seconds.
@@ -18,7 +37,9 @@ This web page will try it automatically in a 10 seconds.
 <script>
 setTimeout("location.href = 'http://localhost:6680';", 10000);
 </script>
+{% end if %}
 
 {% end if %}
+
 
 {% end block %}

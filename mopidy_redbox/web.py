@@ -5,26 +5,29 @@ import library
 from collections import OrderedDict
 from ConfigParser import SafeConfigParser
 
-import wifi
+class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        return self.get_secure_cookie("user")
 
-class MainHandler(tornado.web.RequestHandler):
+class MainHandler(BaseHandler):
     def initialize(self):
         pass
 
     def get(self):
         self.render("site/index.html", active_page="index")
 
-class AboutHandler(tornado.web.RequestHandler):
+class AboutHandler(BaseHandler):
     def initialize(self):
         pass
 
     def get(self):
         self.render("site/about.html", active_page="about")
 
-class SettingsHandler(tornado.web.RequestHandler):
+class SettingsHandler(BaseHandler):
     def initialize(self, config):
         self.config_file = config['redbox']['config_file']
 
+    @tornado.web.authenticated
     def get(self):
         parser = SafeConfigParser()
         parser.read(self.config_file)
@@ -36,48 +39,66 @@ class SettingsHandler(tornado.web.RequestHandler):
                 for name, value in parser.items(section):
                     config[section][name] = value
 
-        ssids = wifi.scan_networks("wlan0")
-
-        self.render('site/settings.html', active_page="settings", config=config, ssids=ssids)
+        self.render('site/settings.html', active_page="settings", config=config)
 
     def post(self, *args, **kwargs):
-        section = self.get_argument("section", None)
-        if section is not None:
-            # all internal settings
-            if section != "wifi":
-                parser = SafeConfigParser()
-                parser.read(self.config_file)
+        section = self.get_argument("section")
+        # all internal settings
+        parser = SafeConfigParser()
+        parser.read(self.config_file)
 
-                for name in parser.options(section):
-                    parser.set(section, name, self.get_argument(name))
+        for name in parser.options(section):
+            parser.set(section, name, self.get_argument(name))
 
 
-                with open(self.config_file, 'w') as fp:
-                    parser.write(fp)
+        with open(self.config_file, 'w') as fp:
+            parser.write(fp)
 
-                self.redirect('settings')
-
-            # wifi
-            else:
-                ssids = self.get_argument('ssids', "")
-                ssid_other = self.get_argument('ssid_other', "")
-                passwd = self.get_argument('passwd')
-
-                if ssids == "" and ssid_other == "":
-                    self.render("site/wifi.html", active_page="", ssid=None)
-                    return
-
-                ssid = ssid_other if ssid_other != "" else ssids
-                self.render("site/wifi.html", active_page="", ssid=ssid)
-
-                # os.popen('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
-                print('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
+        self.redirect('settings')
 
 
 
+class WifiHandler(BaseHandler):
+    def initialize(self):
+        pass
+
+    @tornado.web.authenticated
+    def get(self):
+        ssids = []
+        self.render("site/wifi.html", active_page="wifi", ssids=ssids, valid_ssid=None)
 
 
-class BrowseHandler(tornado.web.RequestHandler):
+    def post(self):
+        ssids = self.get_argument('ssids', "")
+        ssid_other = self.get_argument('ssid_other', "")
+        passwd = self.get_argument('passwd')
+
+        if ssids == "" and ssid_other == "":
+            self.render("site/wifi.html", active_page="wifi", valid_ssid=None, ssids=None)
+            return
+
+        ssid = ssid_other if ssid_other != "" else ssids
+        self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None)
+
+        # os.popen('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
+        print('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
+
+
+class LoginHandler(BaseHandler):
+    def get(self):
+        self.render("site/login.html", active_page="login", next=self.get_argument('next', '/'), error_msg=None)
+
+    def post(self):
+        user = self.get_argument('user')
+        passwd = self.get_argument('passwd')
+
+        if user == "LuKHe" and passwd == "123": #TODO
+            self.set_secure_cookie("user", user)
+            self.redirect(self.get_argument('next', '/'))
+        else:
+            self.render("site/login.html", active_page="login", next=self.get_argument('next', '/'), error_msg="Can't Log In...")
+
+class BrowseHandler(BaseHandler):
     def initialize(self):
         pass
 
@@ -85,11 +106,12 @@ class BrowseHandler(tornado.web.RequestHandler):
         self.render("site/browse.html", active_page="browse")
 
 
-class RadioHandler(tornado.web.RequestHandler):
+class RadioHandler(BaseHandler):
     def initialize(self, core, config):
         self.core = core
         self.lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
 
+    @tornado.web.authenticated
     def get(self, radio_bank=None):
         self.lib.load()
         radios = self.lib.data['radio_banks']
@@ -164,11 +186,12 @@ class RadioHandler(tornado.web.RequestHandler):
 
 
 
-class PodcastHandler(tornado.web.RequestHandler):
+class PodcastHandler(BaseHandler):
     def initialize(self, core, config):
         self.core = core
         self.lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
 
+    @tornado.web.authenticated
     def get(self):
         self.lib.load()
         podcasts = self.lib.data['podcasts']

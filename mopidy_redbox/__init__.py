@@ -62,6 +62,8 @@ class Extension(ext.Extension):
             ('/podcasts', web.PodcastHandler, {'core':core, 'config':config}),
             ('/about', web.AboutHandler, {}),
             ('/settings', web.SettingsHandler, {'config':config}),
+            ('/wifi', web.WifiHandler, {}),
+            ('/login', web.LoginHandler, {}),
             
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site')}),
         ]
