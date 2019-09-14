@@ -23,6 +23,13 @@ class AboutHandler(BaseHandler):
     def get(self):
         self.render("site/about.html", active_page="about")
 
+class AlarmsHandler(BaseHandler):
+    def initialize(self):
+        pass
+
+    def get(self):
+        self.render("site/alarms.html", active_page="alarms")
+
 class SettingsHandler(BaseHandler):
     def initialize(self, config):
         self.config_file = config['redbox']['config_file']

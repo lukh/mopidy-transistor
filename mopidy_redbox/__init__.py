@@ -62,6 +62,7 @@ class Extension(ext.Extension):
             ('/podcasts', web.PodcastHandler, {'core':core, 'config':config}),
             ('/about', web.AboutHandler, {}),
             ('/settings', web.SettingsHandler, {'config':config}),
+            ('/alarms', web.AlarmsHandler, {}),
             ('/wifi', web.WifiHandler, {}),
             ('/login', web.LoginHandler, {}),
             
