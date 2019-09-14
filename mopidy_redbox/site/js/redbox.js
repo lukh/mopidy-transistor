@@ -52,9 +52,9 @@ mopidy.on("state:online", function () {
     var volumeElement = el("volume")
     volumeElement.onchange = () => {
         var vol = parseInt(volumeElement.value);
-        mopidy.playback.setVolume([vol]);
+        mopidy.mixer.setVolume([vol]);
     }
-    mopidy.playback.getVolume().then((vol) => {
+    mopidy.mixer.getVolume().then((vol) => {
       volumeElement.value = vol;
     });
 });
