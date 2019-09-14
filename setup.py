@@ -29,7 +29,8 @@ setup(
         'Pykka >= 1.1',
         'pyserial',
         'transitions',
-        'podcastparser'
+        'podcastparser',
+        'bcrypt'
     ],
     entry_points={
         'mopidy.ext': [

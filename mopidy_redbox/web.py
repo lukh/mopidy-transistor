@@ -4,6 +4,7 @@ import mopidy_redbox
 import library
 from collections import OrderedDict
 from ConfigParser import SafeConfigParser
+import bcrypt
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -44,7 +45,10 @@ class SettingsHandler(BaseHandler):
             if len(parser.items(section)) != 0:
                 config[section] = OrderedDict()
                 for name, value in parser.items(section):
-                    config[section][name] = value
+                    if section == "redbox" and name == "passwd":
+                        config[section][name] = ""
+                    else:
+                        config[section][name] = value
 
         self.render('site/settings.html', active_page="settings", config=config)
 
@@ -55,7 +59,13 @@ class SettingsHandler(BaseHandler):
         parser.read(self.config_file)
 
         for name in parser.options(section):
-            parser.set(section, name, self.get_argument(name))
+            if section == "redbox" and name == "passwd":
+                if self.get_argument(name) != "":
+                    hashed = bcrypt.hashpw(str(self.get_argument(name)), bcrypt.gensalt())
+                    parser.set(section, name, hashed)
+
+            else:
+                parser.set(section, name, self.get_argument(name))
 
 
         with open(self.config_file, 'w') as fp:
@@ -92,16 +102,25 @@ class WifiHandler(BaseHandler):
 
 
 class LoginHandler(BaseHandler):
+    def initialize(self, config):
+        self._user = config['redbox']['user']
+        self._hashed_passwd = config['redbox']['passwd']
+
     def get(self):
-        self.render("site/login.html", active_page="login", next=self.get_argument('next', '/'), error_msg=None)
+        if self._user == None and self._hashed_passwd == None:
+            self.set_secure_cookie("user", "none")
+            self.redirect(self.get_argument('next', '/'))
+        else:
+            self.render("site/login.html", active_page="login", next=self.get_argument('next', '/'), error_msg=None)
 
     def post(self):
         user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
+        raw_passwd = str(self.get_argument('passwd'))
 
-        if user == "LuKHe" and passwd == "123": #TODO
+        if (self._user is None and self._hashed_passwd is None) or (user == self._user and bcrypt.checkpw(raw_passwd, str(self._hashed_passwd))):
             self.set_secure_cookie("user", user)
             self.redirect(self.get_argument('next', '/'))
+
         else:
             self.render("site/login.html", active_page="login", next=self.get_argument('next', '/'), error_msg="Can't Log In...")
 

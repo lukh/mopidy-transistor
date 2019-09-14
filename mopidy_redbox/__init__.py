@@ -40,6 +40,10 @@ class Extension(ext.Extension):
 
         schema['config_file'] = config.Path()
         
+
+        schema['user'] = config.String(optional=True)
+        schema['passwd'] = config.String(optional=True)
+
         return schema
 
     def setup(self, registry):
@@ -64,7 +68,7 @@ class Extension(ext.Extension):
             ('/settings', web.SettingsHandler, {'config':config}),
             ('/alarms', web.AlarmsHandler, {}),
             ('/wifi', web.WifiHandler, {}),
-            ('/login', web.LoginHandler, {}),
+            ('/login', web.LoginHandler, {'config':config}),
             
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'site')}),
         ]
