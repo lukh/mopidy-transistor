@@ -36,24 +36,27 @@ class AlarmsHandler(BaseHandler):
 
 class SettingsHandler(BaseHandler):
     def initialize(self, config):
+        self.config = config
         self.config_file = config['redbox']['config_file']
 
     @tornado.web.authenticated
     def get(self):
-        parser = SafeConfigParser()
-        parser.read(self.config_file)
-
         config = OrderedDict()
-        for section in parser.sections():
-            if len(parser.items(section)) != 0:
-                config[section] = OrderedDict()
-                for name, value in parser.items(section):
-                    if section == "redbox" and name == "passwd":
-                        config[section][name] = ""
-                    else:
-                        config[section][name] = value
+        for section in self.config:
+            config[section] = OrderedDict()
+            for name in self.config[section]:
+                if section == "redbox" and name == "passwd":
+                    config[section]['new_passwd'] = ""
+                    config[section]['repeat_passwd'] = ""
+                    config[section]['old_passwd'] = ""
+                else:
+                    config[section][name] = self.config[section][name]
 
-        self.render('site/settings.html', active_page="settings", config=config)
+        passwd_updated = self.get_argument("passwd_updated", "0")
+        lut_pu = {"0":None, "1":"Password updated successfully", "2":"Error while updating password"}
+
+
+        self.render('site/settings.html', active_page="settings", config=config, warning_msg=lut_pu.get(passwd_updated, None))
 
     def post(self, *args, **kwargs):
         section = self.get_argument("section")
@@ -61,12 +64,21 @@ class SettingsHandler(BaseHandler):
         parser = SafeConfigParser()
         parser.read(self.config_file)
 
+        passwd_updated = 0
+
         for name in parser.options(section):
             if section == "redbox" and name == "passwd":
-                if self.get_argument(name) != "":
-                    hashed = bcrypt.hashpw(str(self.get_argument(name)), bcrypt.gensalt())
+                new_pass = self.get_argument('new_passwd')
+                rep_passwd = self.get_argument('repeat_passwd')
+                old_passwd = self.get_argument('old_passwd')
+                if  new_pass != "" and new_pass == rep_passwd and bcrypt.checkpw(str(old_passwd), str(self.config['redbox']['passwd'])):
+                    hashed = bcrypt.hashpw(str(new_pass), bcrypt.gensalt())
                     parser.set(section, name, hashed)
+                    passwd_updated = 1 # valid
 
+                else:
+                    passwd_updated = 2 # error
+                    
             else:
                 parser.set(section, name, self.get_argument(name))
 
@@ -74,7 +86,7 @@ class SettingsHandler(BaseHandler):
         with open(self.config_file, 'w') as fp:
             parser.write(fp)
 
-        self.redirect('settings')
+        self.redirect('settings?passwd_updated={}'.format(passwd_updated))
 
 
 

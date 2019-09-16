@@ -5,6 +5,10 @@
 
 <h2>Mopidy & Extensions</h2>
 
+{% if warning_msg is not None %}
+<h3 style="color: red">{{ escape(warning_msg) }}</h3>
+{% end if %}
+
 <div class="settings-tablink-group">
     {% for section in config %}
         <div class="settings-tablink" onclick="openSection('{{escape(section) }}', this)">
@@ -19,7 +23,17 @@
 <form class="settings-form" method="post" action="settings">
     {% for name in config[section] %}
         <label for="{{ escape(name) }}">{{ escape(name) }}</label>
-        <input type="text" name="{{ escape(name) }}" value="{{ escape(config[section][name]) }}">
+
+        {% if isinstance(config[section][name], basestring) %}
+        <input type="{%if name in ['new_passwd', 'repeat_passwd', 'old_passwd'] %}password{%else%}text{%end if%}" name="{{ escape(name) }}" value="{{ escape(config[section][name]) }}">
+        {% elif isinstance(config[section][name], bool) %}
+        <input type="checkbox" name="{{ escape(name) }}" value="{{ config[section][name] }}" {% if config[section][name] %}checked{% end if %}>
+        {% elif isinstance(config[section][name], int) %}
+        <input type="int" name="{{ escape(name) }}" value="{{ config[section][name] }}">
+        {% else %}
+        NOT RECONIGZED<input type="text" name="{{ escape(name) }}" value="{{ config[section][name] }}">
+        {% end if %}
+
     {% end %}    
     <button type="submit" name="section" value="{{ escape(section) }}">Save Section</button>
 </form>
