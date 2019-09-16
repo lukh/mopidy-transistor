@@ -10,6 +10,9 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("user")
 
+    def get_login_url(self):
+        return 'login'
+
 class MainHandler(BaseHandler):
     def initialize(self):
         pass
