@@ -5,9 +5,6 @@ import random
 import mopidy
 from mopidy import backend, exceptions, models
 
-from mopidy import local
-from mopidy.internal import storage as internal_storage
-
 import pykka
 
 import urllib

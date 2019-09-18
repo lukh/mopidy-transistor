@@ -7,7 +7,6 @@ import urllib2
 import podcastparser
 import threading
 
-from mopidy import local
 from mopidy.internal import storage as internal_storage
 
 
