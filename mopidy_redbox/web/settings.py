@@ -7,6 +7,8 @@ import bcrypt
 
 import tornado.web
 
+from settings_conf import settings_conf
+
 
 class SettingsHandler(BaseHandler):
     def initialize(self, config):
@@ -16,21 +18,32 @@ class SettingsHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         config = OrderedDict()
-        for section in self.config:
+        for sc in settings_conf:
+            section = sc[0]
             config[section] = OrderedDict()
-            for name in self.config[section]:
+            for name in sc[1]:
                 if section == "redbox" and name == "passwd":
                     config[section]['new_passwd'] = ""
                     config[section]['repeat_passwd'] = ""
                     config[section]['old_passwd'] = ""
                 else:
                     config[section][name] = self.config[section][name]
+                    if config[section][name] is None:
+                        config[section][name] = ""
 
         passwd_updated = self.get_argument("passwd_updated", "0")
-        lut_pu = {"0":None, "1":"Password updated successfully", "2":"Error while updating password"}
+        lut_pu = {
+            "0": None,
+            "1": "Password updated successfully",
+            "2": "Error while updating password"
+        }
 
-
-        self.render('site/settings.html', active_page="settings", config=config, warning_msg=lut_pu.get(passwd_updated, None))
+        self.render(
+            'site/settings.html',
+            active_page="settings",
+            config=config,
+            warning_msg=lut_pu.get(passwd_updated, None)
+        )
 
     def post(self, *args, **kwargs):
         section = self.get_argument("section")
@@ -40,22 +53,38 @@ class SettingsHandler(BaseHandler):
 
         passwd_updated = 0
 
-        for name in parser.options(section):
+        for sc in settings_conf:
+            if sc[0] == section:
+                break
+        else:
+            self.redirect('settings')
+            return
+
+        for name in sc[1]:
             if section == "redbox" and name == "passwd":
                 new_pass = self.get_argument('new_passwd')
                 rep_passwd = self.get_argument('repeat_passwd')
                 old_passwd = self.get_argument('old_passwd')
-                if  new_pass != "" and new_pass == rep_passwd and bcrypt.checkpw(str(old_passwd), str(self.config['redbox']['passwd'])):
-                    hashed = bcrypt.hashpw(str(new_pass), bcrypt.gensalt())
-                    parser.set(section, name, hashed)
-                    passwd_updated = 1 # valid
 
-                else:
-                    passwd_updated = 2 # error
-                    
+                if new_pass == "":
+                    pass
+
+                elif new_pass != "":
+                    if self.config['redbox']['passwd'] is None or \
+                            new_pass == rep_passwd and \
+                            bcrypt.checkpw(
+                                str(old_passwd),
+                                str(self.config['redbox']['passwd'])):
+
+                        hashed = bcrypt.hashpw(str(new_pass), bcrypt.gensalt())
+                        parser.set(section, name, hashed)
+                        passwd_updated = 1  # valid
+                    else:
+                        passwd_updated = 2  # error
+
             else:
-                parser.set(section, name, self.get_argument(name))
-
+                if self.get_argument(name) != "":
+                    parser.set(section, name, self.get_argument(name))
 
         with open(self.config_file, 'w') as fp:
             parser.write(fp)
