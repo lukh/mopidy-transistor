@@ -87,7 +87,7 @@ class SettingsHandler(BaseHandler):
                     elif param_type == "bool":
                         value = value in ['true', 'True']
                     elif param_type == "tuple":
-                        value = value.replace(';', '\n')  # tuple(value.split(';'))
+                        value = value.replace(';', '\n')
 
                 parser.set(section, name, value)
 
@@ -97,7 +97,6 @@ class SettingsHandler(BaseHandler):
         self.redirect('settings?passwd_updated={}'.format(passwd_updated))
 
 
-
 class WifiHandler(BaseHandler):
     def initialize(self):
         pass
@@ -105,8 +104,11 @@ class WifiHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         ssids = []
-        self.render("site/wifi.html", active_page="wifi", ssids=ssids, valid_ssid=None)
-
+        self.render(
+            "site/wifi.html",
+            active_page="wifi",
+            ssids=ssids,
+            valid_ssid=None)
 
     def post(self):
         ssids = self.get_argument('ssids', "")
@@ -114,11 +116,19 @@ class WifiHandler(BaseHandler):
         passwd = self.get_argument('passwd')
 
         if ssids == "" and ssid_other == "":
-            self.render("site/wifi.html", active_page="wifi", valid_ssid=None, ssids=None)
+            self.render(
+                "site/wifi.html",
+                active_page="wifi",
+                valid_ssid=None,
+                ssids=None)
             return
 
         ssid = ssid_other if ssid_other != "" else ssids
-        self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None)
+        self.render(
+            "site/wifi.html",
+            active_page="wifi",
+            valid_ssid=ssid,
+            ssids=None)
 
         # os.popen('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
         print('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
