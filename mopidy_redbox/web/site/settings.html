@@ -24,14 +24,18 @@
     {% for name in config[section] %}
         <label for="{{ escape(name) }}">{{ escape(name) }}</label>
 
-        {% if isinstance(config[section][name], basestring) %}
-        <input type="{%if name in ['new_passwd', 'repeat_passwd', 'old_passwd'] %}password{%else%}text{%end if%}" name="{{ escape(name) }}" value="{{ escape(config[section][name]) }}">
-        {% elif isinstance(config[section][name], bool) %}
-        <input type="checkbox" name="{{ escape(name) }}" value="{{ config[section][name] }}" {% if config[section][name] %}checked{% end if %}>
-        {% elif isinstance(config[section][name], int) %}
-        <input type="int" name="{{ escape(name) }}" value="{{ config[section][name] }}">
+        {% if config[section][name][1] == "string" %}
+        <input type="text" name="{{ escape(name) }}" value="{{ escape(config[section][name][0]) }}">
+        {% elif config[section][name][1] == "password" %}
+        <input type="password" name="{{ escape(name) }}" value="{{ escape(config[section][name][0]) }}">
+        {% elif config[section][name][1] == "bool" %}
+        <input type="checkbox" name="{{ escape(name) }}" value="{{ config[section][name][0] }}" {% if config[section][name] %}checked{% end if %}>
+        {% elif config[section][name][1] == "int" %}
+        <input type="number" name="{{ escape(name) }}" value="{{ config[section][name][0] }}">
+        {% elif config[section][name][1] == "tuple" %}
+        <input type="text" name="{{ escape(name) }}" value="{{ ';'.join([str(e) for e in config[section][name][0]]) }}">
         {% else %}
-        NOT RECONIGZED<input type="text" name="{{ escape(name) }}" value="{{ config[section][name] }}">
+        NOT RECONIGZED<input type="text" name="{{ escape(name) }}" value="{{ config[section][name][0] }}">
         {% end if %}
 
     {% end %}    

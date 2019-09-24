@@ -18,18 +18,20 @@ class SettingsHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         config = OrderedDict()
-        for sc in settings_conf:
-            section = sc[0]
+        for section in settings_conf:
             config[section] = OrderedDict()
-            for name in sc[1]:
+            for name, param_type in settings_conf[section]:
                 if section == "redbox" and name == "passwd":
-                    config[section]['new_passwd'] = ""
-                    config[section]['repeat_passwd'] = ""
-                    config[section]['old_passwd'] = ""
+                    config[section]['new_passwd'] = ["", "password"]
+                    config[section]['repeat_passwd'] = ["", "password"]
+                    config[section]['old_passwd'] = ["", "password"]
                 else:
-                    config[section][name] = self.config[section][name]
-                    if config[section][name] is None:
-                        config[section][name] = ""
+                    config[section][name] = [
+                        self.config[section][name],
+                        param_type]
+
+                    if config[section][name][0] is None:
+                        config[section][name][0] = ""
 
         passwd_updated = self.get_argument("passwd_updated", "0")
         lut_pu = {
@@ -53,14 +55,7 @@ class SettingsHandler(BaseHandler):
 
         passwd_updated = 0
 
-        for sc in settings_conf:
-            if sc[0] == section:
-                break
-        else:
-            self.redirect('settings')
-            return
-
-        for name in sc[1]:
+        for name, param_type in settings_conf[section]:
             if section == "redbox" and name == "passwd":
                 new_pass = self.get_argument('new_passwd')
                 rep_passwd = self.get_argument('repeat_passwd')
@@ -83,8 +78,18 @@ class SettingsHandler(BaseHandler):
                         passwd_updated = 2  # error
 
             else:
-                if self.get_argument(name) != "":
-                    parser.set(section, name, self.get_argument(name))
+                value = self.get_argument(name)
+                if value == "":
+                    value = None
+                else:
+                    if param_type == "int":
+                        value = int(value)
+                    elif param_type == "bool":
+                        value = value in ['true', 'True']
+                    elif param_type == "tuple":
+                        value = value.replace(';', '\n')  # tuple(value.split(';'))
+
+                parser.set(section, name, value)
 
         with open(self.config_file, 'w') as fp:
             parser.write(fp)

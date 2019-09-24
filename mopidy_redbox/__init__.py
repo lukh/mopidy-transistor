@@ -35,11 +35,10 @@ class Extension(ext.Extension):
         schema['serial_baudrate'] = config.Integer()
 
         schema['podcasts_timeout'] = config.Integer()
-        
+
         schema['noise_folder'] = config.Path()
 
         schema['config_file'] = config.Path()
-        
 
         schema['user'] = config.String(optional=True)
         schema['passwd'] = config.String(optional=True)
