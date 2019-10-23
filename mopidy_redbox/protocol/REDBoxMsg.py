@@ -19,36 +19,38 @@ class REDBoxMsg(mp.Message):
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
     # |   |   |   |   |   |   |   |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     class MsgType(Enum):
-        MsgType_UserAction = 0
+        MsgType_Command = 0
         MsgType_System = 1
     def getMsgType(self):
         return REDBoxMsg.MsgType( self.get(0, 1)  )
     def setMsgType(self, in_msgtype):
         self.set(0, 1, in_msgtype.value)
         
-    # UserAction
+    # Command
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |   |   |   |   |Us |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
-    class UserAction(Enum):
-        UserAction_Potentiometer = 0
-        UserAction_Switch = 1
-    def getUserAction(self):
-        return REDBoxMsg.UserAction( self.get(1, 1)  )
-    def setUserAction(self, in_useraction):
-        self.set(1, 1, in_useraction.value)
+    # |   |   |   |   |   |Co |Co |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    class Command(Enum):
+        Command_Potentiometer = 0
+        Command_PowerOff = 1
+        Command_Mode = 2
+        Command_Navigation = 3
+    def getCommand(self):
+        return REDBoxMsg.Command( self.get(1, 2)  )
+    def setCommand(self, in_command):
+        self.set(1, 2, in_command.value)
         
     # Potentiometer
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |   |   |   |Po |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |   |   |   |   |Po |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     class Potentiometer(Enum):
         Potentiometer_Volume = 0
         Potentiometer_Tuner = 1
     def getPotentiometer(self):
-        return REDBoxMsg.Potentiometer( self.get(2, 1)  )
+        return REDBoxMsg.Potentiometer( self.get(3, 1)  )
     def setPotentiometer(self, in_potentiometer):
-        self.set(2, 1, in_potentiometer.value)
+        self.set(3, 1, in_potentiometer.value)
         
     # PotentiometerValue
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
@@ -59,48 +61,68 @@ class REDBoxMsg(mp.Message):
     def setPotentiometerValue(self, in_potentiometervalue):
         self.set(8, 16, in_potentiometervalue)
         
-    # Switch
+    # ModeType
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |   |Sw |Sw |Sw |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
-    class Switch(Enum):
-        Switch_Power = 0
-        Switch_Radio = 1
-        Switch_Podcast = 2
-        Switch_Previous = 3
-        Switch_Next = 4
-    def getSwitch(self):
-        return REDBoxMsg.Switch( self.get(2, 3)  )
-    def setSwitch(self, in_switch):
-        self.set(2, 3, in_switch.value)
+    # |   |   |   |Ty |Ty |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    class ModeType(Enum):
+        ModeType_NextMode = 0
+        ModeType_Radio = 1
+        ModeType_Podcast = 2
+    def getModeType(self):
+        return REDBoxMsg.ModeType( self.get(3, 2)  )
+    def setModeType(self, in_modetype):
+        self.set(3, 2, in_modetype.value)
+        
+    # NavigationType
+    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+    # |   |   |   |   |Ty |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    class NavigationType(Enum):
+        NavigationType_Previous = 0
+        NavigationType_Next = 1
+    def getNavigationType(self):
+        return REDBoxMsg.NavigationType( self.get(3, 1)  )
+    def setNavigationType(self, in_navigationtype):
+        self.set(3, 1, in_navigationtype.value)
         
     # System
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |   |   |   |   |Sy |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |   |   |   |   |   |Sy |Sy |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     class System(Enum):
-        System_QueryProtocolVersion = 0
-        System_SendProtocolVersion = 1
+        System_SendBatteryStatus = 0
+        System_QueryProtocolVersion = 1
+        System_SendProtocolVersion = 2
     def getSystem(self):
-        return REDBoxMsg.System( self.get(1, 1)  )
+        return REDBoxMsg.System( self.get(1, 2)  )
     def setSystem(self, in_system):
-        self.set(1, 1, in_system.value)
+        self.set(1, 2, in_system.value)
+        
+    # SendBatteryStatusPercentage
+    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+    # |Pc |Pc |Pc |Pc |Pc |   |   |    ||   |   |   |   |   |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    |
+    def getSendBatteryStatusPercentage(self):
+        return self.get(3, 8)
+    def setSendBatteryStatusPercentage(self, in_sendbatterystatuspercentage):
+        self.set(3, 8, in_sendbatterystatuspercentage)
         
     # SendProtocolVersionMajor
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |Ma |Ma |Ma |Ma |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |   |Ma |Ma |Ma |Ma |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     def getSendProtocolVersionMajor(self):
-        return self.get(2, 4)
+        return self.get(3, 4)
     def setSendProtocolVersionMajor(self, in_sendprotocolversionmajor):
-        self.set(2, 4, in_sendprotocolversionmajor)
+        self.set(3, 4, in_sendprotocolversionmajor)
         
     # SendProtocolVersionMinor
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |Mi |Mi |   |   |   |   |   |    ||   |   |   |   |   |   |Mi |Mi  ||   |   |   |   |   |   |   |    |
+    # |Mi |   |   |   |   |   |   |    ||   |   |   |   |   |Mi |Mi |Mi  ||   |   |   |   |   |   |   |    |
     def getSendProtocolVersionMinor(self):
-        return self.get(6, 4)
+        return self.get(7, 4)
     def setSendProtocolVersionMinor(self, in_sendprotocolversionminor):
-        self.set(6, 4, in_sendprotocolversionminor)
+        self.set(7, 4, in_sendprotocolversionminor)
         

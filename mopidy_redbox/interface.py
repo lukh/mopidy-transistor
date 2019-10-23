@@ -27,18 +27,19 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
         self.core = core
 
-        self._data_path = os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'data.json')
+        self._data_path = os.path.join(
+            mopidy_redbox.Extension.get_data_dir(config), b'data.json')
 
-        self._curr_played_position = 0 # the position used as a key for radio and podcast
-        self._curr_position = 0 # the raw position for updating when changing mode or banks
-
+        # the position used as a key for radio and podcast
+        self._curr_played_position = 0
+        # the raw position for updating when changing mode or banks
+        self._curr_position = 0
 
         self.initStateMachine()
         self.initLibrary()
-        self.initCommunication(config['redbox']['serial_port'], int(config['redbox']['serial_baudrate']))
+        self.initCommunication(config['redbox']['serial_port'],
+                               int(config['redbox']['serial_baudrate']))
 
-            
-        
     @property
     def stop(self):
         return self._stop_flag
@@ -47,29 +48,43 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     def stop(self, st):
         self._stop_flag = st
 
-
     def initStateMachine(self):
-        machine = Machine(
-            model=self, 
+        Machine(
+            model=self,
             states=[
-                State('turn_off', on_enter=["turn_off_system"]), 
-                State('radio'), 
-                State('podcast'), 
-            ], 
+                State('turn_off', on_enter=["turn_off_system"]),
+                State('radio'),
+                State('podcast')
+            ],
             transitions=[
-                { 'trigger': 'power_off', 'source': '*', 'dest': 'turn_off'},
+                {'trigger': 'power_off', 'source': '*', 'dest': 'turn_off'},
 
-                { 'trigger': 'press_radio', 'source': ['podcast', 'radio'], 'dest': 'radio' },
-                { 'trigger': 'press_podcast', 'source': ['podcast', 'radio'], 'dest': 'podcast' },
+                {'trigger': 'press_radio',
+                    'source': ['podcast', 'radio'], 'dest': 'radio'},
+                {'trigger': 'press_podcast',
+                    'source': ['podcast', 'radio'], 'dest': 'podcast'},
 
-                { 'trigger': 'tuner', 'source': 'radio', 'dest': 'radio', 'after':'set_radio' },
-                { 'trigger': 'tuner', 'source': 'podcast', 'dest': 'podcast', 'after':'set_podcast' },
+                {'trigger': 'press_next_mode',
+                    'source': 'podcast', 'dest': 'radio'},
+                {'trigger': 'press_next_mode',
+                    'source': 'radio', 'dest': 'podcast'},
 
-                { 'trigger': 'volume', 'source': '*', 'dest': None, 'after':'set_volume' },
-            
-                { 'trigger': 'next', 'source': ['radio', 'podcast'], 'dest':None, 'after':'set_next'},
-                { 'trigger': 'previous', 'source': ['radio', 'podcast'], 'dest':None, 'after':'set_previous'}
-            ], 
+                {'trigger': 'tuner',
+                    'source': 'radio', 'dest': 'radio', 'after': 'set_radio'},
+                {'trigger': 'tuner',
+                    'source': 'podcast',
+                    'dest': 'podcast', 'after': 'set_podcast'},
+
+                {'trigger': 'volume',
+                    'source': '*', 'dest': None, 'after': 'set_volume'},
+
+                {'trigger': 'next',
+                    'source': ['radio', 'podcast'],
+                    'dest':None, 'after':'set_next'},
+                {'trigger': 'previous',
+                    'source': ['radio', 'podcast'],
+                    'dest':None, 'after':'set_previous'}
+            ],
             initial='radio'
         )
 
@@ -171,20 +186,26 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         position = int(100*(float(in_potentiometervalue) / 32767.0))
         self.tuner(position=position)
 
-    def processSwitchPower(self):
+    def processPowerOff(self):
         self.power_off()
 
-    def processSwitchRadio(self):
-        self.press_radio()
+    def processMode(self, in_modetype):
+        if in_modetype == REDBoxMsg.ModeType.ModeType_NextMode:
+            self.press_next_mode()
+        elif in_modetype == REDBoxMsg.ModeType.ModeType_Radio:
+            self.press_radio()
+        elif in_modetype == REDBoxMsg.ModeType.ModeType_Podcast:
+            self.press_podcast()
 
-    def processSwitchPodcast(self):
-        self.press_podcast()
 
-    def processSwitchPrevious(self):
-        self.previous()
+    def processNavigation(self, in_navigationtype):
+        if in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Next:
+            self.next()
+        elif in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Previous:
+            self.previous()
 
-    def processSwitchNext(self):
-        self.next()
+    def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
+        logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))
 
     def processSendProtocolVersion(self, in_sendprotocolversionmajor, in_sendprotocolversionminor):
         logger.info("FW Version: {}.{}".format(in_sendprotocolversionmajor, in_sendprotocolversionminor))
@@ -250,7 +271,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
                 episodes = self.core.library.browse(ref_pod.uri).get()
                 uris =  [ep.uri for ep in episodes]
-                
+
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uris=uris)
                 self.core.playback.play(tl_track=None, tlid=None)
@@ -259,13 +280,11 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
         else:
             if self._curr_played_position != found_pos:
-                
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uris=["redbox:noise"])
                 self.core.playback.play(tl_track=None, tlid=None)
 
                 self._curr_played_position = found_pos
-
 
     def set_next(self, **kwargs):
         if self.state == "podcast":
