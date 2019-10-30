@@ -85,7 +85,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
                     'source': ['radio', 'podcast'],
                     'dest':None, 'after':'set_previous'}
             ],
-            initial='radio'
+            initial='radio', ignore_invalid_triggers=True
         )
 
     def initLibrary(self):
@@ -179,17 +179,21 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     ################### Serial Message Implementation  #################
     ####################################################################
     def processPotentiometerVolume(self, in_potentiometervalue):
+        logger.info("Pot Vol %d" %in_potentiometervalue)
         position = int(100*(float(in_potentiometervalue) / 32767.0))
         self.volume(position=position)
 
     def processPotentiometerTuner(self, in_potentiometervalue):
+        logger.info("Pot Tuner %d" %in_potentiometervalue)
         position = int(100*(float(in_potentiometervalue) / 32767.0))
         self.tuner(position=position)
 
     def processPowerOff(self):
+        logger.info("Turning Off")
         self.power_off()
 
     def processMode(self, in_modetype):
+        logger.info("Mode %s" %str(in_modetype))
         if in_modetype == REDBoxMsg.ModeType.ModeType_NextMode:
             self.press_next_mode()
         elif in_modetype == REDBoxMsg.ModeType.ModeType_Radio:
@@ -199,6 +203,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
 
     def processNavigation(self, in_navigationtype):
+        logger.info("Navigation %s" %(in_navigationtype))
         if in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Next:
             self.next()
         elif in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Previous:
@@ -319,7 +324,9 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
             self.tuner(position=self._curr_position)
 
     def turn_off_system(self, **kwargs):
+        
         logger.warning("Turning Off")
+        os.popen("sudo poweroff")
 
 
     ####################################################################
