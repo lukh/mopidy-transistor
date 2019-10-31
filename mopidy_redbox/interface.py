@@ -65,9 +65,9 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
                     'source': ['podcast', 'radio'], 'dest': 'podcast'},
 
                 {'trigger': 'press_next_mode',
-                    'source': 'podcast', 'dest': 'radio', 'after'='set_radio'},
+                    'source': 'podcast', 'dest': 'radio', 'after':'set_radio'},
                 {'trigger': 'press_next_mode',
-                    'source': 'radio', 'dest': 'podcast', 'after'='set_podcast'},
+                    'source': 'radio', 'dest': 'podcast', 'after':'set_podcast'},
 
                 {'trigger': 'tuner',
                     'source': 'radio', 'dest': 'radio', 'after': 'set_radio'},
@@ -109,7 +109,6 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
         # load default bank
         self._selected_radio_bank = None
-        self._curr_played_bank = None
         if not os.path.isfile(self._data_path) and len(self.lib["radio_banks"]) > 0:
             with open(self._data_path, 'w') as fp:
                 json.dump({"bank":self.lib["radio_banks"].keys()[0]}, fp)
@@ -118,7 +117,6 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
             with open(self._data_path) as fp:
                 data = json.load(fp)
                 self._selected_radio_bank = data['bank']
-                self._curr_played_bank = data['bank']
 
 
     def initCommunication(self, serial_port, serial_baudrate):
@@ -237,21 +235,23 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
             logger.warning("No bank selected...")
             return
 
+        force_reload = False
         if position is not None:
             self._curr_position = position
+        else:
+            force_reload = True
 
         radios = self.lib["radio_banks"][self._selected_radio_bank]
 
         found_pos = self.find_closest_playable(self._curr_position, radios.keys())
         if found_pos is not None:
-            if self._curr_played_position != found_pos or self._curr_played_bank != self._selected_radio_bank:
+            if self._curr_played_position != found_pos or force_reload:
                 ref_radio = radios[found_pos]
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uris=[ref_radio.uri])
                 self.core.playback.play(tl_track=None, tlid=None)
 
                 self._curr_played_position = found_pos
-                self._curr_played_bank = self._selected_radio_bank
 
         else:
             if self._curr_played_position != found_pos:
@@ -263,14 +263,17 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
 
     def set_podcast(self, position=None):
+        force_reload = False
         if position is not None:
             self._curr_position = position
+        else:
+            force_reload = True
 
         podcasts = self.lib['podcasts']
 
         found_pos = self.find_closest_playable(self._curr_position, podcasts.keys())
         if found_pos is not None:
-            if self._curr_played_position != found_pos:
+            if self._curr_played_position != found_pos or force_reload:
                 ref_pod = podcasts[found_pos]
 
                 logger.info("Playing" + str(ref_pod))
