@@ -18,6 +18,14 @@ from protocol.REDBoxMasterRouter import REDBoxMasterRouter
 
 logger = logging.getLogger(__name__)
 
+class SharedData:
+    def __init__(self, position, labels, battery_status):
+        self.tuner_position = position
+        self.tuner_labels = labels
+        self.battery_status = battery_status
+
+shared_data = SharedData(None, {}, None)
+
 
 class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     def __init__(self, core, config):
@@ -208,6 +216,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
             self.previous()
 
     def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
+        shared_data.battery_status = in_sendbatterystatuspercentage
         logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))
 
     def processSendProtocolVersion(self, in_sendprotocolversionmajor, in_sendprotocolversionminor):
@@ -261,6 +270,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
                 self._curr_played_position = found_pos
 
+        shared_data.tuner_position = self._curr_position
+        shared_data.tuner_labels = {k:radios[k].name for k in radios}
 
     def set_podcast(self, position=None):
         force_reload = False
@@ -275,8 +286,6 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         if found_pos is not None:
             if self._curr_played_position != found_pos or force_reload:
                 ref_pod = podcasts[found_pos]
-
-                logger.info("Playing" + str(ref_pod))
 
                 episodes = self.core.library.browse(ref_pod.uri).get()
                 uris =  [ep.uri for ep in episodes]
@@ -294,6 +303,9 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
                 self.core.playback.play(tl_track=None, tlid=None)
 
                 self._curr_played_position = found_pos
+
+        shared_data.tuner_position = self._curr_position
+        shared_data.tuner_labels = {k:podcasts[k].name for k in podcasts}
 
     def set_next(self, **kwargs):
         if self.state == "podcast":
