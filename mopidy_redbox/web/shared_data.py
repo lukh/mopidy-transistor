@@ -1,6 +1,7 @@
 from tornado import web, gen
 from tornado.ioloop import PeriodicCallback
 from tornado.iostream import StreamClosedError
+import json
 
 from ..interface import shared_data
 
@@ -45,7 +46,7 @@ class EventSource(web.RequestHandler):
     def publish(self, data):
         """Pushes data to a listener."""
         try:
-            self.write('data: {}\n\n'.format(data))
+            self.write('data: {}\n\n'.format(json.dumps(data)))
             yield self.flush()
         except StreamClosedError:
             pass

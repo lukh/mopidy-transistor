@@ -1,4 +1,5 @@
 var mopidy = new Mopidy();
+var event_source = new EventSource('/redbox/events');
 
 mopidy.on("state", console.log);
 mopidy.on("event", console.log);
@@ -140,3 +141,28 @@ mopidy.on('event:volumeChanged', function(event) {
     default:
   }
 }
+
+
+event_source.onmessage = function(message) {
+  data = JSON.parse(message.data);
+
+  // tuner position
+  tuner_position = document.getElementById("tuner-position");
+  tuner_position.value = data.tuner_position;
+
+  // tuner labels
+  tuner_labels = document.getElementById("tuner-labels");
+  tuner_labels.innerHTML = '';
+
+  for (var label_position in data.tuner_labels){
+    var label_name = data.tuner_labels[label_position];
+
+    var label = document.createElement('span');
+    label.innerText = label_name;
+    label.className = "tuner-label";
+    label.style.left = label_position.toString(10) + '%';
+
+    tuner_labels.appendChild(label);
+  }
+
+};

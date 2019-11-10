@@ -1,0 +1,42 @@
+#tuner-block{
+    width: 100%;
+}
+
+#tuner-block #tuner-position{
+    width: 100%;
+}
+
+#tuner-block #tuner-labels {
+    width: 100%;
+}
+
+#tuner-block #tuner-labels .tuner-label {
+    writing-mode: sideways-lr;
+    text-orientation: mixed;
+    position: relative;
+}
+
+
+#tuner-block #tuner-position{
+    -webkit-appearance: none;
+}
+
+
+#tuner-block #tuner-position::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 80px;
+    width: 16px;
+    border-radius: 50%;
+    background: blueviolet;
+    margin-top: -4px;
+}
+
+
+#tuner-block #tuner-position::-moz-range-thumb {
+    border: none;
+    height: 80px;
+    width: 4px;
+    background: #006e8a;
+    margin-top: -4px;
+}
