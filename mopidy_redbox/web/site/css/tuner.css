@@ -1,3 +1,6 @@
+@import "config.css";
+
+
 #tuner-block{
     width: 100%;
 }
@@ -19,6 +22,7 @@
 
 #tuner-block #tuner-position{
     -webkit-appearance: none;
+    margin-bottom:40px;
 }
 
 
@@ -26,9 +30,8 @@
     -webkit-appearance: none;
     border: none;
     height: 80px;
-    width: 16px;
-    border-radius: 50%;
-    background: blueviolet;
+    width: 4px;
+    background: var(--redbox-dark-color);
     margin-top: -4px;
 }
 
@@ -37,6 +40,6 @@
     border: none;
     height: 80px;
     width: 4px;
-    background: #006e8a;
+    background: var(--redbox-dark-color);
     margin-top: -4px;
 }
