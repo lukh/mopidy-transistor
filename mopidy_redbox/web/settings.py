@@ -6,6 +6,7 @@ from basics import BaseHandler
 import bcrypt
 
 import tornado.web
+import tornado.websocket
 
 from settings_conf import settings_conf
 
@@ -132,3 +133,24 @@ class WifiHandler(BaseHandler):
 
         # os.popen('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
         print('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
+
+class CalibrationHandler(BaseHandler):
+    def initialize(self):
+        pass
+
+    def get(self):
+        self.render("site/calibration.html", active_page="calibration")
+
+class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
+    def initialize(self, queue_front, queue_web):
+        self._queue_front = queue_front
+        self._queue_web = queue_web
+
+    def open(self):
+        print("WebSocket opened")
+
+    def on_message(self, message):
+        self.write_message(u"You said: " + message)
+
+    def on_close(self):
+        print("WebSocket closed")
