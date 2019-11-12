@@ -50,6 +50,11 @@ class Extension(ext.Extension):
         registry.add('backend', RedBoxBackend)
 
         from .frontend import RedBoxFrontend
+
+        self._queue_event = RedBoxFrontend.queue_event
+        self._queue_front = RedBoxFrontend.queue_front
+        self._queue_web = RedBoxFrontend.queue_web
+
         registry.add('frontend', RedBoxFrontend)
 
         registry.add('http:app', {

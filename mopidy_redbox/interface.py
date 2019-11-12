@@ -28,12 +28,15 @@ shared_data = SharedData(None, {}, None)
 
 
 class SerialInterfaceListener(Thread, REDBoxMasterRouter):
-    def __init__(self, core, config):
+    def __init__(self, core, config, queue_event, queue_front, queue_web):
         super(SerialInterfaceListener, self).__init__()
 
         self._stop_flag = False
 
         self.core = core
+        self._queue_event = queue_event
+        self._queue_front = queue_front
+        self._queue_web = queue_web
 
         self._data_path = os.path.join(
             mopidy_redbox.Extension.get_data_dir(config), b'data.json')
