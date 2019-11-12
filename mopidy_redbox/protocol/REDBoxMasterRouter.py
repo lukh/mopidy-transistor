@@ -3,7 +3,7 @@ from REDBoxMsg import REDBoxMsg
 class REDBoxMasterRouter(object):
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |   |   |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |   |   |   |   |Sy |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeQueryProtocolVersion():
             msg = REDBoxMsg()
@@ -11,6 +11,38 @@ class REDBoxMasterRouter(object):
 
             msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
             msg.setSystem(REDBoxMsg.System.System_QueryProtocolVersion)
+
+
+            return msg
+ 
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |Ph |Ph |Po |Sy |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeCalibrate(in_calibratepotentiometer, in_calibratephase):
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
+            msg.setSystem(REDBoxMsg.System.System_Calibrate)
+
+            msg.setCalibratePotentiometer(in_calibratepotentiometer)
+            msg.setCalibratePhase(in_calibratephase)
+
+            return msg
+ 
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |   |Sy |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeSaveCalibration():
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
+            msg.setSystem(REDBoxMsg.System.System_SaveCalibration)
 
 
             return msg
@@ -77,6 +109,12 @@ class REDBoxMasterRouter(object):
                 elif in_msg.getSystem() == REDBoxMsg.System.System_SendProtocolVersion:
                     self.processSendProtocolVersion(in_msg.getSendProtocolVersionMajor(), in_msg.getSendProtocolVersionMinor())
 
+
+                elif in_msg.getSystem() == REDBoxMsg.System.System_Calibrate:
+                    pass
+
+                elif in_msg.getSystem() == REDBoxMsg.System.System_SaveCalibration:
+                    pass
 
 
 

@@ -90,7 +90,7 @@ class REDBoxSlaveRouter(object):
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Pc |Pc |Pc |Pc |Pc |Sy |Sy |Ms  ||   |   |   |   |   |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    |
+        # |Pc |Pc |Pc |Pc |Sy |Sy |Sy |Ms  ||   |   |   |   |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeSendBatteryStatus(in_sendbatterystatuspercentage):
             msg = REDBoxMsg()
@@ -106,7 +106,7 @@ class REDBoxSlaveRouter(object):
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Mi |Ma |Ma |Ma |Ma |Sy |Sy |Ms  ||   |   |   |   |   |Mi |Mi |Mi  ||   |   |   |   |   |   |   |    |
+        # |Ma |Ma |Ma |Ma |Sy |Sy |Sy |Ms  ||   |   |   |   |Mi |Mi |Mi |Mi  ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeSendProtocolVersion(in_sendprotocolversionmajor, in_sendprotocolversionminor):
             msg = REDBoxMsg()
@@ -126,6 +126,12 @@ class REDBoxSlaveRouter(object):
         def processQueryProtocolVersion(self):
             raise NotImplementedError
 
+        def processCalibrate(self, in_calibratepotentiometer, in_calibratephase):
+            raise NotImplementedError
+
+        def processSaveCalibration(self):
+            raise NotImplementedError
+
 
 
 
@@ -143,6 +149,14 @@ class REDBoxSlaveRouter(object):
 
                 elif in_msg.getSystem() == REDBoxMsg.System.System_SendProtocolVersion:
                     pass
+
+                elif in_msg.getSystem() == REDBoxMsg.System.System_Calibrate:
+                    self.processCalibrate(in_msg.getCalibratePotentiometer(), in_msg.getCalibratePhase())
+
+
+                elif in_msg.getSystem() == REDBoxMsg.System.System_SaveCalibration:
+                    self.processSaveCalibration()
+
 
 
 

@@ -89,40 +89,68 @@ class REDBoxMsg(mp.Message):
     # System
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |   |   |   |Sy |Sy |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |   |   |   |   |Sy |Sy |Sy |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     class System(Enum):
         System_SendBatteryStatus = 0
         System_QueryProtocolVersion = 1
         System_SendProtocolVersion = 2
+        System_Calibrate = 3
+        System_SaveCalibration = 4
     def getSystem(self):
-        return REDBoxMsg.System( self.get(1, 2)  )
+        return REDBoxMsg.System( self.get(1, 3)  )
     def setSystem(self, in_system):
-        self.set(1, 2, in_system.value)
+        self.set(1, 3, in_system.value)
         
     # SendBatteryStatusPercentage
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |Pc |Pc |Pc |Pc |Pc |   |   |    ||   |   |   |   |   |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    |
+    # |Pc |Pc |Pc |Pc |   |   |   |    ||   |   |   |   |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    |
     def getSendBatteryStatusPercentage(self):
-        return self.get(3, 8)
+        return self.get(4, 8)
     def setSendBatteryStatusPercentage(self, in_sendbatterystatuspercentage):
-        self.set(3, 8, in_sendbatterystatuspercentage)
+        self.set(4, 8, in_sendbatterystatuspercentage)
         
     # SendProtocolVersionMajor
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |Ma |Ma |Ma |Ma |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |Ma |Ma |Ma |Ma |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     def getSendProtocolVersionMajor(self):
-        return self.get(3, 4)
+        return self.get(4, 4)
     def setSendProtocolVersionMajor(self, in_sendprotocolversionmajor):
-        self.set(3, 4, in_sendprotocolversionmajor)
+        self.set(4, 4, in_sendprotocolversionmajor)
         
     # SendProtocolVersionMinor
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |Mi |   |   |   |   |   |   |    ||   |   |   |   |   |Mi |Mi |Mi  ||   |   |   |   |   |   |   |    |
+    # |   |   |   |   |   |   |   |    ||   |   |   |   |Mi |Mi |Mi |Mi  ||   |   |   |   |   |   |   |    |
     def getSendProtocolVersionMinor(self):
-        return self.get(7, 4)
+        return self.get(8, 4)
     def setSendProtocolVersionMinor(self, in_sendprotocolversionminor):
-        self.set(7, 4, in_sendprotocolversionminor)
+        self.set(8, 4, in_sendprotocolversionminor)
+        
+    # CalibratePotentiometer
+    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+    # |   |   |   |Po |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    class CalibratePotentiometer(Enum):
+        CalibratePotentiometer_Volume = 0
+        CalibratePotentiometer_Tuner = 1
+    def getCalibratePotentiometer(self):
+        return REDBoxMsg.CalibratePotentiometer( self.get(4, 1)  )
+    def setCalibratePotentiometer(self, in_calibratepotentiometer):
+        self.set(4, 1, in_calibratepotentiometer.value)
+        
+    # CalibratePhase
+    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
+    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+    # |   |Ph |Ph |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    class CalibratePhase(Enum):
+        CalibratePhase_StartLow = 0
+        CalibratePhase_StopLow = 1
+        CalibratePhase_StartHigh = 2
+        CalibratePhase_StopHigh = 3
+    def getCalibratePhase(self):
+        return REDBoxMsg.CalibratePhase( self.get(5, 2)  )
+    def setCalibratePhase(self, in_calibratephase):
+        self.set(5, 2, in_calibratephase.value)
         
