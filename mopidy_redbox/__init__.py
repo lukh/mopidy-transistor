@@ -73,7 +73,7 @@ class Extension(ext.Extension):
             ('/alarms', web.AlarmsHandler, {}),
             ('/wifi', web.WifiHandler, {}),
             ('/login', web.LoginHandler, {'config':config}),
-            ('/events', web.EventSource, {'source':web.make_source()}),
+            ('/events', web.EventSource, {'queue':self._queue_event}),
 
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'web', 'site')})
         ]

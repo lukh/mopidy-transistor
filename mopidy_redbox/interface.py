@@ -18,14 +18,6 @@ from protocol.REDBoxMasterRouter import REDBoxMasterRouter
 
 logger = logging.getLogger(__name__)
 
-class SharedData:
-    def __init__(self, position, labels, battery_status):
-        self.tuner_position = position
-        self.tuner_labels = labels
-        self.battery_status = battery_status
-
-shared_data = SharedData(None, {}, None)
-
 
 class SerialInterfaceListener(Thread, REDBoxMasterRouter):
     def __init__(self, core, config, queue_event, queue_front, queue_web):
@@ -273,8 +265,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
                 self._curr_played_position = found_pos
 
-        shared_data.tuner_position = self._curr_position
-        shared_data.tuner_labels = {k:radios[k].name for k in radios}
+        self._queue_event.put({'tuner_position':self._curr_position})
+        self._queue_event.put({'tuner_labels':{k:radios[k].name for k in radios}})
 
     def set_podcast(self, position=None):
         force_reload = False
@@ -307,8 +299,8 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
 
                 self._curr_played_position = found_pos
 
-        shared_data.tuner_position = self._curr_position
-        shared_data.tuner_labels = {k:podcasts[k].name for k in podcasts}
+        self._queue_event.put({'tuner_position':self._curr_position})
+        self._queue_event.put({'tuner_labels':{k:podcasts[k].name for k in podcasts}})
 
     def set_next(self, **kwargs):
         if self.state == "podcast":
