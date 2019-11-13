@@ -1,12 +1,14 @@
 from ConfigParser import SafeConfigParser
 from collections import OrderedDict
-
+from threading import Timer
 from basics import BaseHandler
 
 import bcrypt
 
 import tornado.web
 import tornado.websocket
+
+from transitions import Machine, State
 
 from settings_conf import settings_conf
 
@@ -141,16 +143,113 @@ class CalibrationHandler(BaseHandler):
     def get(self):
         self.render("site/calibration.html", active_page="calibration")
 
+
+
 class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
     def initialize(self, queue_front, queue_web):
         self._queue_front = queue_front
         self._queue_web = queue_web
 
+        Machine(model=self,
+            states=[
+                State('idle'),
+                State('turn_volume_low', on_enter=['handle_turn_volume_low']),
+                State('start_calibrate_volume_low', on_enter=['handle_start_calibrate_volume_low']),
+                State('save_calibrate_volume_low', on_enter=['handle_save_calibrate_volume_low']),
+                State('turn_volume_high', on_enter=['handle_turn_volume_high']),
+                State('start_calibrate_volume_high', on_enter=['handle_start_calibrate_volume_high']),
+                State('save_calibrate_volume_high', on_enter=['handle_save_calibrate_volume_high']),
+
+                State('turn_tuner_low', on_enter=['handle_turn_tuner_low']),
+                State('start_calibrate_tuner_low', on_enter=['handle_start_calibrate_tuner_low']),
+                State('save_calibrate_tuner_low', on_enter=['handle_save_calibrate_tuner_low']),
+                State('turn_tuner_high', on_enter=['handle_turn_tuner_high']),
+                State('start_calibrate_tuner_high', on_enter=['handle_start_calibrate_tuner_high']),
+                State('save_calibrate_tuner_high', on_enter=['handle_save_calibrate_tuner_high']),
+
+                State('save', on_enter=['handle_save'])
+            ],
+            transitions=[
+                {'trigger':'next_step', 'source':'idle', 'dest':'turn_volume_low'},
+
+                {'trigger':'next_step', 'source':'turn_volume_low', 'dest':'start_calibrate_volume_low'},
+                {'trigger':'timeout', 'source':'start_calibrate_volume_low', 'dest':'save_calibrate_volume_low'},
+                {'trigger':'timeout', 'source':'save_calibrate_volume_low', 'dest':'turn_volume_high'},
+
+                {'trigger':'next_step', 'source':'turn_volume_high', 'dest':'start_calibrate_volume_high'},
+                {'trigger':'timeout', 'source':'start_calibrate_volume_high', 'dest':'save_calibrate_volume_high'},
+                {'trigger':'timeout', 'source':'save_calibrate_volume_high', 'dest':'turn_tuner_low'},
+
+                {'trigger':'next_step', 'source':'turn_tuner_low', 'dest':'start_calibrate_tuner_low'},
+                {'trigger':'timeout', 'source':'start_calibrate_tuner_low', 'dest':'save_calibrate_tuner_low'},
+                {'trigger':'timeout', 'source':'save_calibrate_tuner_low', 'dest':'turn_tuner_high'},
+
+                {'trigger':'next_step', 'source':'turn_tuner_high', 'dest':'start_calibrate_tuner_high'},
+                {'trigger':'timeout', 'source':'start_calibrate_tuner_high', 'dest':'save_calibrate_tuner_high'},
+                {'trigger':'timeout', 'source':'save_calibrate_tuner_high', 'dest':'save'},
+
+                {'trigger':'next_step', 'source':'save', 'dest':'idle'}
+            ],
+            initial='idle', ignore_invalid_triggers=True
+        )
+
+    def handle_turn_volume_low(self):
+        self.write_message(u'Turn Volume Low and press Calibration button')
+    def handle_start_calibrate_volume_low(self):
+        self.write_message(u'Start Volume Low Calibration, Wait...')
+        self.wait(2)
+        # start calib
+    def handle_save_calibrate_volume_low(self):
+        self.write_message(u'Saving Volume Low')
+        self.wait(0.5)
+
+    def handle_turn_volume_high(self):
+        self.write_message(u'Turn Volume High and press Calibration button')
+    def handle_start_calibrate_volume_high(self):
+        self.write_message(u'Start Volume High Calibration, Wait...')
+        self.wait(2)
+        # start calib
+    def handle_save_calibrate_volume_high(self):
+        self.write_message(u'Saving Volume High')
+        self.wait(0.5)
+
+
+    def handle_turn_tuner_low(self):
+        self.write_message(u'Turn Tuner Low and press Calibration button')
+    def handle_start_calibrate_tuner_low(self):
+        self.write_message(u'Start Tuner Low Calibration, Wait...')
+        self.wait(2)
+        # start calib
+    def handle_save_calibrate_tuner_low(self):
+        self.write_message(u'Saving Tuner Low')
+        self.wait(0.5)
+
+    def handle_turn_tuner_high(self):
+        self.write_message(u'Turn Tuner High and press Calibration button')
+    def handle_start_calibrate_tuner_high(self):
+        self.write_message(u'Start Tuner High Calibration, Wait...')
+        self.wait(2)
+        # start calib
+    def handle_save_calibrate_tuner_high(self):
+        self.write_message(u'Saving Tuner High')
+        self.wait(0.5)
+
+    def handle_save(self):
+        self.write_message(u"Saving...")
+
+
+
+    def wait(self, seconds):
+        timer = Timer(seconds, self.timeout)
+        timer.start()
+
     def open(self):
         print("WebSocket opened")
 
     def on_message(self, message):
-        self.write_message(u"You said: " + message)
+        if (message == "next_step"):
+            self.next_step()
+
 
     def on_close(self):
         print("WebSocket closed")
