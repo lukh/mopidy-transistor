@@ -444,7 +444,6 @@
 }
 
 .settings-form button {
-  width: 100%;
   background-color: var(--redbox-dark-color);
   color: white;
   padding: 8px 20px;
