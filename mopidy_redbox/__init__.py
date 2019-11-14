@@ -73,10 +73,10 @@ class Extension(ext.Extension):
             ('/alarms', web.AlarmsHandler, {}),
             ('/wifi', web.WifiHandler, {}),
             ('/login', web.LoginHandler, {'config':config}),
-            ('/calibration', web.CalibrationHandler),
-
-            ('/calibsocket', web.CalibrationWebSocketHandler, {'queue_front':self._queue_front, 'queue_web':self._queue_web}),
+            ('/calibration', web.CalibrationHandler, {}),
+            
             ('/events', web.EventSource, {'queue':self._queue_event}),
+            ('/calibsocket', web.CalibrationWebSocketHandler, {'queue_front':self._queue_front, 'queue_web':self._queue_web}),
 
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'web', 'site')})
         ]
