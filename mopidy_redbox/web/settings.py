@@ -188,7 +188,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
                 {'trigger':'timeout', 'source':'start_calibrate_tuner_high', 'dest':'save_calibrate_tuner_high'},
                 {'trigger':'timeout', 'source':'save_calibrate_tuner_high', 'dest':'save'},
 
-                {'trigger':'next_step', 'source':'save', 'dest':'idle'}
+                {'trigger':'timeout', 'source':'save', 'dest':'idle'}
             ],
             initial='idle', ignore_invalid_triggers=True
         )
@@ -201,6 +201,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         self._queue_web.put(self.state)
     def handle_save_calibrate_volume_low(self):
         self.write_message(u'Saving Volume Low')
+        self._queue_web.put(self.state)
         self.wait(0.5)
 
     def handle_turn_volume_high(self):
@@ -211,6 +212,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         self._queue_web.put(self.state)
     def handle_save_calibrate_volume_high(self):
         self.write_message(u'Saving Volume High')
+        self._queue_web.put(self.state)
         self.wait(0.5)
 
 
@@ -222,6 +224,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         self._queue_web.put(self.state)
     def handle_save_calibrate_tuner_low(self):
         self.write_message(u'Saving Tuner Low')
+        self._queue_web.put(self.state)
         self.wait(0.5)
 
     def handle_turn_tuner_high(self):
@@ -232,11 +235,13 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         self._queue_web.put(self.state)
     def handle_save_calibrate_tuner_high(self):
         self.write_message(u'Saving Tuner High')
+        self._queue_web.put(self.state)
         self.wait(0.5)
 
     def handle_save(self):
         self.write_message(u"Saving...")
         self._queue_web.put(self.state)
+        self.wait(0.5)
 
     def handle_done(self):
         self.write_message(u"Done !")
