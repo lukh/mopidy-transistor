@@ -259,6 +259,13 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         elif in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Previous:
             self.previous()
 
+
+    def processDate(self, in_dateday, in_datemonth, in_dateyear):
+        logger.info("Day {}, Month {}, Year {}".format(in_dateday, in_datemonth, in_dateyear))
+
+    def processTime(self, in_timehour, in_timeminute, in_timesecond):
+        logger.info("Hour {}, Minute {}, Second {}".format(in_timehour, in_timeminute, in_timesecond))
+
     def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
         self.queue_event.put({'battery_status':in_sendbatterystatuspercentage})
         logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))

@@ -3,7 +3,7 @@ from REDBoxMsg import REDBoxMsg
 class REDBoxMasterRouter(object):
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |   |Sy |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeQueryProtocolVersion():
             msg = REDBoxMsg()
@@ -18,7 +18,7 @@ class REDBoxMasterRouter(object):
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |Ph |Ph |Po |Sy |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |Ph |Ph |Po |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeCalibrate(in_calibratepotentiometer, in_calibratephase):
             msg = REDBoxMsg()
@@ -35,7 +35,7 @@ class REDBoxMasterRouter(object):
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |   |Sy |Sy |Sy |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeSaveCalibration():
             msg = REDBoxMsg()
@@ -66,6 +66,12 @@ class REDBoxMasterRouter(object):
         def processNavigation(self, in_navigationtype):
             raise NotImplementedError
 
+        def processDate(self, in_dateday, in_datemonth, in_dateyear):
+            raise NotImplementedError
+
+        def processTime(self, in_timehour, in_timeminute, in_timesecond):
+            raise NotImplementedError
+
         def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
             raise NotImplementedError
 
@@ -94,6 +100,17 @@ class REDBoxMasterRouter(object):
 
                 elif in_msg.getCommand() == REDBoxMsg.Command.Command_Navigation:
                     self.processNavigation(in_msg.getNavigationType())
+
+
+
+
+            elif in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_DateTime:
+                if in_msg.getDateTime() == REDBoxMsg.DateTime.DateTime_Date:
+                    self.processDate(in_msg.getDateDay(), in_msg.getDateMonth(), in_msg.getDateYear())
+
+
+                elif in_msg.getDateTime() == REDBoxMsg.DateTime.DateTime_Time:
+                    self.processTime(in_msg.getTimeHour(), in_msg.getTimeMinute(), in_msg.getTimeSecond())
 
 
 
