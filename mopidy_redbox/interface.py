@@ -211,7 +211,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
             self.previous()
 
     def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
-        shared_data.battery_status = in_sendbatterystatuspercentage
+        self._queue_event.put({'battery_status':in_sendbatterystatuspercentage})
         logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))
 
     def processSendProtocolVersion(self, in_sendprotocolversionmajor, in_sendprotocolversionminor):

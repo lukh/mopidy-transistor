@@ -152,7 +152,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
 
         Machine(model=self,
             states=[
-                State('idle'),
+                State('idle', on_enter=['handle_done']),
                 State('turn_volume_low', on_enter=['handle_turn_volume_low']),
                 State('start_calibrate_volume_low', on_enter=['handle_start_calibrate_volume_low']),
                 State('save_calibrate_volume_low', on_enter=['handle_save_calibrate_volume_low']),
@@ -198,7 +198,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
     def handle_start_calibrate_volume_low(self):
         self.write_message(u'Start Volume Low Calibration, Wait...')
         self.wait(2)
-        # start calib
+        self._queue_web.put(self.state)
     def handle_save_calibrate_volume_low(self):
         self.write_message(u'Saving Volume Low')
         self.wait(0.5)
@@ -208,7 +208,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
     def handle_start_calibrate_volume_high(self):
         self.write_message(u'Start Volume High Calibration, Wait...')
         self.wait(2)
-        # start calib
+        self._queue_web.put(self.state)
     def handle_save_calibrate_volume_high(self):
         self.write_message(u'Saving Volume High')
         self.wait(0.5)
@@ -219,7 +219,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
     def handle_start_calibrate_tuner_low(self):
         self.write_message(u'Start Tuner Low Calibration, Wait...')
         self.wait(2)
-        # start calib
+        self._queue_web.put(self.state)
     def handle_save_calibrate_tuner_low(self):
         self.write_message(u'Saving Tuner Low')
         self.wait(0.5)
@@ -229,13 +229,17 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
     def handle_start_calibrate_tuner_high(self):
         self.write_message(u'Start Tuner High Calibration, Wait...')
         self.wait(2)
-        # start calib
+        self._queue_web.put(self.state)
     def handle_save_calibrate_tuner_high(self):
         self.write_message(u'Saving Tuner High')
         self.wait(0.5)
 
     def handle_save(self):
         self.write_message(u"Saving...")
+        self._queue_web.put(self.state)
+
+    def handle_done(self):
+        self.write_message(u"Done !")
 
 
 
