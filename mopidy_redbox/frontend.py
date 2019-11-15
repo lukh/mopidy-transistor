@@ -262,9 +262,12 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
     def processDate(self, in_dateday, in_datemonth, in_dateyear):
         logger.info("Day {}, Month {}, Year {}".format(in_dateday, in_datemonth, in_dateyear))
+        self.queue_event.put({'date':{'day':in_dateday, 'month':in_datemonth, 'year':in_dateyear}})
 
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
         logger.info("Hour {}, Minute {}, Second {}".format(in_timehour, in_timeminute, in_timesecond))
+        self.queue_event.put({'time':{'hour':in_timehour, 'minute':in_timeminute, 'second':in_timesecond}})
+        
 
     def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
         self.queue_event.put({'battery_status':in_sendbatterystatuspercentage})

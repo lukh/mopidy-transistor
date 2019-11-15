@@ -71,10 +71,15 @@
         <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
             <i class="fa fa-bars"></i>
         </a>
-        <div class="battery"><div class="level"></div></div>
     </div>
 
     <div class="content">
+        <span id="left-side-informations">
+            <span id="time"></span>
+            <span id="date"></span>
+            <div class="battery"><div class="level"></div></div>
+        </span>
+
         {% block body %}Not defined{% end %}
     </div>
 
