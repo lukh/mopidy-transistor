@@ -11,8 +11,11 @@ class EventSource(web.RequestHandler):
         self.set_header('content-type', 'text/event-stream')
         self.set_header('cache-control', 'no-cache')
 
+        self._stop = False
+
     def on_connection_close(self):
         self._queue.detach()
+        self._stop = True
 
     @gen.coroutine
     def publish(self, data):
@@ -25,7 +28,7 @@ class EventSource(web.RequestHandler):
 
     @gen.coroutine
     def get(self):
-        while True:
+        while not self._stop:
             while not self._queue.empty():
                 yield self.publish(self._queue.get())
             else:
