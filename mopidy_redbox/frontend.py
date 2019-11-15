@@ -12,6 +12,7 @@ from mopidy import core
 from mopidy.exceptions import FrontendError
 
 import mopidy_redbox
+from mopidy_redbox.utils import MultiConsumerQueue
 
 from protocol.REDBoxMsg import REDBoxMsg
 from protocol.REDBoxMasterRouter import REDBoxMasterRouter
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter):
     # used to push data to the event source (tuner, radios list, battery)
-    queue_event = Queue()
+    queue_event = MultiConsumerQueue()
     # used to communicate between front and web.
     queue_front = Queue()
     queue_web = Queue()

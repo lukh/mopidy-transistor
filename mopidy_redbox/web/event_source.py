@@ -7,9 +7,12 @@ import json
 class EventSource(web.RequestHandler):
     """Basic handler for server-sent events."""
     def initialize(self, queue):
-        self._queue = queue
+        self._queue = queue.make()
         self.set_header('content-type', 'text/event-stream')
         self.set_header('cache-control', 'no-cache')
+
+    def on_connection_close(self):
+        self._queue.detach()
 
     @gen.coroutine
     def publish(self, data):
