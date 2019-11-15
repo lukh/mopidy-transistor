@@ -90,16 +90,16 @@ class REDBoxSlaveRouter(object):
 
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
         # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |Dd |Dd |Dd |Da |Ms |Ms  ||Yy |Yy |Yy |Yy |Yy |Yy |Yy |Yy  ||Mm |Mm |Mm |Mm |Yy |Yy |Yy |Yy  |
+        # |Dd |Dd |Dd |Dd |Dd |Da |Ms |Ms  ||Yy |Yy |Yy |Yy |Yy |Yy |Yy |Yy  ||Mm |Mm |Mm |Mm |Yy |Yy |Yy |Yy  |
         @staticmethod
-        def makeDate(in_dateday, in_datemonth, in_dateyear):
+        def makeDate(in_datedate, in_datemonth, in_dateyear):
             msg = REDBoxMsg()
 
 
             msg.setMsgType(REDBoxMsg.MsgType.MsgType_DateTime)
             msg.setDateTime(REDBoxMsg.DateTime.DateTime_Date)
 
-            msg.setDateDay(in_dateday)
+            msg.setDateDate(in_datedate)
             msg.setDateMonth(in_datemonth)
             msg.setDateYear(in_dateyear)
 

@@ -99,14 +99,14 @@ class REDBoxMsg(mp.Message):
     def setDateTime(self, in_datetime):
         self.set(2, 1, in_datetime.value)
         
-    # DateDay
+    # DateDate
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |   |   |Dd |Dd |Dd |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
-    def getDateDay(self):
-        return self.get(3, 3)
-    def setDateDay(self, in_dateday):
-        self.set(3, 3, in_dateday)
+    # |Dd |Dd |Dd |Dd |Dd |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    def getDateDate(self):
+        return self.get(3, 5)
+    def setDateDate(self, in_datedate):
+        self.set(3, 5, in_datedate)
         
     # DateMonth
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |

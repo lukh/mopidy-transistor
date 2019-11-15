@@ -66,7 +66,7 @@ class REDBoxMasterRouter(object):
         def processNavigation(self, in_navigationtype):
             raise NotImplementedError
 
-        def processDate(self, in_dateday, in_datemonth, in_dateyear):
+        def processDate(self, in_datedate, in_datemonth, in_dateyear):
             raise NotImplementedError
 
         def processTime(self, in_timehour, in_timeminute, in_timesecond):
@@ -106,7 +106,7 @@ class REDBoxMasterRouter(object):
 
             elif in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_DateTime:
                 if in_msg.getDateTime() == REDBoxMsg.DateTime.DateTime_Date:
-                    self.processDate(in_msg.getDateDay(), in_msg.getDateMonth(), in_msg.getDateYear())
+                    self.processDate(in_msg.getDateDate(), in_msg.getDateMonth(), in_msg.getDateYear())
 
 
                 elif in_msg.getDateTime() == REDBoxMsg.DateTime.DateTime_Time:

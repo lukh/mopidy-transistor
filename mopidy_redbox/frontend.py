@@ -260,9 +260,9 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
             self.previous()
 
 
-    def processDate(self, in_dateday, in_datemonth, in_dateyear):
-        logger.info("Day {}, Month {}, Year {}".format(in_dateday, in_datemonth, in_dateyear))
-        self.queue_event.put({'date':{'day':in_dateday, 'month':in_datemonth, 'year':in_dateyear}})
+    def processDate(self, in_datedate, in_datemonth, in_dateyear):
+        logger.info("Date {}, Month {}, Year {}".format(in_datedate, in_datemonth, in_dateyear))
+        self.queue_event.put({'date':{'date':in_datedate, 'month':in_datemonth, 'year':in_dateyear}})
 
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
         logger.info("Hour {}, Minute {}, Second {}".format(in_timehour, in_timeminute, in_timesecond))

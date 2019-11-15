@@ -176,7 +176,7 @@ event_source.onmessage = function(message) {
 
   if(data.hasOwnProperty('date')){
     date_label = document.getElementById("date");
-    date_label.innerText = data.date.day + "-" + data.date.month + "-" + data.date.year
+    date_label.innerText = data.date.date + "-" + data.date.month + "-" + data.date.year
   }
 
 };
