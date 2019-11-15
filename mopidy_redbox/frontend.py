@@ -52,7 +52,7 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         self.interface = interface.SerialInterfaceListener(
             self.actor_ref.proxy(), 
             self.config, 
-            self.queue_event)
+        )
         self.interface.start()
 
         self.interface.sendMsg(self.makeQueryProtocolVersion())

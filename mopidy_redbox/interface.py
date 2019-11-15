@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class SerialInterfaceListener(Thread):
-    def __init__(self, frontend, config, queue_event):
+    def __init__(self, frontend, config):
         super(SerialInterfaceListener, self).__init__()
 
         self._stop_flag = False
