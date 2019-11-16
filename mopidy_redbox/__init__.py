@@ -70,7 +70,7 @@ class Extension(ext.Extension):
             ('/podcasts', web.PodcastHandler, {'core':core, 'config':config}),
             ('/about', web.AboutHandler, {}),
             ('/settings', web.SettingsHandler, {'config':config}),
-            ('/alarms', web.AlarmsHandler, {}),
+            ('/alarms', web.AlarmsHandler, {'queue_web':self._queue_web}),
             ('/wifi', web.WifiHandler, {}),
             ('/login', web.LoginHandler, {'config':config}),
             ('/calibration', web.CalibrationHandler, {}),

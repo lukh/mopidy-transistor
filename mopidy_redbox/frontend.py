@@ -149,7 +149,9 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
 
 
-    def process_queue_web(self, command):
+    def process_queue_web(self, msg):
+        command = msg.get('cmd', '')
+
         if command == "start_calibrate_volume_low":
             self.interface.sendMsg(
                 self.makeCalibrate(
@@ -208,6 +210,10 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
             )
         elif command == "save":
             self.interface.sendMsg(self.makeSaveCalibration())
+
+
+        elif command == "update_datetime":
+            logger.warning(msg.get('dt', ""))
 
             
     def process_serial_message(self, msg):
