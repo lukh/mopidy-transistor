@@ -171,12 +171,11 @@ event_source.onmessage = function(message) {
 
   if(data.hasOwnProperty('time')){
     time_label = document.getElementById("time");
-    time_label.innerText = data.time.hour + ":" + data.time.minute + ":" + data.time.second
+    time_label.innerText = data.time;
   }
 
   if(data.hasOwnProperty('date')){
     date_label = document.getElementById("date");
-    date_label.innerText = data.date.date + "-" + data.date.month + "-" + data.date.year
+    date_label.innerText = data.date;
   }
-
 };

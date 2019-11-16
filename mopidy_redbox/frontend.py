@@ -5,6 +5,8 @@ import serial
 import json
 from threading import Thread
 from queue import Queue
+import datetime
+import time
 
 from transitions import Machine, State, MachineError
 
@@ -12,7 +14,7 @@ from mopidy import core
 from mopidy.exceptions import FrontendError
 
 import mopidy_redbox
-from mopidy_redbox.utils import MultiConsumerQueue
+from mopidy_redbox.utils import SharedData
 
 from protocol.REDBoxMsg import REDBoxMsg
 from protocol.REDBoxMasterRouter import REDBoxMasterRouter
@@ -25,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter):
     # used to push data to the event source (tuner, radios list, battery)
-    queue_event = MultiConsumerQueue()
+    shared_data = SharedData()
     # used to communicate between front and web.
     queue_front = Queue()
     queue_web = Queue()
@@ -263,12 +265,13 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
     def processDate(self, in_datedate, in_datemonth, in_dateyear):
         logger.info("Date {}, Month {}, Year {}".format(in_datedate, in_datemonth, in_dateyear))
-        self.queue_event.put({'date':{'date':in_datedate, 'month':in_datemonth, 'year':in_dateyear}})
+        self.shared_data.date = datetime.date(year=2019, month=11, day=8)
+        # self.shared_data.date = datetime.date(year=in_dateyear, month=in_datemonth, day=in_datedate)
 
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
         logger.info("Hour {}, Minute {}, Second {}".format(in_timehour, in_timeminute, in_timesecond))
-        self.queue_event.put({'time':{'hour':in_timehour, 'minute':in_timeminute, 'second':in_timesecond}})
-        
+        self.shared_data.time = datetime.time(hour=in_timehour, minute=in_timeminute, second=in_timesecond)
+        self.shared_data.timestamp = time.time()
 
     def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
         self.queue_event.put({'battery_status':in_sendbatterystatuspercentage})
@@ -325,8 +328,8 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
                 self._curr_played_position = found_pos
 
-        self.queue_event.put({'tuner_position':self._curr_position})
-        self.queue_event.put({'tuner_labels':{k:radios[k].name for k in radios}})
+        self.shared_data.tuner_position = self._curr_position
+        self.shared_data.tuner_labels = {k:radios[k].name for k in radios}
 
     def set_podcast(self, position=None):
         force_reload = False
@@ -359,8 +362,8 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
                 self._curr_played_position = found_pos
 
-        self.queue_event.put({'tuner_position':self._curr_position})
-        self.queue_event.put({'tuner_labels':{k:podcasts[k].name for k in podcasts}})
+        self.shared_data.tuner_position = self._curr_position
+        self.shared_data.tuner_labels = {k:podcasts[k].name for k in podcasts}
 
     def set_next(self, **kwargs):
         if self.state == "podcast":

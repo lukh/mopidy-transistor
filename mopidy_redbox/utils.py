@@ -1,30 +1,79 @@
-from queue import Queue
+from threading import Lock
 
+import datetime
 
-class ConsumerQueue(Queue):
-    def __init__(self, idx, parent, **kargs):
-        Queue.__init__(self, **kargs)
-        self._idx = idx
-        self._parent = parent
-
-    def detach(self):
-        self._parent.detach(self._idx)
-
-class MultiConsumerQueue(object):
+class SharedData(object):
     def __init__(self):
-        self._idx = 0
-        self._queues = {}
+        self._lock = Lock()
 
-    def make(self):
-        queue = ConsumerQueue(self._idx, self)
-        self._queues[self._idx] = queue
-        self._idx += 1
+        self._tuner_position = 0
+        self._tuner_labels = []
+        self._time = datetime.time(0,0,0)
+        self._date = datetime.date.max
 
-        return queue
+        self._timestamp = 0
 
-    def detach(self, idx):
-        del self._queues[idx]
+    @property
+    def tuner_position(self):
+        self._lock.acquire()
+        data = self._tuner_position
+        self._lock.release()
+        return data
 
-    def put(self, item):
-        for q in self._queues.values():
-            q.put(item)
+    @tuner_position.setter
+    def tuner_position(self, tp):
+        self._lock.acquire()
+        self._tuner_position = tp
+        self._lock.release()
+
+    @property
+    def tuner_labels(self):
+        self._lock.acquire()
+        data = self._tuner_labels
+        self._lock.release()
+        return data
+
+    @tuner_labels.setter
+    def tuner_labels(self, tl):
+        self._lock.acquire()
+        self._tuner_labels = tl
+        self._lock.release()
+
+    @property
+    def time(self):
+        self._lock.acquire()
+        data = self._time
+        self._lock.release()
+        return data
+
+    @time.setter
+    def time(self, t):
+        self._lock.acquire()
+        self._time = t
+        self._lock.release()
+
+    @property
+    def date(self):
+        self._lock.acquire()
+        data = self._date
+        self._lock.release()
+        return data
+
+    @date.setter
+    def date(self, d):
+        self._lock.acquire()
+        self._date = d
+        self._lock.release()
+
+    @property
+    def timestamp(self):
+        self._lock.acquire()
+        data = self._timestamp
+        self._lock.release()
+        return data
+
+    @timestamp.setter
+    def timestamp(self, tp):
+        self._lock.acquire()
+        self._timestamp = tp
+        self._lock.release()
