@@ -1,12 +1,12 @@
 from REDBoxMsg import REDBoxMsg
 
 class REDBoxSlaveRouter(object):
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  |
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makePotentiometerVolume(in_potentiometervalue):
             msg = REDBoxMsg()
@@ -21,9 +21,9 @@ class REDBoxSlaveRouter(object):
 
             return msg
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makePotentiometerTuner(in_potentiometervalue):
             msg = REDBoxMsg()
@@ -41,9 +41,9 @@ class REDBoxSlaveRouter(object):
 
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |   |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |   |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makePowerOff():
             msg = REDBoxMsg()
@@ -56,9 +56,9 @@ class REDBoxSlaveRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |Ty |Ty |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |Ty |Ty |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeMode(in_modetype):
             msg = REDBoxMsg()
@@ -72,9 +72,9 @@ class REDBoxSlaveRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |Ty |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Ty |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeNavigation(in_navigationtype):
             msg = REDBoxMsg()
@@ -88,9 +88,9 @@ class REDBoxSlaveRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Dd |Dd |Dd |Dd |Dd |Da |Ms |Ms  ||Yy |Yy |Yy |Yy |Yy |Yy |Yy |Yy  ||Mm |Mm |Mm |Mm |Yy |Yy |Yy |Yy  |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |Dd |Dd |Dd |Dd |Dd |Da |Ms |Ms  ||Yy |Yy |Yy |Yy |Yy |Yy |Yy |Yy  ||Mm |Mm |Mm |Mm |Yy |Yy |Yy |Yy  ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeDate(in_datedate, in_datemonth, in_dateyear):
             msg = REDBoxMsg()
@@ -106,9 +106,9 @@ class REDBoxSlaveRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Ho |Ho |Ho |Ho |Ho |Da |Ms |Ms  ||Se |Se |Mi |Mi |Mi |Mi |Mi |Mi  ||   |   |   |   |Se |Se |Se |Se  |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |Ho |Ho |Ho |Ho |Ho |Da |Ms |Ms  ||Se |Se |Mi |Mi |Mi |Mi |Mi |Mi  ||   |   |   |   |Se |Se |Se |Se  ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeTime(in_timehour, in_timeminute, in_timesecond):
             msg = REDBoxMsg()
@@ -124,9 +124,9 @@ class REDBoxSlaveRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Pc |Pc |Pc |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Pc |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |Pc |Pc |Pc |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Pc |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeSendBatteryStatus(in_sendbatterystatuspercentage):
             msg = REDBoxMsg()
@@ -140,9 +140,9 @@ class REDBoxSlaveRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Ma |Ma |Ma |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Mi |Mi |Mi |Mi |Ma  ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |Ma |Ma |Ma |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Mi |Mi |Mi |Mi |Ma  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeSendProtocolVersion(in_sendprotocolversionmajor, in_sendprotocolversionminor):
             msg = REDBoxMsg()
@@ -166,6 +166,12 @@ class REDBoxSlaveRouter(object):
             raise NotImplementedError
 
         def processSaveCalibration(self):
+            raise NotImplementedError
+
+        def processSetDate(self, in_setdatedate, in_setdatemonth, in_setdateyear):
+            raise NotImplementedError
+
+        def processSetTime(self, in_settimehour, in_settimeminute, in_settimesecond):
             raise NotImplementedError
 
 
@@ -195,6 +201,17 @@ class REDBoxSlaveRouter(object):
 
                 elif in_msg.getSystem() == REDBoxMsg.System.System_SaveCalibration:
                     self.processSaveCalibration()
+
+
+                elif in_msg.getSystem() == REDBoxMsg.System.System_SetDateTime:
+                    if in_msg.getSetDateTime() == REDBoxMsg.SetDateTime.SetDateTime_SetDate:
+                        self.processSetDate(in_msg.getSetDateDate(), in_msg.getSetDateMonth(), in_msg.getSetDateYear())
+
+
+                    elif in_msg.getSetDateTime() == REDBoxMsg.SetDateTime.SetDateTime_SetTime:
+                        self.processSetTime(in_msg.getSetTimeHour(), in_msg.getSetTimeMinute(), in_msg.getSetTimeSecond())
+
+
 
 
 

@@ -1,9 +1,9 @@
 from REDBoxMsg import REDBoxMsg
 
 class REDBoxMasterRouter(object):
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeQueryProtocolVersion():
             msg = REDBoxMsg()
@@ -16,9 +16,9 @@ class REDBoxMasterRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |Ph |Ph |Po |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |Ph |Ph |Po |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeCalibrate(in_calibratepotentiometer, in_calibratephase):
             msg = REDBoxMsg()
@@ -33,9 +33,9 @@ class REDBoxMasterRouter(object):
             return msg
  
 
-        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |
-        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-        # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
         @staticmethod
         def makeSaveCalibration():
             msg = REDBoxMsg()
@@ -44,6 +44,44 @@ class REDBoxMasterRouter(object):
             msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
             msg.setSystem(REDBoxMsg.System.System_SaveCalibration)
 
+
+            return msg
+ 
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |   |   |Se |Sy |Sy |Sy |Ms |Ms  ||Yy |Yy |Yy |Yy |Yy |Yy |Yy |Yy  ||Dd |Dd |Dd |Dd |Yy |Yy |Yy |Yy  ||   |   |   |Mm |Mm |Mm |Mm |Dd  |
+        @staticmethod
+        def makeSetDate(in_setdatedate, in_setdatemonth, in_setdateyear):
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
+            msg.setSystem(REDBoxMsg.System.System_SetDateTime)
+            msg.setSetDateTime(REDBoxMsg.SetDateTime.SetDateTime_SetDate)
+
+            msg.setSetDateDate(in_setdatedate)
+            msg.setSetDateMonth(in_setdatemonth)
+            msg.setSetDateYear(in_setdateyear)
+
+            return msg
+ 
+
+        # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+        # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+        # |Ho |Ho |Se |Sy |Sy |Sy |Ms |Ms  ||Mi |Mi |Mi |Mi |Mi |Ho |Ho |Ho  ||   |Se |Se |Se |Se |Se |Se |Mi  ||   |   |   |   |   |   |   |    |
+        @staticmethod
+        def makeSetTime(in_settimehour, in_settimeminute, in_settimesecond):
+            msg = REDBoxMsg()
+
+
+            msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
+            msg.setSystem(REDBoxMsg.System.System_SetDateTime)
+            msg.setSetDateTime(REDBoxMsg.SetDateTime.SetDateTime_SetTime)
+
+            msg.setSetTimeHour(in_settimehour)
+            msg.setSetTimeMinute(in_settimeminute)
+            msg.setSetTimeSecond(in_settimesecond)
 
             return msg
  
@@ -131,6 +169,9 @@ class REDBoxMasterRouter(object):
                     pass
 
                 elif in_msg.getSystem() == REDBoxMsg.System.System_SaveCalibration:
+                    pass
+
+                elif in_msg.getSystem() == REDBoxMsg.System.System_SetDateTime:
                     pass
 
 

@@ -213,7 +213,9 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
 
         elif command == "update_datetime":
-            logger.warning(msg.get('dt', ""))
+            dt = msg['dt']
+            self.interface.sendMsg(self.makeSetDate(dt.day, dt.month, dt.year))
+            self.interface.sendMsg(self.makeSetTime(dt.hour, dt.minute, dt.second))
 
             
     def process_serial_message(self, msg):
@@ -271,8 +273,7 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
     def processDate(self, in_datedate, in_datemonth, in_dateyear):
         logger.info("Date {}, Month {}, Year {}".format(in_datedate, in_datemonth, in_dateyear))
-        self.shared_data.date = datetime.date(year=2019, month=11, day=8)
-        # self.shared_data.date = datetime.date(year=in_dateyear, month=in_datemonth, day=in_datedate)
+        self.shared_data.date = datetime.date(year=in_dateyear, month=in_datemonth, day=in_datedate)
 
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
         logger.info("Hour {}, Minute {}, Second {}".format(in_timehour, in_timeminute, in_timesecond))
