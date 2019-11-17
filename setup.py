@@ -30,7 +30,8 @@ setup(
         'pyserial',
         'transitions',
         'podcastparser',
-        'bcrypt'
+        'bcrypt',
+        'microparcel'
     ],
     entry_points={
         'mopidy.ext': [
