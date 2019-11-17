@@ -77,8 +77,9 @@ class SerialInterfaceListener(Thread):
     ####################################################################
     def sendMsg(self, msg):
         if self.serial is None:
-            raise FrontendError("Can't send message to the hardware, serial port not opened")
-
+            logger.warning("Can't send message to the hardware, serial port not opened")
+            return
+            
         self._mutex.acquire()
         frame = self._parser.encode(msg)
         buff = bytearray()
