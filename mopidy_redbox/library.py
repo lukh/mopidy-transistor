@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Library(object):
     def __init__(self, json_file, podcast_timeout=5.0):
-        self._json_file = json_file
+        self._json_file = Path(json_file)
         self._podcast_timeout = podcast_timeout
         self.load()
 
@@ -23,7 +23,7 @@ class Library(object):
         internal_storage.dump(self._json_file, self.data)
 
     def load(self):
-        if not os.path.isfile(self._json_file):
+        if not self._json_file.is_file():
             self.data = {
                 'version': mopidy.__version__,
                 'radio_banks': {
@@ -46,7 +46,7 @@ class Library(object):
             }
             self.save()
 
-        self.data = internal_storage.load(Path(self._json_file))
+        self.data = internal_storage.load(self._json_file)
 
 
     def update_podcasts(self):
@@ -63,7 +63,8 @@ class Library(object):
                         title = episode['title']
                         media_url = episode['enclosures'][0]['url']
 
-                        podcast['episodes'].append({"title":unicodedata.normalize('NFKD', title).encode('ascii','ignore'), "url":media_url})
+                        # podcast['episodes'].append({"title":unicodedata.normalize('NFKD', title).encode('ascii','ignore'), "url":media_url})
+                        podcast['episodes'].append({"title":title, "url":media_url})
 
                 self.save()
                 logger.info("Redbox Library: done downloading podcasts infos")

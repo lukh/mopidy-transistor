@@ -114,7 +114,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         self._selected_radio_bank = None
         if not os.path.isfile(self._data_path) and len(self.lib["radio_banks"]) > 0:
             with open(self._data_path, 'w') as fp:
-                json.dump({"bank":self.lib["radio_banks"].keys()[0]}, fp)
+                json.dump({"bank":list(self.lib["radio_banks"].keys())[0]}, fp)
 
         if os.path.isfile(self._data_path):
             with open(self._data_path) as fp:
