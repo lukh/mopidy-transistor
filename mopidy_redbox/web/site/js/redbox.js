@@ -169,4 +169,13 @@ event_source.onmessage = function(message) {
     }
   }
 
+  if(data.hasOwnProperty('time')){
+    time_label = document.getElementById("time");
+    time_label.innerText = data.time;
+  }
+
+  if(data.hasOwnProperty('date')){
+    date_label = document.getElementById("date");
+    date_label.innerText = data.date;
+  }
 };

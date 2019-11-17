@@ -53,9 +53,3 @@ class LoginHandler(BaseHandler):
         else:
             self.render("site/login.html", active_page="login", next=self.get_argument('next', '/'), error_msg="Can't Log In...")
 
-class AlarmsHandler(BaseHandler):
-    def initialize(self):
-        pass
-
-    def get(self):
-        self.render("site/alarms.html", active_page="alarms")

@@ -51,7 +51,7 @@ class Extension(ext.Extension):
 
         from .frontend import RedBoxFrontend
 
-        self._queue_event = RedBoxFrontend.queue_event
+        self._shared_data = RedBoxFrontend.shared_data
         self._queue_front = RedBoxFrontend.queue_front
         self._queue_web = RedBoxFrontend.queue_web
 
@@ -70,13 +70,13 @@ class Extension(ext.Extension):
             ('/podcasts', web.PodcastHandler, {'core':core, 'config':config}),
             ('/about', web.AboutHandler, {}),
             ('/settings', web.SettingsHandler, {'config':config}),
-            ('/alarms', web.AlarmsHandler, {}),
+            ('/alarms', web.AlarmsHandler, {'queue_web':self._queue_web}),
             ('/wifi', web.WifiHandler, {}),
             ('/login', web.LoginHandler, {'config':config}),
-            ('/calibration', web.CalibrationHandler),
-
+            ('/calibration', web.CalibrationHandler, {}),
+            
+            ('/events', web.EventSource, {'shared_data':self._shared_data}),
             ('/calibsocket', web.CalibrationWebSocketHandler, {'queue_front':self._queue_front, 'queue_web':self._queue_web}),
-            ('/events', web.EventSource, {'queue':self._queue_event}),
 
             (r'/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), 'web', 'site')})
         ]

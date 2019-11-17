@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/lukhe/.local/share/virtualenvs/software-psf0Q1jc/bin/python"
+    "python.pythonPath": "/home/lukhe/.local/share/virtualenvs/software-psf0Q1jc/bin/python",
+    "python.linting.enabled": false
 }

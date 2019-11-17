@@ -1,6 +1,14 @@
 {% extends "base.html"%}
 {% block body %}
 
-
 <h2>Alarms</h2>
-{% end %}
+
+<form class="settings-form" method="post" action="alarms">
+    <input type="date" name="current_date">
+    <input type="time" name="current_time">
+    <button type="submit">Set Date/Time</button>
+</form>
+
+<span style="color: red;">{{ message }}</span>
+
+{% end %}s
