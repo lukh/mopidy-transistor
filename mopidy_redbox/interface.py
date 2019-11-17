@@ -23,8 +23,9 @@ class SerialInterfaceListener(Thread):
 
         self.frontend = frontend
 
-        self.initCommunication(config['redbox']['serial_port'],
-                               int(config['redbox']['serial_baudrate']))
+        self.initCommunication(
+            config["redbox"]["serial_port"], int(config["redbox"]["serial_baudrate"])
+        )
 
     @property
     def stop(self):
@@ -34,8 +35,6 @@ class SerialInterfaceListener(Thread):
     def stop(self, st):
         self._stop_flag = st
 
-
-
     def initCommunication(self, serial_port, serial_baudrate):
         self._mutex = Lock()
         # opening serial port
@@ -44,12 +43,17 @@ class SerialInterfaceListener(Thread):
             self.serial = serial.Serial(serial_port, serial_baudrate, timeout=0.1)
         except serial.SerialException as e:
             self.serial = None
-            logger.error("Can't open serial port {} @ {}: {}".format(serial_port, serial_baudrate, str(e)))
-            logger.warning("It is not possible to communicate with the hardware, but the web front end still work")
+            logger.error(
+                "Can't open serial port {} @ {}: {}".format(
+                    serial_port, serial_baudrate, str(e)
+                )
+            )
+            logger.warning(
+                "It is not possible to communicate with the hardware, but the web front end still work"
+            )
             # raise FrontendError("Impossible to open serial port {}: {}".format(serial_port, str(e)))
 
         self._parser = mp.make_parser_cls(REDBoxMsg().size)()
-
 
     def run(self):
         if self.serial is None:
@@ -69,10 +73,13 @@ class SerialInterfaceListener(Thread):
             if status == self._parser.Status.Complete:
                 self.frontend.process_serial_message(msg)
             if status == self._parser.Status.Error:
-                logger.error("Error in parsing Serial Message: recv byte = {}, current msg = {}".format(raw_byte, msg.data))
+                logger.error(
+                    "Error in parsing Serial Message: recv byte = {}, current msg = {}".format(
+                        raw_byte, msg.data
+                    )
+                )
 
         self.serial.close()
-
 
     ####################################################################
     ############################## Others ##############################
@@ -81,7 +88,7 @@ class SerialInterfaceListener(Thread):
         if self.serial is None:
             logger.warning("Can't send message to the hardware, serial port not opened")
             return
-            
+
         self._mutex.acquire()
         frame = self._parser.encode(msg)
         buff = bytearray()
@@ -89,7 +96,6 @@ class SerialInterfaceListener(Thread):
             buff.append(d)
         self.serial.write(buff)
         self._mutex.release()
-
 
 
 class WebsocketInterfaceListener(Thread):
@@ -116,4 +122,3 @@ class WebsocketInterfaceListener(Thread):
 
             else:
                 time.sleep(0.1)
-

@@ -9,13 +9,14 @@ from mopidy_redbox.utils import SharedData
 
 class EventSource(web.RequestHandler):
     """Basic handler for server-sent events."""
+
     def initialize(self, shared_data):
         self._shared_data = shared_data
 
         self._sent_data = SharedData()
 
-        self.set_header('content-type', 'text/event-stream')
-        self.set_header('cache-control', 'no-cache')
+        self.set_header("content-type", "text/event-stream")
+        self.set_header("cache-control", "no-cache")
 
         self._stop = False
 
@@ -26,7 +27,7 @@ class EventSource(web.RequestHandler):
     def publish(self, data):
         """Pushes data to a listener."""
         try:
-            self.write('data: {}\n\n'.format(json.dumps(data)))
+            self.write("data: {}\n\n".format(json.dumps(data)))
             yield self.flush()
         except StreamClosedError:
             pass
@@ -37,12 +38,12 @@ class EventSource(web.RequestHandler):
             if self._sent_data.tuner_position != self._shared_data.tuner_position:
                 self._sent_data.tuner_position = self._shared_data.tuner_position
 
-                yield self.publish({'tuner_position':self._shared_data.tuner_position})
+                yield self.publish({"tuner_position": self._shared_data.tuner_position})
 
             if self._sent_data.tuner_labels != self._shared_data.tuner_labels:
                 self._sent_data.tuner_labels = self._shared_data.tuner_labels
 
-                yield self.publish({'tuner_labels':self._shared_data.tuner_labels})
+                yield self.publish({"tuner_labels": self._shared_data.tuner_labels})
 
             if self._sent_data.time != self._shared_data.time:
                 self._sent_data.time = self._shared_data.time
@@ -50,8 +51,9 @@ class EventSource(web.RequestHandler):
             if self._sent_data.date != self._shared_data.date:
                 self._sent_data.date = self._shared_data.date
 
-                yield self.publish({'date':self._shared_data.date.strftime("%d/%m/%y")})
-
+                yield self.publish(
+                    {"date": self._shared_data.date.strftime("%d/%m/%y")}
+                )
 
             yield gen.sleep(0.1)
 
@@ -59,10 +61,8 @@ class EventSource(web.RequestHandler):
             d = self._shared_data.date
 
             dt = datetime.datetime(d.year, d.month, d.day, t.hour, t.minute, t.second)
-            dt += datetime.timedelta(seconds=int(time.time() - self._shared_data.timestamp))
+            dt += datetime.timedelta(
+                seconds=int(time.time() - self._shared_data.timestamp)
+            )
 
-            yield self.publish({'time':dt.time().strftime("%H:%M:%S")})
-
-
-
-
+            yield self.publish({"time": dt.time().strftime("%H:%M:%S")})

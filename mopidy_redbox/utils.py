@@ -2,13 +2,14 @@ from threading import Lock
 
 import datetime
 
+
 class SharedData(object):
     def __init__(self):
         self._lock = Lock()
 
         self._tuner_position = 0
         self._tuner_labels = []
-        self._time = datetime.time(0,0,0)
+        self._time = datetime.time(0, 0, 0)
         self._date = datetime.date.max
 
         self._timestamp = 0
