@@ -4,7 +4,7 @@ import logging
 import serial
 import json
 from threading import Thread
-from queue import Queue
+from Queue import Queue
 import datetime
 import time
 
