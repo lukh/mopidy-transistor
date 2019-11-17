@@ -7,7 +7,7 @@ from queue import Queue
 from mopidy import core
 from mopidy.exceptions import FrontendError
 
-import interface
+from . import interface
 
 logger = logging.getLogger(__name__)
 

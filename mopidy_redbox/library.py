@@ -3,7 +3,8 @@ import os
 import mopidy
 import logging
 import unicodedata
-import urllib2
+from urllib.request import urlopen
+from pathlib import Path
 import podcastparser
 import threading
 
@@ -45,14 +46,14 @@ class Library(object):
             }
             self.save()
 
-        self.data = internal_storage.load(self._json_file)
+        self.data = internal_storage.load(Path(self._json_file))
 
 
     def update_podcasts(self):
         def run():
             try:
                 for podcast in self.data['podcasts']:
-                    raw = urllib2.urlopen(podcast['feed_url'], timeout=self._podcast_timeout)
+                    raw = urlopen(podcast['feed_url'], timeout=self._podcast_timeout)
                     parsed = podcastparser.parse(podcast['feed_url'], raw)
                     episodes = parsed['episodes']
 

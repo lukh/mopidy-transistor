@@ -7,7 +7,7 @@ import tornado.web
 
 from mopidy import config, ext
 
-import web
+from . import web
 
 
 __version__ = '0.0.1'

@@ -1,4 +1,4 @@
-from REDBoxMsg import REDBoxMsg
+from .REDBoxMsg import REDBoxMsg
 
 class REDBoxMasterRouter(object):
         # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    |

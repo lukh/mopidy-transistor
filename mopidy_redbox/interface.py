@@ -12,8 +12,8 @@ import mopidy_redbox
 
 from microparcel import microparcel as mp
 
-from protocol.REDBoxMsg import REDBoxMsg
-from protocol.REDBoxMasterRouter import REDBoxMasterRouter
+from .protocol.REDBoxMsg import REDBoxMsg
+from .protocol.REDBoxMasterRouter import REDBoxMasterRouter
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class SerialInterfaceListener(Thread, REDBoxMasterRouter):
         self._queue_web = queue_web
 
         self._data_path = os.path.join(
-            mopidy_redbox.Extension.get_data_dir(config), b'data.json')
+            mopidy_redbox.Extension.get_data_dir(config), 'data.json')
 
         # the position used as a key for radio and podcast
         self._curr_played_position = 0

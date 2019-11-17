@@ -1,7 +1,9 @@
-from ConfigParser import SafeConfigParser
+try:
+    from configparser import SafeConfigParser
+except:
+    from ConfigParser import SafeConfigParser
 from collections import OrderedDict
 from threading import Timer
-from basics import BaseHandler
 
 import bcrypt
 
@@ -10,7 +12,8 @@ import tornado.websocket
 
 from transitions import Machine, State
 
-from settings_conf import settings_conf
+from .basics import BaseHandler
+from .settings_conf import settings_conf
 
 
 class SettingsHandler(BaseHandler):

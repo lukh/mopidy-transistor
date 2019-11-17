@@ -11,7 +11,7 @@ import urllib
 import podcastparser
 
 import mopidy_redbox
-import library
+from . import library
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class RedBoxBackend(pykka.ThreadingActor, backend.Backend):
     def __init__(self, config, audio):
         super(RedBoxBackend, self).__init__()
 
-        lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), b'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
+        lib = library.Library(os.path.join(mopidy_redbox.Extension.get_data_dir(config), 'library.json.gz'), podcast_timeout=config['redbox']['podcasts_timeout'])
         lib.update_podcasts()
         
         self.library = RedBoxLibraryProvider(self, lib)

@@ -1,6 +1,6 @@
 import os
 
-from basics import BaseHandler
+from .basics import BaseHandler
 
 import tornado.web
 
