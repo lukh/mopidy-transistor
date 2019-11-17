@@ -57,7 +57,7 @@ class SerialInterfaceListener(Thread):
 
         while not self.stop:
             ser_in = self.serial.read()
-            if ser_in == "":
+            if len(ser_in) == 0:
                 continue
 
             raw_byte = ord(ser_in)
