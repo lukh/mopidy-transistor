@@ -55,6 +55,20 @@ div.content {
   height: 1000px;
 }
 
+.content .right-side-informations{
+  float: right;
+}
+
+.content .right-side-informations .date-time{
+  float: left;
+  margin: 7px 8px;
+  text-align: center;
+}
+
+.content .right-side-informations #battery{
+  float: left;
+}
+
 /* Footer */
 .footer-wrapper {
   position: fixed;
@@ -124,7 +138,9 @@ div.content {
     display: none;
   }
 
-  div.content {margin-left: 0;}
+  div.content {
+    margin-left: 0;
+  }
 
   .footer{
     display: none;

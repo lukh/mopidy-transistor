@@ -50,12 +50,13 @@
     </div>
 
     <div class="content">
-        <span id="left-side-informations">
-            <span id="time"></span>
-            <span id="date"></span>
+        <div class="right-side-informations">
+            <div class="date-time">
+                <div id="time"></div>
+                <div id="date"></div>
+            </div>
             <div id="battery"><div id="battery_level"></div></div>
-        </span>
-
+        </div>
         {% block body %}Not defined{% end %}
     </div>
 
