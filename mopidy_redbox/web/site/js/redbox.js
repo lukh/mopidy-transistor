@@ -1,9 +1,6 @@
 var mopidy = new Mopidy();
 var event_source = new EventSource('/redbox/events');
 
-mopidy.on("state", console.log);
-mopidy.on("event", console.log);
-
 // Utilities
 
 function el(id) {
