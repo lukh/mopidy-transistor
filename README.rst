@@ -1,20 +1,20 @@
 ****************************
-Mopidy-Redbox
+Mopidy-Transistor
 ****************************
 
-.. image:: https://img.shields.io/pypi/v/Mopidy-Redbox.svg?style=flat
-    :target: https://pypi.python.org/pypi/Mopidy-Redbox/
+.. image:: https://img.shields.io/pypi/v/Mopidy-Transistor.svg?style=flat
+    :target: https://pypi.python.org/pypi/Mopidy-Transistor/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/travis/lukhe/mopidy-redbox/master.svg?style=flat
-    :target: https://travis-ci.org/lukhe/mopidy-redbox
+.. image:: https://img.shields.io/travis/lukhe/mopidy-transistor/master.svg?style=flat
+    :target: https://travis-ci.org/lukhe/mopidy-transistor
     :alt: Travis CI build status
 
-.. image:: https://img.shields.io/coveralls/lukhe/mopidy-redbox/master.svg?style=flat
-   :target: https://coveralls.io/r/lukhe/mopidy-redbox
+.. image:: https://img.shields.io/coveralls/lukhe/mopidy-transistor/master.svg?style=flat
+   :target: https://coveralls.io/r/lukhe/mopidy-transistor
    :alt: Test coverage
 
-Mopidy Extension for Redbox project
+Mopidy Extension for Transistor project
 
 
 Installation
@@ -22,7 +22,7 @@ Installation
 
 Install by running::
 
-    pip install Mopidy-Redbox
+    pip install Mopidy-Transistor
 
 Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
 <http://apt.mopidy.com/>`_.
@@ -32,17 +32,17 @@ Configuration
 =============
 
 Before starting Mopidy, you must add configuration for
-Mopidy-Redbox to your Mopidy configuration file::
+Mopidy-Transistor to your Mopidy configuration file::
 
-    [redbox]
+    [transistor]
     # TODO: Add example of extension config
 
 
 Project resources
 =================
 
-- `Source code <https://github.com/lukhe/mopidy-redbox>`_
-- `Issue tracker <https://github.com/lukhe/mopidy-redbox/issues>`_
+- `Source code <https://github.com/lukhe/mopidy-transistor>`_
+- `Issue tracker <https://github.com/lukhe/mopidy-transistor/issues>`_
 
 
 Credits
@@ -50,7 +50,7 @@ Credits
 
 - Original author: `Vivien HENRY <https://github.com/lukhe`__
 - Current maintainer: `Vivien HENRY <https://github.com/lukhe`__
-- `Contributors <https://github.com/lukhe/mopidy-redbox/graphs/contributors>`_
+- `Contributors <https://github.com/lukhe/mopidy-transistor/graphs/contributors>`_
 
 
 Changelog
