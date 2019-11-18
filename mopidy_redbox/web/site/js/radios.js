@@ -5,7 +5,7 @@ function openPage(pageName, elmnt, color) {
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].className = "radios-tabcontent";
     }
-    document.getElementById(pageName).className = "radios-tabcontent active";
+    el(pageName).className = "radios-tabcontent active";
 
 
     // Remove the background color of all tablinks/buttons
@@ -17,14 +17,14 @@ function openPage(pageName, elmnt, color) {
     elmnt.className = "radios-tablink active";
 
     // update value of add radio button
-    document.getElementById("radios-addradio-button").setAttribute("value", pageName); 
+    el("radios-addradio-button").setAttribute("value", pageName); 
 
     //hide add radio form
-    document.getElementById("radios-addradio").style.display = "none";
+    el("radios-addradio").style.display = "none";
 }
 
 function addBank() {
-    var bankList = document.getElementById("radios-banks");
+    var bankList = el("radios-banks");
     newBankDiv = document.createElement("div");
 
     var form = document.createElement("form");
@@ -43,10 +43,10 @@ function addBank() {
 }
 
 function deleteBank(bank) {
-    minus = document.getElementById("radio-tab-del-"+bank);
+    minus = el("radio-tab-del-"+bank);
     minus.style.display = "none";
 
-    tab = document.getElementById("radios-tab-" + bank);
+    tab = el("radios-tab-" + bank);
     var form = document.createElement("form");
     form.setAttribute('method',"post");
     form.setAttribute('action',"radios");
@@ -62,8 +62,8 @@ function deleteBank(bank) {
 }
 
 function addRadio() {
-    form = document.getElementById("radios-addradio");
-    button = document.getElementById("radios-addradio-show");
+    form = el("radios-addradio");
+    button = el("radios-addradio-show");
     if(form.style.display != "block"){
         form.style.display = "block";
         button.className = "fas fa-minus-circle";
@@ -75,7 +75,7 @@ function addRadio() {
 }
 
 function deleteRadio(bank, radio_index) {
-    entry = document.getElementById("delete-"+bank+"-"+radio_index);
+    entry = el("delete-"+bank+"-"+radio_index);
     entry.style.width = "100px";
     var form = document.createElement("form");
     form.setAttribute('method',"post");

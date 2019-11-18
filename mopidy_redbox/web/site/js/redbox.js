@@ -1,11 +1,7 @@
 var mopidy = new Mopidy();
 var event_source = new EventSource('/redbox/events');
 
-mopidy.on("state", console.log);
-mopidy.on("event", console.log);
-
 // Utilities
-
 function el(id) {
    return document.getElementById(id);
  }
@@ -21,6 +17,29 @@ function el(id) {
      e.hidden = false;
    });
  }
+
+
+/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+function toggleMenu() {
+  var x = el("menu");
+  if (x.className === "sidebar") {
+    x.className += " responsive";
+  } else {
+    x.className = "sidebar";
+  }
+}
+
+function toggleFooter() {
+  var x = el("footer_id");
+  var toggle = el("toggle-footer");
+  if (x.className === "footer") {
+    x.className += " responsive";
+    toggle.className = "fas fa-minus-circle";
+  } else {
+    x.className = "footer";
+    toggle.className = "fas fa-plus-circle";
+  }
+}
 
 
 // Events Hook - Mopidy
@@ -148,13 +167,13 @@ event_source.onmessage = function(message) {
 
   // tuner position
   if(data.hasOwnProperty('tuner_position')){
-    tuner_position = document.getElementById("tuner-position");
+    tuner_position = el("tuner-position");
     tuner_position.value = data.tuner_position;
   }
 
   // tuner labels
   if(data.hasOwnProperty('tuner_labels')){
-    tuner_labels = document.getElementById("tuner-labels");
+    tuner_labels = el("tuner-labels");
     tuner_labels.innerHTML = '';
 
     for (var label_position in data.tuner_labels){
@@ -170,12 +189,17 @@ event_source.onmessage = function(message) {
   }
 
   if(data.hasOwnProperty('time')){
-    time_label = document.getElementById("time");
+    time_label = el("time");
     time_label.innerText = data.time;
   }
 
   if(data.hasOwnProperty('date')){
-    date_label = document.getElementById("date");
+    date_label = el("date");
     date_label.innerText = data.date;
+  }
+
+  if(data.hasOwnProperty('battery_soc')){
+    bat_gauge = el("battery_level");
+    bat_gauge.style.width = data.battery_soc.toString() + "%";
   }
 };

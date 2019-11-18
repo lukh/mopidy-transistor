@@ -1,7 +1,7 @@
 
 function updateTrackList(){
     const printTracks = tracks => {
-        var tableRef = document.getElementById('tracklist').getElementsByTagName('tbody')[0];
+        var tableRef = el('tracklist').getElementsByTagName('tbody')[0];
         while ( tableRef.rows.length > 0 ) { tableRef.deleteRow(0); }
 
         // list

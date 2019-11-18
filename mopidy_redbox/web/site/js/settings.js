@@ -5,7 +5,7 @@ function openSection(pageName, elmnt){
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].className = "settings-tabcontent";
     }
-    content = document.getElementById(pageName).className = "settings-tabcontent active";
+    content = el(pageName).className = "settings-tabcontent active";
 
 
     // Remove the background color of all tablinks/buttons

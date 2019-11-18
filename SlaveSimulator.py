@@ -7,10 +7,12 @@ ser = serial.Serial("/dev/pts/5", 115200, timeout=0.1)
 router = REDBoxSlaveRouter()
 parser = mp.make_parser_cls(REDBoxMsg().size)()
 
+
 def send_msg(msg):
     frame = parser.encode(msg)
     print frame
     ser.write(frame.data)
+
 
 if __name__ == "__main__":
     while True:
@@ -19,7 +21,7 @@ if __name__ == "__main__":
             if raw == "radio":
                 msg = router.makeSwitchRadio()
                 send_msg(msg)
-            
+
             elif raw == "podcast":
                 msg = router.makeSwitchPodcast()
                 send_msg(msg)
@@ -51,8 +53,3 @@ if __name__ == "__main__":
         except Exception as e:
             print str(e)
             break
-
-
-
-    
-

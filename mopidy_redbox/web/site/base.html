@@ -36,30 +36,6 @@
     <script type="text/javascript" src="vendor/mopidy/mopidy.js"></script>
     <script type="text/javascript" src="js/redbox.js"></script>
 
-    <script type="text/javascript">
-    /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
-        function toggleMenu() {
-            var x = document.getElementById("menu");
-            if (x.className === "sidebar") {
-                x.className += " responsive";
-            } else {
-                x.className = "sidebar";
-            }
-        }
-
-        function toggleFooter() {
-            var x = document.getElementById("footer_id");
-            var toggle = document.getElementById("toggle-footer");
-            if (x.className === "footer") {
-                x.className += " responsive";
-                toggle.className = "fas fa-minus-circle";
-            } else {
-                x.className = "footer";
-                toggle.className = "fas fa-plus-circle";
-            }
-        }
-    </script>
-
     <!-- The sidebar -->
     <div class="sidebar" id="menu">
         <div class="sidebar-icon"><img src="/redbox/images/logo.png"></div>
@@ -74,12 +50,13 @@
     </div>
 
     <div class="content">
-        <span id="left-side-informations">
-            <span id="time"></span>
-            <span id="date"></span>
-            <div class="battery"><div class="level"></div></div>
-        </span>
-
+        <div class="right-side-informations">
+            <div class="date-time">
+                <div id="time"></div>
+                <div id="date"></div>
+            </div>
+            <div id="battery"><div id="battery_level"></div></div>
+        </div>
         {% block body %}Not defined{% end %}
     </div>
 
