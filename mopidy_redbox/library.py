@@ -100,10 +100,10 @@ class Library(object):
                         podcast["episodes"].append({"title": title, "url": media_url})
 
                 self.save()
-                logger.info("Redbox Library: done downloading podcasts infos")
+                logger.info("Transistor Library: done downloading podcasts infos")
 
             except Exception as e:
-                logger.error("RedBox: Can't retrieve podcast data: {}".format(str(e)))
+                logger.error("Transistor: Can't retrieve podcast data: {}".format(str(e)))
 
         thr = threading.Thread(target=run)
         thr.start()

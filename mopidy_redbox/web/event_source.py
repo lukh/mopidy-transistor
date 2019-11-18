@@ -4,7 +4,7 @@ from tornado import web, gen
 from tornado.ioloop import PeriodicCallback
 from tornado.iostream import StreamClosedError
 import json
-from mopidy_redbox.utils import SharedData
+from mopidy_transistor.utils import SharedData
 
 
 class EventSource(web.RequestHandler):

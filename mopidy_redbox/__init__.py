@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 class Extension(ext.Extension):
 
-    dist_name = "Mopidy-Redbox"
-    ext_name = "redbox"
+    dist_name = "Mopidy-Transistor"
+    ext_name = "transistor"
     version = __version__
 
     def get_default_config(self):
@@ -46,17 +46,17 @@ class Extension(ext.Extension):
         return schema
 
     def setup(self, registry):
-        from .backend import RedBoxBackend
+        from .backend import TransistorBackend
 
-        registry.add("backend", RedBoxBackend)
+        registry.add("backend", TransistorBackend)
 
-        from .frontend import RedBoxFrontend
+        from .frontend import TransistorFrontend
 
-        self._shared_data = RedBoxFrontend.shared_data
-        self._queue_front = RedBoxFrontend.queue_front
-        self._queue_web = RedBoxFrontend.queue_web
+        self._shared_data = TransistorFrontend.shared_data
+        self._queue_front = TransistorFrontend.queue_front
+        self._queue_web = TransistorFrontend.queue_web
 
-        registry.add("frontend", RedBoxFrontend)
+        registry.add("frontend", TransistorFrontend)
 
         registry.add("http:app", {"name": self.ext_name, "factory": self.web_factory})
 

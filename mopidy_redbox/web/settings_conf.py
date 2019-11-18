@@ -4,7 +4,7 @@ from collections import OrderedDict
 settings_conf = OrderedDict()
 
 # settings convert passwd to new, old, repeat passwd
-settings_conf["redbox"] = [("user", "string"), ("passwd", "password")]
+settings_conf["transistor"] = [("user", "string"), ("passwd", "password")]
 settings_conf["proxy"] = [
     ("scheme", "string"),
     ("hostname", "string"),

@@ -1,12 +1,12 @@
 {% set navigation_bar = [
-    ('/redbox', 'index', 'Dashboard'),
-    ('/redbox/browse', 'browse', 'Browse'),
-    ('/redbox/radios', 'radios', 'Radios'),
-    ('/redbox/podcasts', 'podcasts', 'Podcasts'),
-    ('/redbox/alarms', 'alarms', 'Alarms'),
-    ('/redbox/wifi', 'wifi', 'Wifi'),
-    ('/redbox/settings', 'settings', 'Settings'),
-    ('/redbox/about', 'about', 'About'),
+    ('/transistor', 'index', 'Dashboard'),
+    ('/transistor/browse', 'browse', 'Browse'),
+    ('/transistor/radios', 'radios', 'Radios'),
+    ('/transistor/podcasts', 'podcasts', 'Podcasts'),
+    ('/transistor/alarms', 'alarms', 'Alarms'),
+    ('/transistor/wifi', 'wifi', 'Wifi'),
+    ('/transistor/settings', 'settings', 'Settings'),
+    ('/transistor/about', 'about', 'About'),
 ] %}
 
 <!DOCTYPE html>
@@ -19,26 +19,26 @@
     <meta name="author" content="">
 
     <title>Transistor Configuration</title>
-    <link rel="icon" type="image/png" href="/redbox/images/radio.png">
+    <link rel="icon" type="image/png" href="/transistor/images/radio.png">
 
     <!-- Custom styles for this template -->
-    <link href="/redbox/css/style.css" rel="stylesheet">
-    <link href="/redbox/css/redbox.css" rel="stylesheet">
-    <link href="/redbox/css/battery.css" rel="stylesheet">
-    <link href="/redbox/css/tuner.css" rel="stylesheet">
+    <link href="/transistor/css/style.css" rel="stylesheet">
+    <link href="/transistor/css/transistor.css" rel="stylesheet">
+    <link href="/transistor/css/battery.css" rel="stylesheet">
+    <link href="/transistor/css/tuner.css" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 
 </head>
 
 <body>
-    <!-- Mopidy API and Redbox JS-->
+    <!-- Mopidy API and Transistor JS-->
     <script type="text/javascript" src="vendor/mopidy/mopidy.js"></script>
-    <script type="text/javascript" src="js/redbox.js"></script>
+    <script type="text/javascript" src="js/transistor.js"></script>
 
     <!-- The sidebar -->
     <div class="sidebar" id="menu">
-        <div class="sidebar-icon"><img src="/redbox/images/logo.png"></div>
+        <div class="sidebar-icon"><img src="/transistor/images/logo.png"></div>
 
         {% for href, id, caption in navigation_bar %}
         <a {% if active_page == id %}class="active"{% end if %} href="{{ href }}">{{caption}}</a>

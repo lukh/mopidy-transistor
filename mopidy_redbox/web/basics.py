@@ -37,8 +37,8 @@ class BrowseHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def initialize(self, config):
-        self._user = config["redbox"]["user"]
-        self._hashed_passwd = config["redbox"]["passwd"]
+        self._user = config["transistor"]["user"]
+        self._hashed_passwd = config["transistor"]["passwd"]
 
     def get(self):
         if self._user == None and self._hashed_passwd == None:

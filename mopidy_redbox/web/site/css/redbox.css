@@ -1,30 +1,30 @@
 @import "config.css";
 
-.redbox-table {
+.transistor-table {
     border-collapse: collapse;
     width: 100%;
     margin-top:16px;
     table-layout: fixed;
   }
 
-.redbox-table .browse-type{
+.transistor-table .browse-type{
     width : 20px;
 }
   
-.redbox-table td, .redbox-table th {
+.transistor-table td, .transistor-table th {
     border: 0px;
     padding: 8px;
 }
 
-.redbox-table tr:nth-child(even){background-color: #f2f2f2;}
+.transistor-table tr:nth-child(even){background-color: #f2f2f2;}
 
-.redbox-table tr:hover {background-color: #ddd;}
+.transistor-table tr:hover {background-color: #ddd;}
 
-.redbox-table th {
+.transistor-table th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: var(--redbox-light-color);
+    background-color: var(--transistor-light-color);
     color: white;
 }
 
@@ -47,12 +47,12 @@
 /* Radios Related */
 /* Style tab links */
 .radios-tablink-group{
-    background-color:var(--redbox-dark-color);
+    background-color:var(--transistor-dark-color);
     overflow: hidden;
 }
 
 .radios-tablink {
-    background-color:var(--redbox-dark-color);
+    background-color:var(--transistor-dark-color);
     float: left;
     color: #f2f2f2;
     text-align: center;
@@ -66,7 +66,7 @@
   }
 
   .radios-tablink.active {
-    background-color: var(--redbox-light-color);
+    background-color: var(--transistor-light-color);
   }
 
   .radios-tablink i{
@@ -91,7 +91,7 @@
   }
   
   .radios-add-bank{
-    background-color:var(--redbox-dark-color);
+    background-color:var(--transistor-dark-color);
     float: right;
     color: #f2f2f2;
     text-align: center;
@@ -101,7 +101,7 @@
   }
 
   .radios-new-bank{
-    background-color:var(--redbox-dark-color);
+    background-color:var(--transistor-dark-color);
     float: right;
     color: #f2f2f2;
     text-align: center;
@@ -173,7 +173,7 @@
   
   #radios-addradio button[type=submit] {
     width: 100%;
-    background-color: var(--redbox-dark-color);
+    background-color: var(--transistor-dark-color);
     color: white;
     padding: 8px 20px;
     margin: 8px 0;
@@ -183,7 +183,7 @@
   }
   
   #radios-addradio button[type=submit]:hover {
-    background-color: var(--redbox-dark-color);
+    background-color: var(--transistor-dark-color);
   }
 
 
@@ -220,7 +220,7 @@
   
   #radios-modifyradio button[type=submit] {
     width: 100%;
-    background-color: var(--redbox-dark-color);
+    background-color: var(--transistor-dark-color);
     color: white;
     padding: 8px 20px;
     margin: 8px 0;
@@ -230,7 +230,7 @@
   }
   
   #radios-modifyradio button[type=submit]:hover {
-    background-color: var(--redbox-dark-color);
+    background-color: var(--transistor-dark-color);
   }
 
 
@@ -311,7 +311,7 @@
  
  #podcasts-addpodcast button[type=submit] {
    width: 100%;
-   background-color: var(--redbox-dark-color);
+   background-color: var(--transistor-dark-color);
    color: white;
    padding: 8px 20px;
    margin: 8px 0;
@@ -321,7 +321,7 @@
  }
  
  #podcasts-addpodcast button[type=submit]:hover {
-   background-color: var(--redbox-dark-color);
+   background-color: var(--transistor-dark-color);
  }
 
 
@@ -358,7 +358,7 @@
  
  #podcasts-modifypodcast button[type=submit] {
    width: 100%;
-   background-color: var(--redbox-dark-color);
+   background-color: var(--transistor-dark-color);
    color: white;
    padding: 8px 20px;
    margin: 8px 0;
@@ -368,7 +368,7 @@
  }
  
  #podcasts-modifypodcast button[type=submit]:hover {
-   background-color: var(--redbox-dark-color);
+   background-color: var(--transistor-dark-color);
  }
 
 
@@ -396,12 +396,12 @@
  /* Radios Related */
 /* Style tab links */
 .settings-tablink-group{
-  background-color:var(--redbox-dark-color);
+  background-color:var(--transistor-dark-color);
   overflow: hidden;
 }
 
 .settings-tablink {
-  background-color:var(--redbox-dark-color);
+  background-color:var(--transistor-dark-color);
   float: left;
   color: #f2f2f2;
   text-align: center;
@@ -415,7 +415,7 @@
 }
 
 .settings-tablink.active {
-  background-color: var(--redbox-light-color);
+  background-color: var(--transistor-light-color);
 }
 
 .settings-tabcontent{
@@ -444,7 +444,7 @@
 }
 
 .settings-form button {
-  background-color: var(--redbox-dark-color);
+  background-color: var(--transistor-dark-color);
   color: white;
   padding: 8px 20px;
   margin: 8px 0;

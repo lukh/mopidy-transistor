@@ -32,7 +32,7 @@
     border: none;
     height: 80px;
     width: 4px;
-    background: var(--redbox-dark-color);
+    background: var(--transistor-dark-color);
     margin-top: -4px;
 }
 
@@ -41,6 +41,6 @@
     border: none;
     height: 80px;
     width: 4px;
-    background: var(--redbox-dark-color);
+    background: var(--transistor-dark-color);
     margin-top: -4px;
 }

@@ -8,8 +8,8 @@ from mopidy.exceptions import FrontendError
 
 from microparcel import microparcel as mp
 
-from .protocol.REDBoxMsg import REDBoxMsg
-from .protocol.REDBoxMasterRouter import REDBoxMasterRouter
+from .protocol.TransistorMsg import TransistorMsg
+from .protocol.TransistorMasterRouter import TransistorMasterRouter
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class SerialInterfaceListener(Thread):
         self.frontend = frontend
 
         self.initCommunication(
-            config["redbox"]["serial_port"], int(config["redbox"]["serial_baudrate"])
+            config["transistor"]["serial_port"], int(config["transistor"]["serial_baudrate"])
         )
 
     @property
@@ -53,7 +53,7 @@ class SerialInterfaceListener(Thread):
             )
             # raise FrontendError("Impossible to open serial port {}: {}".format(serial_port, str(e)))
 
-        self._parser = mp.make_parser_cls(REDBoxMsg().size)()
+        self._parser = mp.make_parser_cls(TransistorMsg().size)()
 
     def run(self):
         if self.serial is None:
@@ -66,7 +66,7 @@ class SerialInterfaceListener(Thread):
 
             raw_byte = ord(ser_in)
 
-            msg = REDBoxMsg()
+            msg = TransistorMsg()
 
             # parse byte
             status = self._parser.parse(raw_byte, msg)

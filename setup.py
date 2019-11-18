@@ -12,13 +12,13 @@ def get_version(filename):
 
 
 setup(
-    name="Mopidy-Redbox",
-    version=get_version("mopidy_redbox/__init__.py"),
-    url="https://github.com/lukhe/mopidy-redbox",
+    name="Mopidy-Transistor",
+    version=get_version("mopidy_transistor/__init__.py"),
+    url="https://github.com/lukhe/mopidy-transistor",
     license="Apache License, Version 2.0",
     author="Vivien HENRY",
     author_email="vivien.henry@outlook.fr",
-    description="Mopidy Extension for Redbox project",
+    description="Mopidy Extension for Transistor project",
     long_description=open("README.rst").read(),
     packages=find_packages(exclude=["tests", "tests.*"]),
     zip_safe=False,
@@ -33,7 +33,7 @@ setup(
         "bcrypt",
         "microparcel",
     ],
-    entry_points={"mopidy.ext": ["redbox = mopidy_redbox:Extension",],},
+    entry_points={"mopidy.ext": ["transistor = mopidy_transistor:Extension",],},
     classifiers=[
         "Environment :: No Input/Output (Daemon)",
         "Intended Audience :: End Users/Desktop",

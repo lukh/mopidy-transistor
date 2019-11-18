@@ -19,7 +19,7 @@ from .settings_conf import settings_conf
 class SettingsHandler(BaseHandler):
     def initialize(self, config):
         self.config = config
-        self.config_file = config["redbox"]["config_file"]
+        self.config_file = config["transistor"]["config_file"]
 
     @tornado.web.authenticated
     def get(self):
@@ -27,7 +27,7 @@ class SettingsHandler(BaseHandler):
         for section in settings_conf:
             config[section] = OrderedDict()
             for name, param_type in settings_conf[section]:
-                if section == "redbox" and name == "passwd":
+                if section == "transistor" and name == "passwd":
                     config[section]["new_passwd"] = ["", "password"]
                     config[section]["repeat_passwd"] = ["", "password"]
                     config[section]["old_passwd"] = ["", "password"]
@@ -60,7 +60,7 @@ class SettingsHandler(BaseHandler):
         passwd_updated = 0
 
         for name, param_type in settings_conf[section]:
-            if section == "redbox" and name == "passwd":
+            if section == "transistor" and name == "passwd":
                 new_pass = self.get_argument("new_passwd")
                 rep_passwd = self.get_argument("repeat_passwd")
                 old_passwd = self.get_argument("old_passwd")
@@ -70,10 +70,10 @@ class SettingsHandler(BaseHandler):
 
                 elif new_pass != "":
                     if (
-                        self.config["redbox"]["passwd"] is None
+                        self.config["transistor"]["passwd"] is None
                         or new_pass == rep_passwd
                         and bcrypt.checkpw(
-                            str(old_passwd), str(self.config["redbox"]["passwd"])
+                            str(old_passwd), str(self.config["transistor"]["passwd"])
                         )
                     ):
 
@@ -126,8 +126,8 @@ class WifiHandler(BaseHandler):
         ssid = ssid_other if ssid_other != "" else ssids
         self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None)
 
-        # os.popen('sudo redbox_wifi connect {} {}'.format(ssid, passwd))
-        print("sudo redbox_wifi connect {} {}".format(ssid, passwd))
+        # os.popen('sudo transistor_wifi connect {} {}'.format(ssid, passwd))
+        print("sudo transistor_wifi connect {} {}".format(ssid, passwd))
 
 
 class CalibrationHandler(BaseHandler):

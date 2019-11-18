@@ -2,12 +2,12 @@ from enum import Enum
 import microparcel as mp
 
 
-class REDBoxMsg(mp.Message):
+class TransistorMsg(mp.Message):
     PROTOCOL_VERSION_MAJOR = 1
     PROTOCOL_VERSION_MINOR = 0
 
     def __init__(self):
-        super(REDBoxMsg, self).__init__(size=4)
+        super(TransistorMsg, self).__init__(size=4)
 
     # --- Common enums ---
 
@@ -24,7 +24,7 @@ class REDBoxMsg(mp.Message):
         MsgType_System = 2
 
     def getMsgType(self):
-        return REDBoxMsg.MsgType(self.get(0, 2))
+        return TransistorMsg.MsgType(self.get(0, 2))
 
     def setMsgType(self, in_msgtype):
         self.set(0, 2, in_msgtype.value)
@@ -40,7 +40,7 @@ class REDBoxMsg(mp.Message):
         Command_Navigation = 3
 
     def getCommand(self):
-        return REDBoxMsg.Command(self.get(2, 2))
+        return TransistorMsg.Command(self.get(2, 2))
 
     def setCommand(self, in_command):
         self.set(2, 2, in_command.value)
@@ -54,7 +54,7 @@ class REDBoxMsg(mp.Message):
         Potentiometer_Tuner = 1
 
     def getPotentiometer(self):
-        return REDBoxMsg.Potentiometer(self.get(4, 1))
+        return TransistorMsg.Potentiometer(self.get(4, 1))
 
     def setPotentiometer(self, in_potentiometer):
         self.set(4, 1, in_potentiometer.value)
@@ -79,7 +79,7 @@ class REDBoxMsg(mp.Message):
         ModeType_Podcast = 2
 
     def getModeType(self):
-        return REDBoxMsg.ModeType(self.get(4, 2))
+        return TransistorMsg.ModeType(self.get(4, 2))
 
     def setModeType(self, in_modetype):
         self.set(4, 2, in_modetype.value)
@@ -93,7 +93,7 @@ class REDBoxMsg(mp.Message):
         NavigationType_Next = 1
 
     def getNavigationType(self):
-        return REDBoxMsg.NavigationType(self.get(4, 1))
+        return TransistorMsg.NavigationType(self.get(4, 1))
 
     def setNavigationType(self, in_navigationtype):
         self.set(4, 1, in_navigationtype.value)
@@ -107,7 +107,7 @@ class REDBoxMsg(mp.Message):
         DateTime_Time = 1
 
     def getDateTime(self):
-        return REDBoxMsg.DateTime(self.get(2, 1))
+        return TransistorMsg.DateTime(self.get(2, 1))
 
     def setDateTime(self, in_datetime):
         self.set(2, 1, in_datetime.value)
@@ -185,7 +185,7 @@ class REDBoxMsg(mp.Message):
         System_SetDateTime = 5
 
     def getSystem(self):
-        return REDBoxMsg.System(self.get(2, 3))
+        return TransistorMsg.System(self.get(2, 3))
 
     def setSystem(self, in_system):
         self.set(2, 3, in_system.value)
@@ -229,7 +229,7 @@ class REDBoxMsg(mp.Message):
         CalibratePotentiometer_Tuner = 1
 
     def getCalibratePotentiometer(self):
-        return REDBoxMsg.CalibratePotentiometer(self.get(5, 1))
+        return TransistorMsg.CalibratePotentiometer(self.get(5, 1))
 
     def setCalibratePotentiometer(self, in_calibratepotentiometer):
         self.set(5, 1, in_calibratepotentiometer.value)
@@ -245,7 +245,7 @@ class REDBoxMsg(mp.Message):
         CalibratePhase_StopHigh = 3
 
     def getCalibratePhase(self):
-        return REDBoxMsg.CalibratePhase(self.get(6, 2))
+        return TransistorMsg.CalibratePhase(self.get(6, 2))
 
     def setCalibratePhase(self, in_calibratephase):
         self.set(6, 2, in_calibratephase.value)
@@ -259,7 +259,7 @@ class REDBoxMsg(mp.Message):
         SetDateTime_SetTime = 1
 
     def getSetDateTime(self):
-        return REDBoxMsg.SetDateTime(self.get(5, 1))
+        return TransistorMsg.SetDateTime(self.get(5, 1))
 
     def setSetDateTime(self, in_setdatetime):
         self.set(5, 1, in_setdatetime.value)

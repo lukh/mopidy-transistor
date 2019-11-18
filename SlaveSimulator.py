@@ -1,11 +1,11 @@
 from microparcel import microparcel as mp
-from mopidy_redbox.protocol.REDBoxMsg import REDBoxMsg
-from mopidy_redbox.protocol.REDBoxSlaveRouter import REDBoxSlaveRouter
+from mopidy_transistor.protocol.TransistorMsg import TransistorMsg
+from mopidy_transistor.protocol.TransistorSlaveRouter import TransistorSlaveRouter
 import serial
 
 ser = serial.Serial("/dev/pts/5", 115200, timeout=0.1)
-router = REDBoxSlaveRouter()
-parser = mp.make_parser_cls(REDBoxMsg().size)()
+router = TransistorSlaveRouter()
+parser = mp.make_parser_cls(TransistorMsg().size)()
 
 
 def send_msg(msg):

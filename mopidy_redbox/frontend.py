@@ -13,11 +13,11 @@ from transitions import Machine, State, MachineError
 from mopidy import core
 from mopidy.exceptions import FrontendError
 
-import mopidy_redbox
+import mopidy_transistor
 from .utils import SharedData
 
-from .protocol.REDBoxMsg import REDBoxMsg
-from .protocol.REDBoxMasterRouter import REDBoxMasterRouter
+from .protocol.TransistorMsg import TransistorMsg
+from .protocol.TransistorMasterRouter import TransistorMasterRouter
 
 from . import interface
 
@@ -25,7 +25,7 @@ from . import interface
 logger = logging.getLogger(__name__)
 
 
-class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter):
+class TransistorFrontend(pykka.ThreadingActor, core.CoreListener, TransistorMasterRouter):
     # used to push data to the event source (tuner, radios list, battery)
     shared_data = SharedData()
     # used to communicate between front and web.
@@ -33,13 +33,13 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
     queue_web = Queue()
 
     def __init__(self, config, core):
-        super(RedBoxFrontend, self).__init__()
+        super(TransistorFrontend, self).__init__()
 
         self.core = core
         self.config = config
 
         self._data_path = os.path.join(
-            mopidy_redbox.Extension.get_data_dir(config), "data.json"
+            mopidy_transistor.Extension.get_data_dir(config), "data.json"
         )
 
         # the position used as a key for radio and podcast
@@ -48,7 +48,7 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         self._curr_position = 0
 
     def on_start(self):
-        logger.info("REDBOX Front End Running")
+        logger.info("Transistor Front End Running")
 
         self.initStateMachine()
         self.initLibrary()
@@ -144,11 +144,11 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         self.lib = {"podcasts": {}, "radio_banks": {}}
 
         # Load podcasts from lib
-        podcasts = self.core.library.browse("redbox:podcasts").get()
+        podcasts = self.core.library.browse("transistor:podcasts").get()
         self.lib["podcasts"] = {int(pod.uri.split(":")[-1]): pod for pod in podcasts}
 
         # Load radios from lib
-        banks = self.core.library.browse("redbox:radios").get()
+        banks = self.core.library.browse("transistor:radios").get()
         for bank in banks:
             radios = self.core.library.browse(bank.uri).get()
             self.lib["radio_banks"][bank.name] = {
@@ -172,57 +172,57 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         if command == "start_calibrate_volume_low":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StartLow,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StartLow,
                 )
             )
         elif command == "save_calibrate_volume_low":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StopLow,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StopLow,
                 )
             )
         elif command == "start_calibrate_volume_high":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StartHigh,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StartHigh,
                 )
             )
         elif command == "save_calibrate_volume_high":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StopHigh,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StopHigh,
                 )
             )
         elif command == "start_calibrate_tuner_low":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StartLow,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StartLow,
                 )
             )
         elif command == "save_calibrate_tuner_low":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StopLow,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StopLow,
                 )
             )
         elif command == "start_calibrate_tuner_high":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StartHigh,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StartHigh,
                 )
             )
         elif command == "save_calibrate_tuner_high":
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    REDBoxMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    REDBoxMsg.CalibratePhase.CalibratePhase_StopHigh,
+                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
+                    TransistorMsg.CalibratePhase.CalibratePhase_StopHigh,
                 )
             )
         elif command == "save":
@@ -268,18 +268,18 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
 
     def processMode(self, in_modetype):
         logger.info("Mode %s" % str(in_modetype))
-        if in_modetype == REDBoxMsg.ModeType.ModeType_NextMode:
+        if in_modetype == TransistorMsg.ModeType.ModeType_NextMode:
             self.press_next_mode()
-        elif in_modetype == REDBoxMsg.ModeType.ModeType_Radio:
+        elif in_modetype == TransistorMsg.ModeType.ModeType_Radio:
             self.press_radio()
-        elif in_modetype == REDBoxMsg.ModeType.ModeType_Podcast:
+        elif in_modetype == TransistorMsg.ModeType.ModeType_Podcast:
             self.press_podcast()
 
     def processNavigation(self, in_navigationtype):
         logger.info("Navigation %s" % (in_navigationtype))
-        if in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Next:
+        if in_navigationtype == TransistorMsg.NavigationType.NavigationType_Next:
             self.next()
-        elif in_navigationtype == REDBoxMsg.NavigationType.NavigationType_Previous:
+        elif in_navigationtype == TransistorMsg.NavigationType.NavigationType_Previous:
             self.previous()
 
     def processDate(self, in_datedate, in_datemonth, in_dateyear):
@@ -357,7 +357,7 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         else:
             if self._curr_played_position != found_pos:
                 self.core.tracklist.clear()
-                self.core.tracklist.add(uris=["redbox:noise"])
+                self.core.tracklist.add(uris=["transistor:noise"])
                 self.core.playback.play(tl_track=None, tlid=None)
 
                 self._curr_played_position = found_pos
@@ -391,7 +391,7 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         else:
             if self._curr_played_position != found_pos:
                 self.core.tracklist.clear()
-                self.core.tracklist.add(uris=["redbox:noise"])
+                self.core.tracklist.add(uris=["transistor:noise"])
                 self.core.playback.play(tl_track=None, tlid=None)
 
                 self._curr_played_position = found_pos

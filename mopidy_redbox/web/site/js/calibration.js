@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://localhost:6680/redbox/calibsocket");
+var ws = new WebSocket("ws://localhost:6680/transistor/calibsocket");
 // ws.onopen = function() {
 //};
 

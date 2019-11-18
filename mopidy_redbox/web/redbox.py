@@ -4,8 +4,8 @@ from .basics import BaseHandler
 
 import tornado.web
 
-import mopidy_redbox
-from mopidy_redbox import library
+import mopidy_transistor
+from mopidy_transistor import library
 
 
 class RadioHandler(BaseHandler):
@@ -13,9 +13,9 @@ class RadioHandler(BaseHandler):
         self.core = core
         self.lib = library.Library(
             os.path.join(
-                mopidy_redbox.Extension.get_data_dir(config), "library.json.gz"
+                mopidy_transistor.Extension.get_data_dir(config), "library.json.gz"
             ),
-            podcast_timeout=config["redbox"]["podcasts_timeout"],
+            podcast_timeout=config["transistor"]["podcasts_timeout"],
         )
 
     @tornado.web.authenticated
@@ -43,14 +43,14 @@ class RadioHandler(BaseHandler):
             if del_bank in self.lib.data["radio_banks"]:
                 del self.lib.data["radio_banks"][del_bank]
                 self.lib.save()
-                self.core.library.refresh("redbox:")
+                self.core.library.refresh("transistor:")
 
         new_bank = self.get_argument("new_bank", None)
         if new_bank:
             if new_bank not in self.lib.data["radio_banks"]:
                 self.lib.data["radio_banks"][new_bank] = []
                 self.lib.save()
-                self.core.library.refresh("redbox:")
+                self.core.library.refresh("transistor:")
 
         add_radio = self.get_argument("add_radio", None)
         if add_radio:
@@ -63,7 +63,7 @@ class RadioHandler(BaseHandler):
                     }
                 )
                 self.lib.save()
-                self.core.library.refresh("redbox:")
+                self.core.library.refresh("transistor:")
 
         del_radio_bank = self.get_argument("del_radio_bank", None)
         if del_radio_bank:
@@ -73,7 +73,7 @@ class RadioHandler(BaseHandler):
                 if del_radio_radio_index < len(radios):
                     del radios[del_radio_radio_index]
                     self.lib.save()
-                    self.core.library.refresh("redbox:")
+                    self.core.library.refresh("transistor:")
 
         modify_radio_bank = self.get_argument("modify_radio_bank", None)
         if modify_radio_bank:
@@ -91,7 +91,7 @@ class RadioHandler(BaseHandler):
                     radio["stream_url"] = url
 
                     self.lib.save()
-                    self.core.library.refresh("redbox:")
+                    self.core.library.refresh("transistor:")
 
         self.redirect("radios")
 
@@ -101,9 +101,9 @@ class PodcastHandler(BaseHandler):
         self.core = core
         self.lib = library.Library(
             os.path.join(
-                mopidy_redbox.Extension.get_data_dir(config), "library.json.gz"
+                mopidy_transistor.Extension.get_data_dir(config), "library.json.gz"
             ),
-            podcast_timeout=config["redbox"]["podcasts_timeout"],
+            podcast_timeout=config["transistor"]["podcasts_timeout"],
         )
 
     @tornado.web.authenticated
@@ -123,7 +123,7 @@ class PodcastHandler(BaseHandler):
                 del podcasts[id]
 
                 self.lib.save()
-                self.core.library.refresh("redbox:")
+                self.core.library.refresh("transistor:")
 
         add_podcast = self.get_argument("add_podcast", None)
         if add_podcast is not None:
@@ -136,6 +136,6 @@ class PodcastHandler(BaseHandler):
                 }
             )
             self.lib.save()
-            self.core.library.refresh("redbox:")
+            self.core.library.refresh("transistor:")
 
         self.redirect("podcasts")

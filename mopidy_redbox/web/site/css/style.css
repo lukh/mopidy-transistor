@@ -7,7 +7,7 @@
   margin: 0;
   padding: 0;
   width: 300px;
-  background-color: var(--redbox-dark-color);
+  background-color: var(--transistor-dark-color);
   position: fixed;
   top:0px;
   left: 0px;
@@ -25,7 +25,7 @@
 
 /* Active/current link */
 .sidebar a.active {
-  background-color: var(--redbox-light-color);
+  background-color: var(--transistor-light-color);
 }
 
 /* Links on mouse-over */
@@ -75,7 +75,7 @@ div.content {
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: var(--redbox-light-color);
+  background-color: var(--transistor-light-color);
   color: white;
   text-align: center;
   vertical-align: middle;

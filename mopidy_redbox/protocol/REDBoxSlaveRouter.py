@@ -1,7 +1,7 @@
-from .REDBoxMsg import REDBoxMsg
+from .TransistorMsg import TransistorMsg
 
 
-class REDBoxSlaveRouter(object):
+class TransistorSlaveRouter(object):
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
     # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  ||   |   |   |   |   |   |   |    |
@@ -10,12 +10,12 @@ class REDBoxSlaveRouter(object):
     # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makePotentiometerVolume(in_potentiometervalue):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_Command)
-        msg.setCommand(REDBoxMsg.Command.Command_Potentiometer)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
+        msg.setCommand(TransistorMsg.Command.Command_Potentiometer)
 
-        msg.setPotentiometer(REDBoxMsg.Potentiometer.Potentiometer_Volume)
+        msg.setPotentiometer(TransistorMsg.Potentiometer.Potentiometer_Volume)
 
         msg.setPotentiometerValue(in_potentiometervalue)
 
@@ -26,12 +26,12 @@ class REDBoxSlaveRouter(object):
     # |   |   |   |Po |Co |Co |Ms |Ms  ||Va |Va |Va |Va |Va |Va |Va |Va  ||Va |Va |Va |Va |Va |Va |Va |Va  ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makePotentiometerTuner(in_potentiometervalue):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_Command)
-        msg.setCommand(REDBoxMsg.Command.Command_Potentiometer)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
+        msg.setCommand(TransistorMsg.Command.Command_Potentiometer)
 
-        msg.setPotentiometer(REDBoxMsg.Potentiometer.Potentiometer_Tuner)
+        msg.setPotentiometer(TransistorMsg.Potentiometer.Potentiometer_Tuner)
 
         msg.setPotentiometerValue(in_potentiometervalue)
 
@@ -42,10 +42,10 @@ class REDBoxSlaveRouter(object):
     # |   |   |   |   |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makePowerOff():
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_Command)
-        msg.setCommand(REDBoxMsg.Command.Command_PowerOff)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
+        msg.setCommand(TransistorMsg.Command.Command_PowerOff)
 
         return msg
 
@@ -54,10 +54,10 @@ class REDBoxSlaveRouter(object):
     # |   |   |Ty |Ty |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makeMode(in_modetype):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_Command)
-        msg.setCommand(REDBoxMsg.Command.Command_Mode)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
+        msg.setCommand(TransistorMsg.Command.Command_Mode)
 
         msg.setModeType(in_modetype)
 
@@ -68,10 +68,10 @@ class REDBoxSlaveRouter(object):
     # |   |   |   |Ty |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makeNavigation(in_navigationtype):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_Command)
-        msg.setCommand(REDBoxMsg.Command.Command_Navigation)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
+        msg.setCommand(TransistorMsg.Command.Command_Navigation)
 
         msg.setNavigationType(in_navigationtype)
 
@@ -82,10 +82,10 @@ class REDBoxSlaveRouter(object):
     # |Dd |Dd |Dd |Dd |Dd |Da |Ms |Ms  ||Yy |Yy |Yy |Yy |Yy |Yy |Yy |Yy  ||Mm |Mm |Mm |Mm |Yy |Yy |Yy |Yy  ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makeDate(in_datedate, in_datemonth, in_dateyear):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_DateTime)
-        msg.setDateTime(REDBoxMsg.DateTime.DateTime_Date)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_DateTime)
+        msg.setDateTime(TransistorMsg.DateTime.DateTime_Date)
 
         msg.setDateDate(in_datedate)
         msg.setDateMonth(in_datemonth)
@@ -98,10 +98,10 @@ class REDBoxSlaveRouter(object):
     # |Ho |Ho |Ho |Ho |Ho |Da |Ms |Ms  ||Se |Se |Mi |Mi |Mi |Mi |Mi |Mi  ||   |   |   |   |Se |Se |Se |Se  ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makeTime(in_timehour, in_timeminute, in_timesecond):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_DateTime)
-        msg.setDateTime(REDBoxMsg.DateTime.DateTime_Time)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_DateTime)
+        msg.setDateTime(TransistorMsg.DateTime.DateTime_Time)
 
         msg.setTimeHour(in_timehour)
         msg.setTimeMinute(in_timeminute)
@@ -114,10 +114,10 @@ class REDBoxSlaveRouter(object):
     # |Pc |Pc |Pc |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Pc |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makeSendBatteryStatus(in_sendbatterystatuspercentage):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
-        msg.setSystem(REDBoxMsg.System.System_SendBatteryStatus)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_System)
+        msg.setSystem(TransistorMsg.System.System_SendBatteryStatus)
 
         msg.setSendBatteryStatusPercentage(in_sendbatterystatuspercentage)
 
@@ -130,10 +130,10 @@ class REDBoxSlaveRouter(object):
     def makeSendProtocolVersion(
         in_sendprotocolversionmajor, in_sendprotocolversionminor
     ):
-        msg = REDBoxMsg()
+        msg = TransistorMsg()
 
-        msg.setMsgType(REDBoxMsg.MsgType.MsgType_System)
-        msg.setSystem(REDBoxMsg.System.System_SendProtocolVersion)
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_System)
+        msg.setSystem(TransistorMsg.System.System_SendProtocolVersion)
 
         msg.setSendProtocolVersionMajor(in_sendprotocolversionmajor)
         msg.setSendProtocolVersionMinor(in_sendprotocolversionminor)
@@ -156,32 +156,32 @@ class REDBoxSlaveRouter(object):
         raise NotImplementedError
 
     def process(self, in_msg):
-        if in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_Command:
+        if in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_Command:
             pass
 
-        elif in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_DateTime:
+        elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_DateTime:
             pass
 
-        elif in_msg.getMsgType() == REDBoxMsg.MsgType.MsgType_System:
-            if in_msg.getSystem() == REDBoxMsg.System.System_SendBatteryStatus:
+        elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_System:
+            if in_msg.getSystem() == TransistorMsg.System.System_SendBatteryStatus:
                 pass
 
-            elif in_msg.getSystem() == REDBoxMsg.System.System_QueryProtocolVersion:
+            elif in_msg.getSystem() == TransistorMsg.System.System_QueryProtocolVersion:
                 self.processQueryProtocolVersion()
 
-            elif in_msg.getSystem() == REDBoxMsg.System.System_SendProtocolVersion:
+            elif in_msg.getSystem() == TransistorMsg.System.System_SendProtocolVersion:
                 pass
 
-            elif in_msg.getSystem() == REDBoxMsg.System.System_Calibrate:
+            elif in_msg.getSystem() == TransistorMsg.System.System_Calibrate:
                 self.processCalibrate(
                     in_msg.getCalibratePotentiometer(), in_msg.getCalibratePhase()
                 )
 
-            elif in_msg.getSystem() == REDBoxMsg.System.System_SaveCalibration:
+            elif in_msg.getSystem() == TransistorMsg.System.System_SaveCalibration:
                 self.processSaveCalibration()
 
-            elif in_msg.getSystem() == REDBoxMsg.System.System_SetDateTime:
-                if in_msg.getSetDateTime() == REDBoxMsg.SetDateTime.SetDateTime_SetDate:
+            elif in_msg.getSystem() == TransistorMsg.System.System_SetDateTime:
+                if in_msg.getSetDateTime() == TransistorMsg.SetDateTime.SetDateTime_SetDate:
                     self.processSetDate(
                         in_msg.getSetDateDate(),
                         in_msg.getSetDateMonth(),
@@ -189,7 +189,7 @@ class REDBoxSlaveRouter(object):
                     )
 
                 elif (
-                    in_msg.getSetDateTime() == REDBoxMsg.SetDateTime.SetDateTime_SetTime
+                    in_msg.getSetDateTime() == TransistorMsg.SetDateTime.SetDateTime_SetTime
                 ):
                     self.processSetTime(
                         in_msg.getSetTimeHour(),

@@ -1,5 +1,5 @@
 var mopidy = new Mopidy();
-var event_source = new EventSource('/redbox/events');
+var event_source = new EventSource('/transistor/events');
 
 // Utilities
 function el(id) {

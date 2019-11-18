@@ -10,49 +10,49 @@ import pykka
 import urllib
 import podcastparser
 
-import mopidy_redbox
+import mopidy_transistor
 from . import library
 
 logger = logging.getLogger(__name__)
 
 
-class RedBoxBackend(pykka.ThreadingActor, backend.Backend):
-    uri_schemes = ["redbox"]
+class TransistorBackend(pykka.ThreadingActor, backend.Backend):
+    uri_schemes = ["transistor"]
 
     def __init__(self, config, audio):
-        super(RedBoxBackend, self).__init__()
+        super(TransistorBackend, self).__init__()
 
         lib = library.Library(
             os.path.join(
-                mopidy_redbox.Extension.get_data_dir(config), "library.json.gz"
+                mopidy_transistor.Extension.get_data_dir(config), "library.json.gz"
             ),
-            podcast_timeout=config["redbox"]["podcasts_timeout"],
+            podcast_timeout=config["transistor"]["podcasts_timeout"],
         )
         lib.update_podcasts()
 
-        self.library = RedBoxLibraryProvider(self, lib)
-        self.playback = RedBoxPlaybackProvider(
-            audio, self, lib, config["redbox"]["noise_folder"]
+        self.library = TransistorLibraryProvider(self, lib)
+        self.playback = TransistorPlaybackProvider(
+            audio, self, lib, config["transistor"]["noise_folder"]
         )
 
 
-class RedBoxLibraryProvider(backend.LibraryProvider):
+class TransistorLibraryProvider(backend.LibraryProvider):
     def __init__(self, backend, lib):
-        super(RedBoxLibraryProvider, self).__init__(backend)
+        super(TransistorLibraryProvider, self).__init__(backend)
         self.lib = lib
 
     @property
     def root_directory(self):
-        return models.Ref.directory(name="RedBox", uri="redbox:")
+        return models.Ref.directory(name="Transistor", uri="transistor:")
 
     def refresh(self, uri=None):
         self.lib.load()
 
     def lookup(self, uri):
-        if not uri.startswith("redbox:"):
+        if not uri.startswith("transistor:"):
             return []
 
-        if uri == "redbox:noise":
+        if uri == "transistor:noise":
             return [models.Track(name="Random Noise", uri=uri)]
 
         split_uri = uri.split(":")
@@ -88,11 +88,11 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
         return []
 
     def browse(self, uri):
-        if not uri.startswith("redbox:"):
+        if not uri.startswith("transistor:"):
             return []
 
-        if uri == "redbox:noise":
-            return [models.Ref.track(name="Random Noise", uri="redbox:noise")]
+        if uri == "transistor:noise":
+            return [models.Ref.track(name="Random Noise", uri="transistor:noise")]
 
         split_uri = uri.split(":")
 
@@ -100,14 +100,14 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
         if len(split_uri) == 2:
             if split_uri[1] == "":
                 return [
-                    models.Ref.directory(name="Radios", uri="redbox:radios"),
-                    models.Ref.directory(name="Podcast", uri="redbox:podcasts"),
-                    models.Ref.directory(name="Noise", uri="redbox:noise"),
+                    models.Ref.directory(name="Radios", uri="transistor:radios"),
+                    models.Ref.directory(name="Podcast", uri="transistor:podcasts"),
+                    models.Ref.directory(name="Noise", uri="transistor:noise"),
                 ]
 
             if split_uri[1] == "radios":
                 return [
-                    models.Ref.album(name=bank, uri="redbox:radios:{}".format(bank))
+                    models.Ref.album(name=bank, uri="transistor:radios:{}".format(bank))
                     for bank in self.lib.data["radio_banks"]
                 ]
 
@@ -115,7 +115,7 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
                 return [
                     models.Ref.album(
                         name=podcast["name"],
-                        uri="redbox:podcasts:{}".format(podcast["position"]),
+                        uri="transistor:podcasts:{}".format(podcast["position"]),
                     )
                     for podcast in self.lib.data["podcasts"]
                 ]
@@ -125,7 +125,7 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
                 return [
                     models.Ref.track(
                         name=radio["name"],
-                        uri="redbox:radios:{}:{}".format(
+                        uri="transistor:radios:{}:{}".format(
                             split_uri[2], radio["position"]
                         ),
                     )
@@ -137,7 +137,7 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
                         return [
                             models.Ref.track(
                                 name=episode["title"],
-                                uri="redbox:podcasts:{}:{}".format(
+                                uri="transistor:podcasts:{}:{}".format(
                                     split_uri[2], episode["title"]
                                 ),
                             )
@@ -146,17 +146,17 @@ class RedBoxLibraryProvider(backend.LibraryProvider):
         return []
 
 
-class RedBoxPlaybackProvider(backend.PlaybackProvider):
+class TransistorPlaybackProvider(backend.PlaybackProvider):
     def __init__(self, audio, backend, lib, noise_folder):
-        super(RedBoxPlaybackProvider, self).__init__(audio, backend)
+        super(TransistorPlaybackProvider, self).__init__(audio, backend)
         self.lib = lib
         self.noises = self.find_noise_files(noise_folder)
 
     def translate_uri(self, uri):
-        if not uri.startswith("redbox:"):
+        if not uri.startswith("transistor:"):
             return None
 
-        if uri == "redbox:noise":
+        if uri == "transistor:noise":
             fn = self.noises[random.randint(0, len(self.noises) - 1)]
             return "file://" + fn
 

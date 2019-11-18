@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from mopidy_redbox import Extension, frontend as frontend_lib
+from mopidy_transistor import Extension, frontend as frontend_lib
 
 
 def test_get_default_config():
@@ -8,7 +8,7 @@ def test_get_default_config():
 
     config = ext.get_default_config()
 
-    assert "[redbox]" in config
+    assert "[transistor]" in config
     assert "enabled = true" in config
 
 
