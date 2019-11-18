@@ -32,7 +32,7 @@ class SettingsHandler(BaseHandler):
                     config[section]["repeat_passwd"] = ["", "password"]
                     config[section]["old_passwd"] = ["", "password"]
                 else:
-                    config[section][name] = [self.config[section][name], param_type]
+                    config[section][name] = [self.config.get(section, {}).get(name, None), param_type]
 
                     if config[section][name][0] is None:
                         config[section][name][0] = ""
