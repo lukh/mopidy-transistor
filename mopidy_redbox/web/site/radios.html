@@ -1,8 +1,8 @@
 {% extends "base.html"%}
 {% block body %}
 <script type="text/javascript" src="js/radios.js"></script>
-<h3>Radios Configuration</h3>
-<h4>Banks</h4>
+<h2>Radios Configuration</h2>
+<h3>Banks</h3>
 <div class="radios-tablink-group">
 <div id="radios-banks">
 {% for bank in radios %}
@@ -15,7 +15,7 @@
 <div class="radios-add-bank"><i class="fas fa-plus-circle" onclick="addBank()")></i></div>
 </div>
 
-<h4>Radios</h4>
+<h3>Radios</h3>
 {% for bank in radios %}
 <div id="{{bank}}" class="radios-tabcontent {{ 'active' if radio_bank == bank else '' }}">
   <table id="radio" class="redbox-table radios-table">
