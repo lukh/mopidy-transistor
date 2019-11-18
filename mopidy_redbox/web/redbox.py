@@ -13,7 +13,7 @@ class RadioHandler(BaseHandler):
         self.core = core
         self.lib = library.Library(
             os.path.join(
-                mopidy_redbox.Extension.get_data_dir(config), b"library.json.gz"
+                mopidy_redbox.Extension.get_data_dir(config), "library.json.gz"
             ),
             podcast_timeout=config["redbox"]["podcasts_timeout"],
         )
@@ -25,7 +25,7 @@ class RadioHandler(BaseHandler):
 
         if radio_bank is None:
             if len(radios) > 0:
-                radio_bank = radios.keys()[0]
+                radio_bank = list(radios.keys())[0]
 
         if radio_bank not in radios:
             radio_bank = None
@@ -101,7 +101,7 @@ class PodcastHandler(BaseHandler):
         self.core = core
         self.lib = library.Library(
             os.path.join(
-                mopidy_redbox.Extension.get_data_dir(config), b"library.json.gz"
+                mopidy_redbox.Extension.get_data_dir(config), "library.json.gz"
             ),
             podcast_timeout=config["redbox"]["podcasts_timeout"],
         )
