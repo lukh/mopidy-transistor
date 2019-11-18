@@ -1,6 +1,6 @@
 function addPodcast(){
-    form = document.getElementById("podcasts-addpodcast");
-    button = document.getElementById("podcasts-addpodcast-show");
+    form = el("podcasts-addpodcast");
+    button = el("podcasts-addpodcast-show");
     if(form.style.display != "block"){
         form.style.display = "block";
         button.className = "fas fa-minus-circle";
@@ -12,7 +12,7 @@ function addPodcast(){
 }
 
 function deletePodcast(p_id){
-    entry = document.getElementById("delete-"+p_id);
+    entry = el("delete-"+p_id);
     entry.style.width = "100px";
     var form = document.createElement("form");
     form.setAttribute('method',"post");

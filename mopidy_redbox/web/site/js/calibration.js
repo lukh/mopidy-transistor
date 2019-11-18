@@ -4,7 +4,7 @@ var ws = new WebSocket("ws://localhost:6680/redbox/calibsocket");
 
 ws.onmessage = function (evt) {
    //  alert(evt.data);
-   document.getElementById("calib_information").innerText = evt.data;
+   el("calib_information").innerText = evt.data;
 };
 
 function calibration_step() {

@@ -4,10 +4,10 @@ var browseStack = [];
 function browseTracks(uri_base=null) {
     const printTracks = tracks => {
         // // header
-        var headerRef = document.getElementById("browse-header");
+        var headerRef = el("browse-header");
 
         // Table
-        var tableRef = document.getElementById('browse').getElementsByTagName('tbody')[0];
+        var tableRef = el('browse').getElementsByTagName('tbody')[0];
         while ( tableRef.rows.length > 0 ) { tableRef.deleteRow(0); }
         // Back function
         if(browseStack.length > 0){

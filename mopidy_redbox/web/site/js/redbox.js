@@ -2,7 +2,6 @@ var mopidy = new Mopidy();
 var event_source = new EventSource('/redbox/events');
 
 // Utilities
-
 function el(id) {
    return document.getElementById(id);
  }
@@ -168,13 +167,13 @@ event_source.onmessage = function(message) {
 
   // tuner position
   if(data.hasOwnProperty('tuner_position')){
-    tuner_position = document.getElementById("tuner-position");
+    tuner_position = el("tuner-position");
     tuner_position.value = data.tuner_position;
   }
 
   // tuner labels
   if(data.hasOwnProperty('tuner_labels')){
-    tuner_labels = document.getElementById("tuner-labels");
+    tuner_labels = el("tuner-labels");
     tuner_labels.innerHTML = '';
 
     for (var label_position in data.tuner_labels){
@@ -190,17 +189,17 @@ event_source.onmessage = function(message) {
   }
 
   if(data.hasOwnProperty('time')){
-    time_label = document.getElementById("time");
+    time_label = el("time");
     time_label.innerText = data.time;
   }
 
   if(data.hasOwnProperty('date')){
-    date_label = document.getElementById("date");
+    date_label = el("date");
     date_label.innerText = data.date;
   }
 
   if(data.hasOwnProperty('battery_soc')){
-    bat_gauge = document.getElementById("battery_level");
+    bat_gauge = el("battery_level");
     bat_gauge.style.width = data.battery_soc.toString() + "%";
   }
 };
