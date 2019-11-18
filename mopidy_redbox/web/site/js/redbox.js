@@ -20,6 +20,29 @@ function el(id) {
  }
 
 
+/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+function toggleMenu() {
+  var x = el("menu");
+  if (x.className === "sidebar") {
+    x.className += " responsive";
+  } else {
+    x.className = "sidebar";
+  }
+}
+
+function toggleFooter() {
+  var x = el("footer_id");
+  var toggle = el("toggle-footer");
+  if (x.className === "footer") {
+    x.className += " responsive";
+    toggle.className = "fas fa-minus-circle";
+  } else {
+    x.className = "footer";
+    toggle.className = "fas fa-plus-circle";
+  }
+}
+
+
 // Events Hook - Mopidy
 mopidy.on("state:online", function () {
    mopidy.playback.getState().then(updatePlaybackState);
