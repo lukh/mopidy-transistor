@@ -178,4 +178,9 @@ event_source.onmessage = function(message) {
     date_label = document.getElementById("date");
     date_label.innerText = data.date;
   }
+
+  if(data.hasOwnProperty('battery_soc')){
+    bat_gauge = document.getElementById("battery_level");
+    bat_gauge.style.width = data.battery_soc.toString() + "%";
+  }
 };

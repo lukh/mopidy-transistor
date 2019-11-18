@@ -1,4 +1,4 @@
-.battery {
+#battery {
   position:relative;
   width: 36px;
   height: 12px;
@@ -9,8 +9,8 @@
   margin: 16px 16px;
 }
 
-.battery .level{
-    width: 20%;
+#battery #battery_level{
+    width: 0%;
     height: 100%;
     background: #000;
     border-radius: 1px;

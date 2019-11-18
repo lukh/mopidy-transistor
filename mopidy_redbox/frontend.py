@@ -302,8 +302,8 @@ class RedBoxFrontend(pykka.ThreadingActor, core.CoreListener, REDBoxMasterRouter
         self.shared_data.timestamp = time.time()
 
     def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
-        self.queue_event.put({"battery_status": in_sendbatterystatuspercentage})
         logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))
+        self.shared_data.battery_soc = in_sendbatterystatuspercentage
 
     def processSendProtocolVersion(
         self, in_sendprotocolversionmajor, in_sendprotocolversionminor
