@@ -62,10 +62,13 @@ class EventSource(web.RequestHandler):
             t = self._shared_data.time
             d = self._shared_data.date
 
-            dt = datetime.datetime(d.year, d.month, d.day, t.hour, t.minute, t.second)
-            dt += datetime.timedelta(
-                seconds=int(time.time() - self._shared_data.timestamp)
-            )
+            try:
+                dt = datetime.datetime(d.year, d.month, d.day, t.hour, t.minute, t.second)
+                dt += datetime.timedelta(
+                    seconds=int(time.time() - self._shared_data.timestamp)
+                )
+            except OverflowError:
+                dt = datetime.datetime.max
 
             if dt.time() != self._sent_data.time:
                 self._sent_data.time = dt.time()
