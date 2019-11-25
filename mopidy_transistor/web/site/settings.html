@@ -18,7 +18,7 @@
 </div>
 
 {% for section in config %}
-<div id="{{escape(section)}}" class="settings-tabcontent">
+<div id="{{escape(section)}}" class="settings-tabcontent {% if section == active_section %}active{% end if %}">
 
 <form class="settings-form" method="post" action="settings">
     {% for name in config[section] %}

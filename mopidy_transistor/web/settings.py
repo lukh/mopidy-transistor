@@ -48,6 +48,7 @@ class SettingsHandler(BaseHandler):
             "site/settings.html",
             active_page="settings",
             config=config,
+            active_section="transistor",
             warning_msg=lut_pu.get(passwd_updated, None),
         )
 
