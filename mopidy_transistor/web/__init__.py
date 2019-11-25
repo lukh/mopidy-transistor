@@ -4,6 +4,7 @@ from .alarms import AlarmsHandler
 from .settings import (
     SettingsHandler,
     WifiHandler,
+    UpdateHandler,
     CalibrationHandler,
     CalibrationWebSocketHandler,
 )

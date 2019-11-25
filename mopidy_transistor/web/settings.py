@@ -131,6 +131,18 @@ class WifiHandler(BaseHandler):
         print("sudo transistor_wifi connect {} {}".format(ssid, passwd))
 
 
+class UpdateHandler(BaseHandler):
+    def initialize(self):
+        pass
+
+    @tornado.web.authenticated
+    def get(self):
+        self.render("site/update.html", active_page="update")
+
+    # def post(self):
+    #     self.redirect('index')
+
+
 class CalibrationHandler(BaseHandler):
     def initialize(self):
         pass

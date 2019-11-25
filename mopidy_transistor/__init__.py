@@ -70,6 +70,7 @@ class Extension(ext.Extension):
             ("/settings", web.SettingsHandler, {"config": config}),
             ("/alarms", web.AlarmsHandler, {"queue_web": self._queue_web}),
             ("/wifi", web.WifiHandler, {}),
+            ("/update", web.UpdateHandler, {}),
             ("/login", web.LoginHandler, {"config": config}),
             ("/calibration", web.CalibrationHandler, {}),
             ("/events", web.EventSource, {"shared_data": self._shared_data}),
