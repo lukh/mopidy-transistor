@@ -139,8 +139,24 @@ class UpdateHandler(BaseHandler):
     def get(self):
         self.render("site/update.html", active_page="update")
 
-    # def post(self):
-    #     self.redirect('index')
+
+class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
+    STATE = "IDLE"
+    def initialize(self):
+        pass
+
+    def on_message(self, msg):
+        if self.STATE == "IDLE":
+            if msg == "update_system":
+                self.STATE = "BUSY"
+                self.write_message("Starting System Update...")
+                self.STATE = "IDLE"
+
+            elif msg == "update_mopidy":
+                self.STATE = "BUSY"
+                self.write_message("Starting Mopidy Update...")
+                self.STATE = "IDLE"
+
 
 
 class CalibrationHandler(BaseHandler):

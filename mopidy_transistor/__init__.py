@@ -71,6 +71,7 @@ class Extension(ext.Extension):
             ("/alarms", web.AlarmsHandler, {"queue_web": self._queue_web}),
             ("/wifi", web.WifiHandler, {}),
             ("/update", web.UpdateHandler, {}),
+            ("/updatesocket", web.UpdateWebSocketHandler, {}),
             ("/login", web.LoginHandler, {"config": config}),
             ("/calibration", web.CalibrationHandler, {}),
             ("/events", web.EventSource, {"shared_data": self._shared_data}),

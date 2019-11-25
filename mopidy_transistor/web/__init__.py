@@ -5,6 +5,7 @@ from .settings import (
     SettingsHandler,
     WifiHandler,
     UpdateHandler,
+    UpdateWebSocketHandler,
     CalibrationHandler,
     CalibrationWebSocketHandler,
 )
