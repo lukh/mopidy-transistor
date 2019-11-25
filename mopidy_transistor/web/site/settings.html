@@ -3,7 +3,21 @@
 <script type="text/javascript" src="js/settings.js"></script>
 
 
-<h2>Mopidy & Extensions</h2>
+<h2>Settings</h2>
+
+<h3>Wifi</h3>
+
+<form class="settings-form" action="/transistor/wifi">
+    <button type="submit" value="Update System">Wifi Settings</button>
+</form>
+
+<h3>System Update</h3>
+
+<form class="settings-form" action="/transistor/update">
+    <button type="submit" value="Update System" style="background-color: red;">Update System</button>
+</form>
+
+<h3>Mopidy & Extensions</h3>
 
 {% if warning_msg is not None %}
 <h3 style="color: red">{{ escape(warning_msg) }}</h3>
@@ -44,7 +58,6 @@
 
 </div>
 {% end %}
-
 
 {% end %}
 
