@@ -6,9 +6,11 @@ from collections import OrderedDict
 from threading import Timer
 
 import bcrypt
+import subprocess
 
 import tornado.web
 import tornado.websocket
+import tornado.gen
 
 from transitions import Machine, State
 
@@ -145,17 +147,26 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
     def initialize(self):
         pass
 
+    @tornado.gen.coroutine
     def on_message(self, msg):
         if self.STATE == "IDLE":
             if msg == "update_system":
                 self.STATE = "BUSY"
                 self.write_message("Starting System Update...")
-                self.STATE = "IDLE"
+                
+                pid = subprocess.Popen("ping www.google.com -c 10", shell=True, stdout=subprocess.PIPE)
+                while pid.poll() is None:
+                    line = pid.stdout.readline()
+                    if line is not None:
+                        yield self.write_message(line)
+
+                self.STATE = "DONE" # need a refresh of the webpage to re execute an update
 
             elif msg == "update_mopidy":
                 self.STATE = "BUSY"
                 self.write_message("Starting Mopidy Update...")
-                self.STATE = "IDLE"
+                self.STATE = "DONE" # need a refresh of the webpage to re execute an update
+
 
 
 
