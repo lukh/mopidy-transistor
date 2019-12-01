@@ -2,13 +2,9 @@ import logging
 import os
 import random
 
-import mopidy
-from mopidy import backend, exceptions, models
+from mopidy import backend, models
 
 import pykka
-
-import urllib
-import podcastparser
 
 import mopidy_transistor
 from . import library

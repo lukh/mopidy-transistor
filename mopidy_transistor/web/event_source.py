@@ -1,7 +1,6 @@
 import datetime
 import time
 from tornado import web, gen
-from tornado.ioloop import PeriodicCallback
 from tornado.iostream import StreamClosedError
 import json
 from mopidy_transistor.utils import SharedData

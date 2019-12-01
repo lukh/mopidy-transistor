@@ -1,8 +1,5 @@
-import collections
-import os
 import mopidy
 import logging
-import unicodedata
 from urllib.request import urlopen
 from pathlib import Path
 import podcastparser

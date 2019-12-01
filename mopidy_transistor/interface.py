@@ -1,15 +1,11 @@
 import time
 import serial
-import os
 from threading import Thread, Lock
 import logging
-
-from mopidy.exceptions import FrontendError
 
 from microparcel import microparcel as mp
 
 from .protocol.TransistorMsg import TransistorMsg
-from .protocol.TransistorMasterRouter import TransistorMasterRouter
 
 
 logger = logging.getLogger(__name__)

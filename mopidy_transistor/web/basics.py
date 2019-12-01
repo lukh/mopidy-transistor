@@ -41,7 +41,7 @@ class LoginHandler(BaseHandler):
         self._hashed_passwd = config["transistor"]["passwd"]
 
     def get(self):
-        if self._user == None and self._hashed_passwd == None:
+        if self._user is None and self._hashed_passwd is None:
             self.set_secure_cookie("user", "none")
             self.redirect(self.get_argument("next", "/"))
         else:

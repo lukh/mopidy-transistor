@@ -1,7 +1,4 @@
-try:
-    from configparser import SafeConfigParser
-except:
-    from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 from collections import OrderedDict
 from threading import Timer
 

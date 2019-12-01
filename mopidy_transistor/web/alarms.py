@@ -1,6 +1,5 @@
 from .basics import BaseHandler
 
-import datetime as dt
 from dateutil import parser
 
 
