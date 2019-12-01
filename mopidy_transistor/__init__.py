@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 import logging
 import os
 
+import pkg_resources
+
 import tornado.web
 
 from mopidy import config, ext
@@ -10,7 +12,7 @@ from mopidy import config, ext
 from . import web
 
 
-__version__ = "0.0.1"
+__version__ = pkg_resources.get_distribution("Mopidy-Transistor").version
 
 # TODO: If you need to log, use loggers named after the current Python module
 logger = logging.getLogger(__name__)
