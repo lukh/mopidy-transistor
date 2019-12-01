@@ -68,6 +68,7 @@ class TransistorLibraryProvider(backend.LibraryProvider):
                                 uri=uri,
                                 artists=[models.Artist(name=rad["name"])],
                                 album=models.Album(name=split_uri[2]),
+                                live_stream=True
                             )
                         ]
 
@@ -82,6 +83,7 @@ class TransistorLibraryProvider(backend.LibraryProvider):
                                         uri=uri,
                                         artists=[models.Artist(name=podcast["name"])],
                                         album=models.Album(name=""),
+                                        live_stream=True
                                     )
                                 ]
 
