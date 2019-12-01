@@ -67,7 +67,6 @@ class SharedData(object):
         self._date = d
         self._lock.release()
 
-
     @property
     def battery_soc(self):
         self._lock.acquire()
@@ -80,7 +79,6 @@ class SharedData(object):
         self._lock.acquire()
         self._battery_soc = tp
         self._lock.release()
-
 
     @property
     def timestamp(self):

@@ -34,7 +34,10 @@ class SettingsHandler(BaseHandler):
                     config[section]["repeat_passwd"] = ["", "password"]
                     config[section]["old_passwd"] = ["", "password"]
                 else:
-                    config[section][name] = [self.config.get(section, {}).get(name, None), param_type]
+                    config[section][name] = [
+                        self.config.get(section, {}).get(name, None),
+                        param_type,
+                    ]
 
                     if config[section][name][0] is None:
                         config[section][name][0] = ""
@@ -144,6 +147,7 @@ class UpdateHandler(BaseHandler):
 
 class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
     STATE = "IDLE"
+
     def initialize(self):
         pass
 
@@ -160,11 +164,13 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
             if msg == "update_system":
                 self.STATE = "BUSY"
                 self.write_message("Starting System Update...")
-                
+
                 execute("sudo apt-get update")
                 execute("sudo apt-get upgrade")
 
-                self.STATE = "DONE" # need a refresh of the webpage to re execute an update
+                self.STATE = (
+                    "DONE"  # need a refresh of the webpage to re execute an update
+                )
 
             elif msg == "update_mopidy":
                 self.STATE = "BUSY"
@@ -173,9 +179,9 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
                 execute("sudo apt-get update")
                 # execute("sudo apt-get upgrade python-mopidy")
 
-                self.STATE = "DONE" # need a refresh of the webpage to re execute an update
-
-
+                self.STATE = (
+                    "DONE"  # need a refresh of the webpage to re execute an update
+                )
 
 
 class CalibrationHandler(BaseHandler):

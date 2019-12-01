@@ -25,13 +25,13 @@ def test_get_config_schema():
 
     schema = ext.get_config_schema()
 
-    assert 'serial_port' in schema
-    assert 'serial_baudrate' in schema
-    assert 'podcasts_timeout' in schema
-    assert 'noise_folder' in schema
-    assert 'config_file' in schema
-    assert 'user' in schema
-    assert 'passwd' in schema
+    assert "serial_port" in schema
+    assert "serial_baudrate" in schema
+    assert "podcasts_timeout" in schema
+    assert "noise_folder" in schema
+    assert "config_file" in schema
+    assert "user" in schema
+    assert "passwd" in schema
 
 
 # TODO Write more tests

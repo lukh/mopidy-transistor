@@ -25,7 +25,9 @@ from . import interface
 logger = logging.getLogger(__name__)
 
 
-class TransistorFrontend(pykka.ThreadingActor, core.CoreListener, TransistorMasterRouter):
+class TransistorFrontend(
+    pykka.ThreadingActor, core.CoreListener, TransistorMasterRouter
+):
     # used to push data to the event source (tuner, radios list, battery)
     shared_data = SharedData()
     # used to communicate between front and web.

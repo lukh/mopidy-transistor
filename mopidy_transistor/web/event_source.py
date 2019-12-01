@@ -63,7 +63,9 @@ class EventSource(web.RequestHandler):
             d = self._shared_data.date
 
             try:
-                dt = datetime.datetime(d.year, d.month, d.day, t.hour, t.minute, t.second)
+                dt = datetime.datetime(
+                    d.year, d.month, d.day, t.hour, t.minute, t.second
+                )
                 dt += datetime.timedelta(
                     seconds=int(time.time() - self._shared_data.timestamp)
                 )

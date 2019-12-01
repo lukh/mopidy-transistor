@@ -24,7 +24,8 @@ class SerialInterfaceListener(Thread):
         self.frontend = frontend
 
         self.initCommunication(
-            config["transistor"]["serial_port"], int(config["transistor"]["serial_baudrate"])
+            config["transistor"]["serial_port"],
+            int(config["transistor"]["serial_baudrate"]),
         )
 
     @property

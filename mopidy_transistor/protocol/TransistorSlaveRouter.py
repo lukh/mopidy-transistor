@@ -181,7 +181,10 @@ class TransistorSlaveRouter(object):
                 self.processSaveCalibration()
 
             elif in_msg.getSystem() == TransistorMsg.System.System_SetDateTime:
-                if in_msg.getSetDateTime() == TransistorMsg.SetDateTime.SetDateTime_SetDate:
+                if (
+                    in_msg.getSetDateTime()
+                    == TransistorMsg.SetDateTime.SetDateTime_SetDate
+                ):
                     self.processSetDate(
                         in_msg.getSetDateDate(),
                         in_msg.getSetDateMonth(),
@@ -189,7 +192,8 @@ class TransistorSlaveRouter(object):
                     )
 
                 elif (
-                    in_msg.getSetDateTime() == TransistorMsg.SetDateTime.SetDateTime_SetTime
+                    in_msg.getSetDateTime()
+                    == TransistorMsg.SetDateTime.SetDateTime_SetTime
                 ):
                     self.processSetTime(
                         in_msg.getSetTimeHour(),

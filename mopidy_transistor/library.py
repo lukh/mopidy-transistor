@@ -103,7 +103,9 @@ class Library(object):
                 logger.info("Transistor Library: done downloading podcasts infos")
 
             except Exception as e:
-                logger.error("Transistor: Can't retrieve podcast data: {}".format(str(e)))
+                logger.error(
+                    "Transistor: Can't retrieve podcast data: {}".format(str(e))
+                )
 
         thr = threading.Thread(target=run)
         thr.start()
