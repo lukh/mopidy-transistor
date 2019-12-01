@@ -149,22 +149,30 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
 
     @tornado.gen.coroutine
     def on_message(self, msg):
+        def execute(cmd):
+            pid = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+            while pid.poll() is None:
+                line = pid.stdout.readline()
+                if line is not None:
+                    yield self.write_message(line)
+
         if self.STATE == "IDLE":
             if msg == "update_system":
                 self.STATE = "BUSY"
                 self.write_message("Starting System Update...")
                 
-                pid = subprocess.Popen("ping www.google.com -c 10", shell=True, stdout=subprocess.PIPE)
-                while pid.poll() is None:
-                    line = pid.stdout.readline()
-                    if line is not None:
-                        yield self.write_message(line)
+                execute("sudo apt-get update")
+                execute("sudo apt-get upgrade")
 
                 self.STATE = "DONE" # need a refresh of the webpage to re execute an update
 
             elif msg == "update_mopidy":
                 self.STATE = "BUSY"
                 self.write_message("Starting Mopidy Update...")
+
+                execute("sudo apt-get update")
+                # execute("sudo apt-get upgrade python-mopidy")
+
                 self.STATE = "DONE" # need a refresh of the webpage to re execute an update
 
 
