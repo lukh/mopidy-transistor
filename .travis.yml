@@ -3,14 +3,34 @@ sudo: false
 language: python
 
 python:
-  - "3.8_with_system_site_packages"
+  - "3.8"
+virtualenv:
+  system_site_packages: true
+
+# command to install dependencies
+install:
+  # - pip install -r requirements.txt
+  - pip install -U tox-travis
+  - pip install https://github.com/mopidy/mopidy/archive/v3.0.0a6.zip
+  - pip install Pykka >= 2.0.1
+  - pip install setuptools
+  - pip install pyserial
+  - pip install transitions
+  - pip install podcastparser
+  - pip install bcrypt
+  - pip install microparcel
+  - pip install .
 
 addons:
   apt:
-    sources:
-      - mopidy-stable
     packages:
-      - mopidy
+      - python-devel
+      - python3-gst-1.0
+      - gir1.2-gstreamer-1.0
+      - gir1.2-gst-plugins-base-1.0
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-tools
 
 env:
   - TOX_ENV=py38
