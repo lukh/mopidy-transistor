@@ -1,0 +1,48 @@
+{% extends "base.html"%}
+{% block body %}
+<script type="text/javascript" src="js/podcasts.js"></script>
+<h2>Podcasts Configuration</h2>
+
+<table id="podcast" class="transistor-table podcasts-table">
+<thead>
+    <tr>
+        <th class="podcasts-table-col-position">Pos</th>
+        <th class="podcasts-table-col-name">Name</th>
+        <th class="podcasts-table-col-url">URL</th>
+        <th class="podcasts-table-col-modify"></th>
+        <th class="podcasts-table-col-delete"></th>
+    </tr>
+</thead>
+<tbody>
+    {% for p_id, podcast in enumerate(podcasts) %}
+    <tr>
+        <td>{{ podcast["position"] }}</td>
+        <td>{{ podcast["name"] }}</td>
+        <td>{{ podcast["feed_url"] }}</td>
+        <td onclick="updatePodcast({{ p_id }}, '{{ podcast["name"] }}', {{ podcast["position"] }}, '{{ podcast["feed_url"] }}')"<i class="fas fa-pen"></i></td>
+        <td class="delete-podcast" id="delete-{{ p_id }}"><i class="fas fa-trash" onclick="deletePodcast({{ p_id }})"></i></td>
+    </tr>
+    {%end for %}
+</tbody>
+</table> 
+
+
+<form id="podcasts-modifypodcast" action="podcasts" method="post">
+    <input type="number" name="id" style="display: none">
+    <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
+    <label for="name">Name</label><input type="text" name="name"><br>
+    <label for="url">URL</label><input type="text" name="url"><br>
+    <button type="submit" name="modify_podcast">Update Podcast</button>
+</form>
+
+<span onclick="addPodcast()"><i id="podcasts-addpodcast-show" class="fas fa-plus-circle"></i> Add podcast</span>
+
+<form id="podcasts-addpodcast" action="podcasts" method="post">
+    <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
+    <label for="name">Name</label><input type="text" name="name"><br>
+    <label for="url">URL</label><input type="text" name="url"><br>
+    <button id="podcasts-addpodcast-button" type="submit" name="add_podcast">Add New Podcast</button>
+</form>
+
+
+{% end %}

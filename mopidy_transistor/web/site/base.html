@@ -1,0 +1,106 @@
+{% set navigation_bar = [
+    ('/transistor', 'index', 'Dashboard'),
+    ('/transistor/browse', 'browse', 'Browse'),
+    ('/transistor/radios', 'radios', 'Radios'),
+    ('/transistor/podcasts', 'podcasts', 'Podcasts'),
+    ('/transistor/alarms', 'alarms', 'Alarms'),
+    ('/transistor/settings', 'settings', 'Settings'),
+    ('/transistor/about', 'about', 'About'),
+] %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Transistor Configuration</title>
+    <link rel="icon" type="image/png" href="/transistor/images/radio.png">
+
+    <!-- Custom styles for this template -->
+    <link href="/transistor/css/style.css" rel="stylesheet">
+    <link href="/transistor/css/transistor.css" rel="stylesheet">
+    <link href="/transistor/css/battery.css" rel="stylesheet">
+    <link href="/transistor/css/tuner.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Mopidy API and Transistor JS-->
+    <script type="text/javascript" src="vendor/mopidy/mopidy.js"></script>
+    <script type="text/javascript" src="js/transistor.js"></script>
+
+    <!-- The sidebar -->
+    <div class="sidebar" id="menu">
+        <div class="sidebar-icon"><img src="/transistor/images/logo.png"></div>
+
+        {% for href, id, caption in navigation_bar %}
+        <a {% if active_page == id %}class="active"{% end if %} href="{{ href }}">{{caption}}</a>
+        {% end for %}
+
+        <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="right-side-informations">
+            <div class="date-time">
+                <div id="time"></div>
+                <div id="date"></div>
+            </div>
+            <div id="battery"><div id="battery_level"></div></div>
+        </div>
+        {% block body %}Not defined{% end %}
+    </div>
+
+
+    <div class="footer-wrapper">
+        <div class="footer" id="footer_id">
+            <div class="footer-left">
+                    <div class="player">
+                        <div class="controls">
+                        <div id="playback-controls">
+                            <button id="previous" title="Previous"><i class="fas fa-step-backward"></i></button>
+                            <button id="play" title="Play"><i class="fas fa-play"></i></button>
+                            <button id="pause" title="Pause"><i class="fas fa-pause"></i></button>
+                            <button id="next" title="Next"><i class="fas fa-step-forward"></i></button>
+                        </div>
+                        <div id="tracklist-mode">
+                            <button id="repeat" title="Repeat"><i class="fas fa-redo"></i></button>
+                            <button id="random" title="Random"><i class="fas fa-random"></i></button>
+                            <button id="single" title="Single"><i class="fas fa-bullseye"></i></button>
+                            <button id="consume" title="Consume"><i class="fas fa-cookie-bite"></i></button>
+                        </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="footer-center">
+                <p class="current">
+                    <div id="current-track">Unknown</div>
+                    <div>
+                        <span id="current-artist">Unknown</span> -
+                        <span id="current-album">Unknown</span>
+                    </div>
+                </p>
+            </div>
+            <div class="footer-right">
+                <div id="playback-state"></div><div>Volume</div><input type="range" min="0" max="100" step="5" id="volume" class="slider">
+            </div>
+        </div>
+        <a href="javascript:void(0);" class="icon" onclick="toggleFooter()">
+            <i id="toggle-footer" class="fas fa-plus-circle"></i>
+        </a>
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/fd7064e45f.js"></script>
+
+</body>
+
+</html>

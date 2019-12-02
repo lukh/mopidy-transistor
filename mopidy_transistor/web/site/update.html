@@ -1,0 +1,15 @@
+{% extends "base.html"%}
+{% block body %}
+
+<script type="text/javascript" src="js/update.js"></script>
+
+<h2>System Update</h2>
+
+<div class="settings-form">
+    <button id="update_mopidy" onclick="update_mopidy()" style="background-color: red;">Update Mopidy Only</button>
+    <button id="update_system" onclick="update_system()" style="background-color: red;">Start System Update</button>
+</div>
+
+<p id="update_informations"></p>
+
+{% end %}

@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from mopidy_redbox import Extension, frontend as frontend_lib
+from mopidy_transistor import Extension
 
 
 def test_get_default_config():
@@ -8,8 +8,16 @@ def test_get_default_config():
 
     config = ext.get_default_config()
 
-    assert '[redbox]' in config
-    assert 'enabled = true' in config
+    assert "[transistor]" in config
+    assert "enabled = true" in config
+
+    assert "serial_port = /dev/ttyUSB0" in config
+    assert "serial_baudrate = 115200" in config
+    assert "podcasts_timeout = 5" in config
+    assert "noise_folder = " in config
+    assert "config_file = " in config
+    assert "user = " in config
+    assert "passwd =" in config
 
 
 def test_get_config_schema():
@@ -17,9 +25,13 @@ def test_get_config_schema():
 
     schema = ext.get_config_schema()
 
-    # TODO Test the content of your config schema
-    #assert 'username' in schema
-    #assert 'password' in schema
+    assert "serial_port" in schema
+    assert "serial_baudrate" in schema
+    assert "podcasts_timeout" in schema
+    assert "noise_folder" in schema
+    assert "config_file" in schema
+    assert "user" in schema
+    assert "passwd" in schema
 
 
 # TODO Write more tests

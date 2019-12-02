@@ -1,0 +1,62 @@
+{% extends "base.html"%}
+{% block body %}
+<script type="text/javascript" src="js/radios.js"></script>
+<h2>Radios Configuration</h2>
+<h3>Banks</h3>
+<div class="radios-tablink-group">
+<div id="radios-banks">
+{% for bank in radios %}
+<div id="radios-tab-{{bank}}" class="radios-tablink {{ 'active' if radio_bank == bank else '' }}" onclick="openPage('{{bank}}', this)">
+    <i id="radio-tab-del-{{ bank}}" class="fas fa-minus-circle" onclick="deleteBank('{{bank}}')"></i>
+    {{ bank }}
+</div>
+{%end for %}
+</div>
+<div class="radios-add-bank"><i class="fas fa-plus-circle" onclick="addBank()")></i></div>
+</div>
+
+<h3>Radios</h3>
+{% for bank in radios %}
+<div id="{{bank}}" class="radios-tabcontent {{ 'active' if radio_bank == bank else '' }}">
+  <table id="radio" class="transistor-table radios-table">
+    <thead>
+        <tr>
+            <th class="radios-table-col-position">Pos</th>
+            <th class="radios-table-col-name">Name</th>
+            <th class="radios-table-col-url">URL</th>
+            <th class="radios-table-col-modify"></th>
+            <th class="radios-table-col-delete"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r_id, radio in enumerate(radios[bank]) %}
+        <tr>
+            <td>{{ radio["position"] }}</td>
+            <td>{{ radio["name"] }}</td>
+            <td>{{ radio["stream_url"] }}</td>
+            <td onclick="updateRadio('{{bank}}', {{ r_id }}, '{{ radio["name"] }}', {{ radio["position"] }}, '{{ radio["stream_url"] }}')"<i class="fas fa-pen"></i></td>
+            <td class="delete-radio" id="delete-{{bank}}-{{ r_id }}"><i class="fas fa-trash" onclick="deleteRadio('{{bank}}', {{ r_id }})"></i></td>
+        </tr>
+        {%end for %}
+    </tbody>
+    </table> 
+</div>
+{%end for %}
+
+<form id="radios-modifyradio" action="radios" method="post">
+    <input type="number" name="id" style="display: none">
+    <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
+    <label for="name">Name</label><input type="text" name="name"><br>
+    <label for="url">URL</label><input type="text" name="url"><br>
+    <button type="submit" name="modify_radio_bank" value="{{radio_bank if radio_bank else ''}}">Update Radio</button>
+</form>
+
+<span onclick="addRadio()"><i id="radios-addradio-show" class="fas fa-plus-circle"></i> Add radio</span>
+
+<form id="radios-addradio" action="radios" method="post">
+    <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
+    <label for="name">Name</label><input type="text" name="name"><br>
+    <label for="url">URL</label><input type="text" name="url"><br>
+    <button id="radios-addradio-button" type="submit" name="add_radio" value="{{radio_bank if radio_bank else ''}}">Add New Radio</button>
+</form>
+{% end %}

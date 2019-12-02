@@ -1,0 +1,196 @@
+@import "config.css";
+
+*{font-family: 'Fira Sans', sans-serif;}
+
+/* The side navigation menu */
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 300px;
+  background-color: var(--transistor-dark-color);
+  position: fixed;
+  top:0px;
+  left: 0px;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Sidebar links */
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+}
+
+/* Active/current link */
+.sidebar a.active {
+  background-color: var(--transistor-light-color);
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+.sidebar .sidebar-icon{
+  width:300px;
+  text-align: center;
+}
+
+.sidebar img {
+  padding: 16px;
+}
+
+/* Hide the link that should open and close the topnav on small screens */
+.sidebar .icon {
+  display: none;
+}
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.content {
+  margin-left: 300px;
+  padding: 16px 16px;
+  height: 1000px;
+}
+
+.content .right-side-informations{
+  float: right;
+}
+
+.content .right-side-informations .date-time{
+  float: left;
+  margin: 7px 8px;
+  text-align: center;
+}
+
+.content .right-side-informations #battery{
+  float: left;
+}
+
+/* Footer */
+.footer-wrapper {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--transistor-light-color);
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.footer-wrapper a{
+  color: white;
+}
+
+.footer .footer-left,
+.footer .footer-center,
+.footer .footer-right{
+  padding: 4px 8px;
+  display: inline-block;
+}
+
+.footer .footer-left{
+  float: left;
+  width: 300px;
+}
+
+.footer .footer-center{
+  float:center;
+}
+
+.footer .footer-right{
+  float: right;
+}
+
+/* Hide the link that should open and close the footer on small screens */
+.footer-wrapper .icon {
+  display: none;
+  padding:16px;
+}
+
+
+/* On screens that are less than 500px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 800px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .sidebar a:not(.active) {
+    display: none;
+  }
+
+  .sidebar .active{
+    display: inline-block;
+
+  }
+
+  .sidebar a.icon {
+    float: right;
+    display: block;
+  }
+
+  .sidebar .sidebar-icon {
+    display: none;
+  }
+
+  div.content {
+    margin-left: 0;
+  }
+
+  .footer{
+    display: none;
+  }
+
+  .footer-wrapper a.icon {
+    display: block;
+  }
+
+  .footer .footer-left,
+  .footer .footer-center,
+  .footer .footer-right{
+      display: block;
+  }
+  .footer .footer-left{
+      float: none;
+      width: inherit;
+
+  }
+    
+  .footer .footer-center{
+      float:none;
+  }
+  
+  .footer .footer-right{
+      float: none;
+  }
+
+  /* #playback-state {
+    display: none;
+  } */
+}
+
+/* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
+@media screen and (max-width: 800px) {
+  .sidebar.responsive {
+    position: relative;
+  }
+  .sidebar.responsive a.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .sidebar.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+
+  .footer.responsive{
+    display: block;
+  }
+} 

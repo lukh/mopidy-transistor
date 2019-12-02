@@ -1,0 +1,16 @@
+{% extends "base.html"%}
+{% block body %}
+<h2>Login</h2>
+<form action="login" method="post" class="settings-form settings-form-wifi">
+<label for="user">User</label>
+<input type="text" name="user">
+
+<label for="passwd">Password</label>
+<input type="password" name="passwd">
+
+<button type="submit" name="next" value="{{ escape(next) }}">Sign In</button>
+</form>
+{% if error_msg is not None %}
+<span style="color: red">{{ error_msg }}</span>
+{% end if %}
+{% end %}

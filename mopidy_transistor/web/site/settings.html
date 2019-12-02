@@ -1,0 +1,63 @@
+{% extends "base.html"%}
+{% block body %}
+<script type="text/javascript" src="js/settings.js"></script>
+
+
+<h2>Settings</h2>
+
+<h3>Wifi</h3>
+
+<form class="settings-form" action="/transistor/wifi">
+    <button type="submit" value="Update System">Wifi Settings</button>
+</form>
+
+<h3>System Update</h3>
+
+<form class="settings-form" action="/transistor/update">
+    <button type="submit" value="Update System" style="background-color: red;">Update System</button>
+</form>
+
+<h3>Mopidy & Extensions</h3>
+
+{% if warning_msg is not None %}
+<h3 style="color: red">{{ escape(warning_msg) }}</h3>
+{% end if %}
+
+<div class="settings-tablink-group">
+    {% for section in config %}
+        <div class="settings-tablink" onclick="openSection('{{escape(section) }}', this)">
+        {{ escape(section) }}
+        </div>
+    {% end %}
+</div>
+
+{% for section in config %}
+<div id="{{escape(section)}}" class="settings-tabcontent {% if section == active_section %}active{% end if %}">
+
+<form class="settings-form" method="post" action="settings">
+    {% for name in config[section] %}
+        <label for="{{ escape(name) }}">{{ escape(name) }}</label>
+
+        {% if config[section][name][1] == "string" %}
+        <input type="text" name="{{ escape(name) }}" value="{{ escape(config[section][name][0]) }}">
+        {% elif config[section][name][1] == "password" %}
+        <input type="password" name="{{ escape(name) }}" value="{{ escape(config[section][name][0]) }}">
+        {% elif config[section][name][1] == "bool" %}
+        <input type="checkbox" name="{{ escape(name) }}" value="{{ config[section][name][0] }}" {% if config[section][name] %}checked{% end if %}>
+        {% elif config[section][name][1] == "int" %}
+        <input type="number" name="{{ escape(name) }}" value="{{ config[section][name][0] }}">
+        {% elif config[section][name][1] == "tuple" %}
+        <input type="text" name="{{ escape(name) }}" value="{{ ';'.join([str(e) for e in config[section][name][0]]) }}">
+        {% else %}
+        NOT RECONIGZED<input type="text" name="{{ escape(name) }}" value="{{ config[section][name][0] }}">
+        {% end if %}
+
+    {% end %}    
+    <button type="submit" name="section" value="{{ escape(section) }}">Save Section</button>
+</form>
+
+</div>
+{% end %}
+
+{% end %}
+

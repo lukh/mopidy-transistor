@@ -1,0 +1,459 @@
+@import "config.css";
+
+.transistor-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top:16px;
+    table-layout: fixed;
+  }
+
+.transistor-table .browse-type{
+    width : 20px;
+}
+  
+.transistor-table td, .transistor-table th {
+    border: 0px;
+    padding: 8px;
+}
+
+.transistor-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.transistor-table tr:hover {background-color: #ddd;}
+
+.transistor-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: var(--transistor-light-color);
+    color: white;
+}
+
+/* Browse related */
+.browse-header-entry{
+    padding: 0px 4px;
+}
+
+.player button{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 8px;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+
+/* Radios Related */
+/* Style tab links */
+.radios-tablink-group{
+    background-color:var(--transistor-dark-color);
+    overflow: hidden;
+}
+
+.radios-tablink {
+    background-color:var(--transistor-dark-color);
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  .radios-tablink:hover {
+    background-color: #777;
+  }
+
+  .radios-tablink.active {
+    background-color: var(--transistor-light-color);
+  }
+
+  .radios-tablink i{
+    margin-right: 10px;
+  }
+
+  .radios-tablink form{
+    display: inline;
+  }
+
+  .radios-tablink button{
+    background-color: #f44336; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1px 8px;
+    margin: 0px 4px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  
+  .radios-add-bank{
+    background-color:var(--transistor-dark-color);
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .radios-new-bank{
+    background-color:var(--transistor-dark-color);
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 8px 8px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  /* Style the tab content (and add height:100% for full page content) */
+  .radios-tabcontent {
+    display: none;
+  }
+
+  .radios-tabcontent.active {
+    display: block;
+  }
+
+ .radios-table {
+   width:100%;
+   table-layout:auto;
+   margin-bottom: 50px;
+ }
+
+ .radios-table-col-position{
+    width: 50px;
+  }
+  
+  .radios-table-col-name{
+    width: 20%;
+  }
+   .radios-table-col-modify{
+    width: 20px;
+  }
+
+  .radios-table-col-delete{
+    width: 20px;
+  }
+
+  #radios-addradio{
+    width:30%;
+    display:none;
+  }
+  @media screen and (max-width: 800px) {
+    #radios-addradio{
+      width:100%;
+    }
+  }
+
+
+  #radios-addradio input[type=number] {
+    width: 100%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  #radios-addradio input[type=text], select {
+    width: 100%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  #radios-addradio button[type=submit] {
+    width: 100%;
+    background-color: var(--transistor-dark-color);
+    color: white;
+    padding: 8px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #radios-addradio button[type=submit]:hover {
+    background-color: var(--transistor-dark-color);
+  }
+
+
+  #radios-modifyradio{
+    width:30%;
+    display:none;
+  }
+  @media screen and (max-width: 800px) {
+    #radios-modifyradio{
+      width:100%;
+    }
+  }
+
+
+  #radios-modifyradio input[type=number] {
+    width: 100%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  #radios-modifyradio input[type=text], select {
+    width: 100%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  #radios-modifyradio button[type=submit] {
+    width: 100%;
+    background-color: var(--transistor-dark-color);
+    color: white;
+    padding: 8px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #radios-modifyradio button[type=submit]:hover {
+    background-color: var(--transistor-dark-color);
+  }
+
+
+
+
+  .delete-radio form{
+    display: inline;
+  }
+
+  .delete-radio button{
+    background-color: #f44336; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1px 8px;
+    margin: 0px 4px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+
+  /* podcasts Related */
+/* Style tab links */
+
+ .podcasts-table {
+  width:100%;
+  table-layout:auto;
+  margin-bottom: 50px;
+}
+
+.podcasts-table-col-position{
+   width: 50px;
+ }
+ 
+ .podcasts-table-col-name{
+   width: 20%;
+ }
+  .podcasts-table-col-modify{
+   width: 20px;
+ }
+
+ .podcasts-table-col-delete{
+   width: 20px;
+ }
+
+ #podcasts-addpodcast{
+   width:30%;
+   display:none;
+ }
+ @media screen and (max-width: 800px) {
+   #podcasts-addpodcast{
+     width:100%;
+   }
+ }
+
+
+ #podcasts-addpodcast input[type=number] {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+
+ #podcasts-addpodcast input[type=text], select {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+ 
+ #podcasts-addpodcast button[type=submit] {
+   width: 100%;
+   background-color: var(--transistor-dark-color);
+   color: white;
+   padding: 8px 20px;
+   margin: 8px 0;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+ }
+ 
+ #podcasts-addpodcast button[type=submit]:hover {
+   background-color: var(--transistor-dark-color);
+ }
+
+
+ #podcasts-modifypodcast{
+   width:30%;
+   display:none;
+ }
+ @media screen and (max-width: 800px) {
+   #podcasts-modifypodcast{
+     width:100%;
+   }
+ }
+
+
+ #podcasts-modifypodcast input[type=number] {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+
+ #podcasts-modifypodcast input[type=text], select {
+   width: 100%;
+   padding: 8px 20px;
+   margin: 8px 0;
+   display: inline-block;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+ 
+ #podcasts-modifypodcast button[type=submit] {
+   width: 100%;
+   background-color: var(--transistor-dark-color);
+   color: white;
+   padding: 8px 20px;
+   margin: 8px 0;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+ }
+ 
+ #podcasts-modifypodcast button[type=submit]:hover {
+   background-color: var(--transistor-dark-color);
+ }
+
+
+
+
+ .delete-podcast form{
+   display: inline;
+ }
+
+ .delete-podcast button{
+   background-color: #f44336; /* Green */
+   border: none;
+   color: white;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   padding: 1px 8px;
+   margin: 0px 4px;
+   border-radius: 2px;
+   cursor: pointer;
+ }
+
+
+ /*Settings*/
+ /* Radios Related */
+/* Style tab links */
+.settings-tablink-group{
+  background-color:var(--transistor-dark-color);
+  overflow: hidden;
+}
+
+.settings-tablink {
+  background-color:var(--transistor-dark-color);
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.settings-tablink:hover {
+  background-color: #777;
+}
+
+.settings-tablink.active {
+  background-color: var(--transistor-light-color);
+}
+
+.settings-tabcontent{
+  display: none;
+}
+
+.settings-tabcontent.active{
+  display: block;
+}
+
+ .settings-form{
+   display: block;
+ }
+ .settings-form input{
+  width: 100%;
+  padding: 8px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+ }
+
+ .settings-form label {
+   display: inline-block;
+  padding: 8px 8px;
+}
+
+.settings-form button {
+  background-color: var(--transistor-dark-color);
+  color: white;
+  padding: 8px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 25%;
+}
+
+.settings-form-wifi{
+  width: 25%;
+}

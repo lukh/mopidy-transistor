@@ -1,0 +1,46 @@
+@import "config.css";
+
+
+#tuner-block{
+    width: 100%;
+}
+
+#tuner-block #tuner-position{
+    width: 100%;
+}
+
+#tuner-block #tuner-labels {
+    width: 100%;
+}
+
+#tuner-block #tuner-labels .tuner-label {
+    writing-mode: sideways-lr;
+    text-orientation: mixed;
+    position: relative;
+    line-height: 50%;
+}
+
+
+#tuner-block #tuner-position{
+    -webkit-appearance: none;
+    margin-bottom:40px;
+}
+
+
+#tuner-block #tuner-position::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 80px;
+    width: 4px;
+    background: var(--transistor-dark-color);
+    margin-top: -4px;
+}
+
+
+#tuner-block #tuner-position::-moz-range-thumb {
+    border: none;
+    height: 80px;
+    width: 4px;
+    background: var(--transistor-dark-color);
+    margin-top: -4px;
+}
