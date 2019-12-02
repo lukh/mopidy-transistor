@@ -10,3 +10,20 @@ from .settings import (
     CalibrationWebSocketHandler,
 )
 from .event_source import EventSource
+
+__all__ = [
+    "MainHandler",
+    "AboutHandler",
+    "BrowseHandler",
+    "LoginHandler",
+    "RadioHandler",
+    "PodcastHandler",
+    "AlarmsHandler",
+    "SettingsHandler",
+    "WifiHandler",
+    "UpdateHandler",
+    "UpdateWebSocketHandler",
+    "CalibrationHandler",
+    "CalibrationWebSocketHandler",
+    "EventSource",
+]

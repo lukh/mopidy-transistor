@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from mopidy_transistor import Extension, frontend as frontend_lib
+from mopidy_transistor import Extension
 
 
 def test_get_default_config():

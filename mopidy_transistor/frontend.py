@@ -1,17 +1,14 @@
 import os
 import pykka
 import logging
-import serial
 import json
-from threading import Thread
 from queue import Queue
 import datetime
 import time
 
-from transitions import Machine, State, MachineError
+from transitions import Machine, State
 
 from mopidy import core
-from mopidy.exceptions import FrontendError
 
 import mopidy_transistor
 from .utils import SharedData
@@ -251,9 +248,7 @@ class TransistorFrontend(
 
         return None
 
-    ####################################################################
-    ################### Serial Message Implementation  #################
-    ####################################################################
+    # Serial Message Implementation
     def processPotentiometerVolume(self, in_potentiometervalue):
         logger.info("Pot Vol %d" % in_potentiometervalue)
         position = int(100 * (float(in_potentiometervalue) / 32767.0))
@@ -318,9 +313,7 @@ class TransistorFrontend(
 
         # TODO: Update if needed...
 
-    ####################################################################
-    #################### State machine calls ###########################
-    ####################################################################
+    # State machine calls
     def set_volume(self, position=None):
         """
             @paramn position: volume, between 0 and 100
@@ -410,7 +403,7 @@ class TransistorFrontend(
                 curr_index = (
                     self.lib["radio_banks"].keys().index(self._selected_radio_bank)
                 )
-            except:
+            except (KeyError, IndexError, ValueError):
                 curr_index = 0
             next_index = curr_index + 1
             if next_index == len(self.lib["radio_banks"]):
@@ -428,7 +421,7 @@ class TransistorFrontend(
                 curr_index = (
                     self.lib["radio_banks"].keys().index(self._selected_radio_bank)
                 )
-            except:
+            except (KeyError, IndexError, ValueError):
                 curr_index = 0
             next_index = curr_index - 1
             if next_index < 0:

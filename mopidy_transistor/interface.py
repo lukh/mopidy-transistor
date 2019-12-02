@@ -78,9 +78,6 @@ class SerialInterfaceListener(Thread):
 
         self.serial.close()
 
-    ####################################################################
-    ############################## Others ##############################
-    ####################################################################
     def sendMsg(self, msg):
         if self.serial is None:
             logger.warning("Can't send message to the hardware, serial port not opened")
