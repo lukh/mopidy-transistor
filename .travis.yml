@@ -3,9 +3,9 @@ sudo: false
 language: python
 
 python:
-  - "3.6"
-virtualenv:
-  system_site_packages: true
+  - "3.8"
+# virtualenv:
+#   system_site_packages: true
 
 # command to install dependencies
 install:
@@ -33,7 +33,7 @@ addons:
       - gstreamer1.0-tools
 
 env:
-  - TOX_ENV=py36
+  - TOX_ENV=py38
   - TOX_ENV=flake8
 
 install:
@@ -43,6 +43,6 @@ script:
   - "tox -e $TOX_ENV"
 
 after_success:
-  - "if [ $TOX_ENV == 'py36' ]; then pip install coveralls; coveralls; fi"
+  - "if [ $TOX_ENV == 'py38' ]; then pip install coveralls; coveralls; fi"
 
 
