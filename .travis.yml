@@ -19,6 +19,7 @@ install:
   - pip install podcastparser
   - pip install bcrypt
   - pip install microparcel
+  - pip install dateutil
   - pip install .
 
 addons:
