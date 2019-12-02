@@ -24,7 +24,7 @@ install:
 addons:
   apt:
     packages:
-      - python-devel
+      - python3-dev
       - python3-gst-1.0
       - gir1.2-gstreamer-1.0
       - gir1.2-gst-plugins-base-1.0
