@@ -24,8 +24,7 @@ Install by running::
 
     pip install Mopidy-Transistor
 
-Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
-<http://apt.mopidy.com/>`_.
+Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com <http://apt.mopidy.com/>`_.
 
 
 Configuration
@@ -48,8 +47,8 @@ Project resources
 Credits
 =======
 
-- Original author: `Vivien HENRY <https://github.com/lukhe`__
-- Current maintainer: `Vivien HENRY <https://github.com/lukhe`__
+- Original author: `Vivien HENRY <https://github.com/lukh>`_
+- Current maintainer: `Vivien HENRY <https://github.com/lukh>`_
 - `Contributors <https://github.com/lukhe/mopidy-transistor/graphs/contributors>`_
 
 
