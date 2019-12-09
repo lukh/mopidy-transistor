@@ -64,7 +64,6 @@ class TransistorLibraryProvider(backend.LibraryProvider):
                                 uri=uri,
                                 artists=[models.Artist(name=rad["name"])],
                                 album=models.Album(name=split_uri[2]),
-                                live_stream=True,
                             )
                         ]
 
@@ -79,7 +78,6 @@ class TransistorLibraryProvider(backend.LibraryProvider):
                                         uri=uri,
                                         artists=[models.Artist(name=podcast["name"])],
                                         album=models.Album(name=""),
-                                        live_stream=True,
                                     )
                                 ]
 
@@ -149,6 +147,9 @@ class TransistorPlaybackProvider(backend.PlaybackProvider):
         super(TransistorPlaybackProvider, self).__init__(audio, backend)
         self.lib = lib
         self.noises = self.find_noise_files(noise_folder)
+
+    def is_live(self, uri):
+        return uri != "transistor:noise"
 
     def translate_uri(self, uri):
         if not uri.startswith("transistor:"):
