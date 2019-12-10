@@ -1,4 +1,5 @@
 from threading import Lock
+import subprocess
 
 import datetime
 
@@ -92,3 +93,12 @@ class SharedData(object):
         self._lock.acquire()
         self._timestamp = tp
         self._lock.release()
+
+
+def is_connected_to_internet():
+    # ping google gateway
+    cmd = "ping -q -w 1 -c 1 8.8.8.8 > /dev/null && echo ok || echo error"
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
+    output, _ = process.communicate()
+
+    return output.find(b"ok") != -1
