@@ -6,8 +6,8 @@ Mopidy-Transistor
     :target: https://pypi.python.org/pypi/Mopidy-Transistor/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/travis/lukhe/mopidy-transistor/master.svg?style=flat
-    :target: https://travis-ci.org/lukhe/mopidy-transistor
+.. image:: https://img.shields.io/travis/lukh/mopidy-transistor/master.svg?style=flat
+    :target: https://travis-ci.org/lukh/mopidy-transistor
     :alt: Travis CI build status
 
 .. image:: https://img.shields.io/coveralls/lukhe/mopidy-transistor/master.svg?style=flat
