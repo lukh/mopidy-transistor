@@ -2,6 +2,8 @@ import bcrypt
 
 import tornado.web
 
+from mopidy_transistor import utils
+
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -16,7 +18,10 @@ class MainHandler(BaseHandler):
         pass
 
     def get(self):
-        self.render("site/index.html", active_page="index")
+        if utils.is_connected_to_internet():
+            self.render("site/index.html", active_page="index")
+        else:
+            self.redirect("wifi")
 
 
 class AboutHandler(BaseHandler):

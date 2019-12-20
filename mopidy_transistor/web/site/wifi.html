@@ -26,16 +26,22 @@ Wifi SSID is invalid
 <p>
 Trying to connect to {{ valid_ssid }}.
 </p>
+
 <p>
-The configuration hotspot is being desactivated.<br>You should reconnect on the network you just configured for the Transistor,
-and reach transistor.local on this network.
-<br>
+The configuration hotspot is being desactivated...
+</p>
+
+<p>
+You should reconnect on the network you just configured for the Transistor,
+and reach <a href="http://transistor.home:6680">transistor.local</a> on this network.
+</p>
+<p>
 This web page will try it automatically in a 10 seconds.
 </p>
 
 
 <script>
-setTimeout("location.href = 'http://localhost:6680';", 10000);
+setTimeout("location.href = 'http://transistor.home:6680';", 20000);
 </script>
 {% end if %}
 
