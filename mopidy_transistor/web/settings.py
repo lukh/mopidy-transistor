@@ -113,7 +113,7 @@ class WifiHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         pid = subprocess.Popen(
-            "sudo yawap --list", stdout=subprocess.PIPE, stderr=None, shell=True
+            "yawap --list", stdout=subprocess.PIPE, stderr=None, shell=True
         )
         output, _ = pid.communicate()
         output = str(output, "utf-8", "ignore").strip("\n")
@@ -135,7 +135,7 @@ class WifiHandler(BaseHandler):
         ssid = ssid_other if ssid_other != "" else ssids
         self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None)
 
-        subprocess.Popen("sudo yawap --add {} {}".format(ssid, passwd), shell=True)
+        subprocess.Popen("yawap --add {} {}".format(ssid, passwd), shell=True)
 
 
 class UpdateHandler(BaseHandler):
