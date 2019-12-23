@@ -451,9 +451,15 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 25%;
+  max-width: 100px;
 }
 
+ /* Wifi Related */
+
 .settings-form-wifi{
-  width: 25%;
+  max-width: 400px;
+}
+
+.wifi-table-col-delete{
+  width: 100px;
 }

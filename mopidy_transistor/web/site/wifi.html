@@ -1,7 +1,34 @@
 {% extends "base.html"%}
 {% block body %}
+<script type="text/javascript" src="js/wifi.js"></script>
 
 <h2>Wifi</h2>
+
+{% if saved_ssids is not None %}
+<h3>Saved Networks</h3>
+
+<table class="transistor-table">
+    <thead>
+        <tr>
+            <th>SSID</th>
+            <th class="wifi-table-col-delete">Delete...</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ssid in saved_ssids %}
+        <tr>
+            <td>
+                {{ ssid }}
+            </td>
+            <td class="delete-radio" id="delete-{{ ssid }}"><i class="fas fa-trash" onclick="deleteSSID('{{ ssid }}')"></i></td>
+        </tr>
+        {% end for %}
+    </tbody>
+</table>
+
+{% end if %}
+
+<h3>Add</h3>
 
 {% if ssids is not None %}
 <form class="settings-form settings-form-wifi" method="post" action="wifi">

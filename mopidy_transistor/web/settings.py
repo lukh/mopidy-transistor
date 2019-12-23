@@ -112,6 +112,7 @@ class WifiHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
+        # scan availables networks
         pid = subprocess.Popen(
             "yawap --list", stdout=subprocess.PIPE, stderr=None, shell=True
         )
@@ -119,23 +120,38 @@ class WifiHandler(BaseHandler):
         output = str(output, "utf-8", "ignore").strip("\n")
         ssids = output.split(";")
 
-        self.render("site/wifi.html", active_page="wifi", ssids=ssids, valid_ssid=None)
+        # scan saved networks
+        pid = subprocess.Popen(
+            "yawap --list-saved", stdout=subprocess.PIPE, stderr=None, shell=True
+        )
+        output, _ = pid.communicate()
+        output = str(output, "utf-8", "ignore").strip("\n")
+        saved_ssids = output.split(";")
+
+        self.render("site/wifi.html", active_page="wifi", ssids=ssids, valid_ssid=None, saved_ssids=saved_ssids)
 
     def post(self):
         ssids = self.get_argument("ssids", "")
         ssid_other = self.get_argument("ssid_other", "")
-        passwd = self.get_argument("passwd")
+        passwd = self.get_argument("passwd", "")
 
-        if ssids == "" and ssid_other == "":
-            self.render(
-                "site/wifi.html", active_page="wifi", valid_ssid=None, ssids=None
-            )
-            return
+        del_ssid = self.get_argument("del_ssid", "")
+        if del_ssid != "":
+            subprocess.Popen("yawap --delete {}".format(del_ssid), shell=True)
+            self.redirect('wifi')
 
-        ssid = ssid_other if ssid_other != "" else ssids
-        self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None)
+        else:
+            if (ssids == "" and ssid_other == "") or passwd == "":
+                self.render(
+                    "site/wifi.html", active_page="wifi", valid_ssid=None, ssids=None, saved_ssids=None
+                )
+                return
 
-        subprocess.Popen("yawap --add {} {}".format(ssid, passwd), shell=True)
+            else:
+                ssid = ssid_other if ssid_other != "" else ssids
+                self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None, saved_ssids=None)
+
+                subprocess.Popen("yawap --add {} {}".format(ssid, passwd), shell=True)
 
 
 class UpdateHandler(BaseHandler):
