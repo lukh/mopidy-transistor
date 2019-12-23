@@ -111,3 +111,10 @@ function updateRadio(bank, id, radio, position, url) {
     form.elements["modify_radio_bank"].value = bank;
 }
     
+
+function playRadio(bank, position) {
+    mopidy.tracklist.clear();
+    uri = "transistor:radios:" + bank + ":" + position;
+    mopidy.tracklist.add({uris:[uri]});
+    mopidy.playback.play();
+}

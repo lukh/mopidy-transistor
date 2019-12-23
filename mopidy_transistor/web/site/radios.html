@@ -22,6 +22,7 @@
     <thead>
         <tr>
             <th class="radios-table-col-position">Pos</th>
+            <th class="radios-table-col-position">Play</th>
             <th class="radios-table-col-name">Name</th>
             <th class="radios-table-col-url">URL</th>
             <th class="radios-table-col-modify"></th>
@@ -32,6 +33,7 @@
         {% for r_id, radio in enumerate(radios[bank]) %}
         <tr>
             <td>{{ radio["position"] }}</td>
+            <td onclick="playRadio('{{bank}}', {{ radio["position"] }})"><i class="fas fa-play-circle"></i></td>
             <td>{{ radio["name"] }}</td>
             <td>{{ radio["stream_url"] }}</td>
             <td onclick="updateRadio('{{bank}}', {{ r_id }}, '{{ radio["name"] }}', {{ radio["position"] }}, '{{ radio["stream_url"] }}')"<i class="fas fa-pen"></i></td>
