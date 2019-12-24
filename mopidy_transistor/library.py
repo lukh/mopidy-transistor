@@ -1,6 +1,8 @@
 import mopidy
 import logging
 from urllib.request import urlopen
+import ssl
+import certifi
 from pathlib import Path
 import podcastparser
 import threading
@@ -83,7 +85,7 @@ class Library(object):
         def run():
             try:
                 for podcast in self.data["podcasts"]:
-                    raw = urlopen(podcast["feed_url"], timeout=self._podcast_timeout)
+                    raw = urlopen(podcast["feed_url"], timeout=self._podcast_timeout, context=ssl.create_default_context(cafile=certifi.where()))
                     parsed = podcastparser.parse(podcast["feed_url"], raw)
                     episodes = parsed["episodes"]
 
