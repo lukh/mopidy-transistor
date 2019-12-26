@@ -428,9 +428,10 @@
 
  .settings-form{
    display: block;
- }
+   max-width: 800px;
+  }
+
  .settings-form input{
-  max-width: 800px;
   width: 100%;
   padding: 8px 8px;
   border: 1px solid #ccc;
@@ -458,9 +459,6 @@
 
  /* Wifi Related */
 
-.settings-form-wifi{
-  max-width: 400px;
-}
 
 .wifi-table-col-delete{
   width: 100px;
