@@ -199,7 +199,7 @@ event_source.onmessage = function(message) {
   }
 
   if(data.hasOwnProperty('battery_soc')){
-    bat_gauge = el("battery_level");
+    bat_gauge = el("battery-level");
     bat_gauge.style.width = data.battery_soc.toString() + "%";
   }
 
