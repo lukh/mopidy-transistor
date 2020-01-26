@@ -205,5 +205,11 @@ event_source.onmessage = function(message) {
 
   if(data.hasOwnProperty('battery_charging')){
     bat_chag = el("battery-charging-status");
+    if(data.battery_charging == true){
+      bat_chag.style.display = "inline";
+    }
+    else{
+      bat_chag.style.display = "none";
+    }
   }
 };

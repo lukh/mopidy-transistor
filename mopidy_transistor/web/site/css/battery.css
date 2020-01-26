@@ -16,6 +16,6 @@
     border-radius: 1px;
 }
 
-.battery-not-charging{
+#battery-charging-status{
   display: none;
 }
