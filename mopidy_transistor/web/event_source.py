@@ -51,6 +51,11 @@ class EventSource(web.RequestHandler):
 
                 yield self.publish({"battery_soc": self._shared_data.battery_soc})
 
+            if self._sent_data.battery_charging != self._shared_data.battery_charging:
+                self._sent_data.battery_charging = self._shared_data.battery_charging
+
+                yield self.publish({"battery_charging": self._shared_data.battery_charging})
+
             yield gen.sleep(0.1)
 
             t = self._shared_data.time

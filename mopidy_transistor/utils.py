@@ -13,6 +13,7 @@ class SharedData(object):
         self._time = datetime.time(0, 0, 0)
         self._date = datetime.date.max
         self._battery_soc = 0
+        self._battery_charging = False
 
         self._timestamp = 0
 
@@ -80,6 +81,20 @@ class SharedData(object):
         self._lock.acquire()
         self._battery_soc = tp
         self._lock.release()
+
+    @property
+    def battery_charging(self):
+        self._lock.acquire()
+        data = self._battery_charging
+        self._lock.release()
+        return data
+
+    @battery_charging.setter
+    def battery_charging(self, tp):
+        self._lock.acquire()
+        self._battery_charging = tp
+        self._lock.release()
+
 
     @property
     def timestamp(self):
