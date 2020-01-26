@@ -28,21 +28,26 @@
     color: white;
 }
 
+
+/* Player */
+.player button{
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 8px;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
 /* Browse related */
 .browse-header-entry{
     padding: 0px 4px;
 }
 
-.player button{
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 8px;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
+.browser-table i{
+  cursor: pointer;
 }
-
 
 /* Radios Related */
 /* Style tab links */
