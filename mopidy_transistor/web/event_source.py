@@ -19,6 +19,8 @@ class EventSource(web.RequestHandler):
 
         self._stop = False
 
+        self._sent_data.date = datetime.date.min
+
     def on_connection_close(self):
         self._stop = True
 
@@ -44,13 +46,6 @@ class EventSource(web.RequestHandler):
 
                 yield self.publish({"tuner_labels": self._shared_data.tuner_labels})
 
-            if self._sent_data.date != self._shared_data.date:
-                self._sent_data.date = self._shared_data.date
-
-                yield self.publish(
-                    {"date": self._shared_data.date.strftime("%d/%m/%y")}
-                )
-
             if self._sent_data.battery_soc != self._shared_data.battery_soc:
                 self._sent_data.battery_soc = self._shared_data.battery_soc
 
@@ -74,3 +69,8 @@ class EventSource(web.RequestHandler):
             if dt.time() != self._sent_data.time:
                 self._sent_data.time = dt.time()
                 yield self.publish({"time": dt.time().strftime("%H:%M:%S")})
+
+            if dt.date() != self._sent_data.date:
+                self._sent_data.date = dt.date()
+
+                yield self.publish({"date": dt.date().strftime("%d/%m/%y")})
