@@ -80,8 +80,8 @@ function browseTracks(uri_base=null) {
             cellName.appendChild(nameText);
 
             // cell 2
+            var cellAdd  = newRow.insertCell(2);
             if(track.type == "track"){
-                var cellAdd  = newRow.insertCell(2);
                 var addDiv = document.createElement("div");
                 addDiv.innerHTML = '<i class="fas fa-plus-circle"></i>';
                 addDiv.id = track.uri;
