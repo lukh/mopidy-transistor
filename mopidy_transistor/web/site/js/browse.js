@@ -83,11 +83,19 @@ function browseTracks(uri_base=null) {
             var cellAdd  = newRow.insertCell(2);
             if(track.type == "track"){
                 var addDiv = document.createElement("div");
-                addDiv.innerHTML = '<i class="fas fa-plus-circle"></i>';
                 addDiv.id = track.uri;
+                addDiv.classList = "popup";
+                addDiv.innerHTML = '<i class="fas fa-plus-circle"></i><span class="popuptext" id="' + 'popup' + track.uri + '">Added...</span>';
                 addDiv.onclick = function(addDiv){
                     return function() {
                         mopidy.tracklist.add({uris:[addDiv.id]});
+
+                        var popup = document.getElementById('popup' + addDiv.id);
+                        popup.classList.toggle("show");
+
+                        setTimeout(function () {
+                            popup.classList.toggle("show");
+                        }, 1500, popup);
                     };
                 }(typeDiv);
                 cellAdd.appendChild(addDiv);
