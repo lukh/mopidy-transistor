@@ -42,13 +42,13 @@ class CommonSharedData(object):
 class SharedData(CommonSharedData):
     def __init__(self):
         super(SharedData, self).__init__(
-            tuner_position = 0,
-            tuner_labels = {},
-            time = datetime.time(0, 0, 0),
-            date = datetime.date.max,
-            battery_soc = 0,
-            battery_charging = False,
-            timestamp = 0
+            tuner_position = self.UNSET,
+            tuner_labels = self.UNSET,
+            time = self.UNSET,
+            date = self.UNSET,
+            battery_soc = self.UNSET,
+            battery_charging = self.UNSET,
+            timestamp = self.UNSET
         )
 
 
