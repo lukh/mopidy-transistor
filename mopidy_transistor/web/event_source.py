@@ -36,25 +36,12 @@ class EventSource(web.RequestHandler):
     @gen.coroutine
     def get(self):
         while not self._stop:
-            if self._sent_data.tuner_position != self._shared_data.tuner_position:
-                self._sent_data.tuner_position = self._shared_data.tuner_position
+            for ev in ['tuner_position', 'tuner_labels', 'battery_soc', 'battery_charging']:
+                if self._sent_data.get(ev) != self._shared_data.get(ev):
+                    self._sent_data.set(ev, self._shared_data.get(ev))
 
-                yield self.publish({"tuner_position": self._shared_data.tuner_position})
+                    yield self.publish({ev: self._shared_data.get(ev)})
 
-            if self._sent_data.tuner_labels != self._shared_data.tuner_labels:
-                self._sent_data.tuner_labels = self._shared_data.tuner_labels
-
-                yield self.publish({"tuner_labels": self._shared_data.tuner_labels})
-
-            if self._sent_data.battery_soc != self._shared_data.battery_soc:
-                self._sent_data.battery_soc = self._shared_data.battery_soc
-
-                yield self.publish({"battery_soc": self._shared_data.battery_soc})
-
-            if self._sent_data.battery_charging != self._shared_data.battery_charging:
-                self._sent_data.battery_charging = self._shared_data.battery_charging
-
-                yield self.publish({"battery_charging": self._shared_data.battery_charging})
 
             yield gen.sleep(0.1)
 
