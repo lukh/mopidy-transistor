@@ -298,9 +298,10 @@ class TransistorFrontend(
         )
         self.shared_data.timestamp = time.time()
 
-    def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
+    def processSendBatteryStatus(self, in_sendbatterystatuspercentage, in_sendbatterystatuscharging):
         logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))
         self.shared_data.battery_soc = in_sendbatterystatuspercentage
+        self.shared_data.battery_charging = in_sendbatterystatuscharging != 0
 
     def processSendProtocolVersion(
         self, in_sendprotocolversionmajor, in_sendprotocolversionminor

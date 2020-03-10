@@ -19,8 +19,6 @@ class EventSource(web.RequestHandler):
 
         self._stop = False
 
-        self._sent_data.date = datetime.date.min
-
     def on_connection_close(self):
         self._stop = True
 
@@ -36,41 +34,33 @@ class EventSource(web.RequestHandler):
     @gen.coroutine
     def get(self):
         while not self._stop:
-            if self._sent_data.tuner_position != self._shared_data.tuner_position:
-                self._sent_data.tuner_position = self._shared_data.tuner_position
+            for ev in ['tuner_position', 'tuner_labels', 'battery_soc', 'battery_charging']:
+                if self._shared_data.get(ev) != SharedData.UNSET and self._sent_data.get(ev) != self._shared_data.get(ev):
+                    self._sent_data.set(ev, self._shared_data.get(ev))
 
-                yield self.publish({"tuner_position": self._shared_data.tuner_position})
-
-            if self._sent_data.tuner_labels != self._shared_data.tuner_labels:
-                self._sent_data.tuner_labels = self._shared_data.tuner_labels
-
-                yield self.publish({"tuner_labels": self._shared_data.tuner_labels})
-
-            if self._sent_data.battery_soc != self._shared_data.battery_soc:
-                self._sent_data.battery_soc = self._shared_data.battery_soc
-
-                yield self.publish({"battery_soc": self._shared_data.battery_soc})
-
-            yield gen.sleep(0.1)
+                    yield self.publish({ev: self._shared_data.get(ev)})
 
             t = self._shared_data.time
             d = self._shared_data.date
+            if t != SharedData.UNSET and d != SharedData.UNSET and self._shared_data.timestamp:
+                try:
+                    dt = datetime.datetime(
+                        d.year, d.month, d.day, t.hour, t.minute, t.second
+                    )
+                    dt += datetime.timedelta(
+                        seconds=int(time.time() - self._shared_data.timestamp)
+                    )
+                except OverflowError:
+                    dt = datetime.datetime.max
 
-            try:
-                dt = datetime.datetime(
-                    d.year, d.month, d.day, t.hour, t.minute, t.second
-                )
-                dt += datetime.timedelta(
-                    seconds=int(time.time() - self._shared_data.timestamp)
-                )
-            except OverflowError:
-                dt = datetime.datetime.max
+                if dt.time() != self._sent_data.time:
+                    self._sent_data.time = dt.time()
+                    yield self.publish({"time": dt.time().strftime("%H:%M:%S")})
 
-            if dt.time() != self._sent_data.time:
-                self._sent_data.time = dt.time()
-                yield self.publish({"time": dt.time().strftime("%H:%M:%S")})
+                if dt.date() != self._sent_data.date:
+                    self._sent_data.date = dt.date()
 
-            if dt.date() != self._sent_data.date:
-                self._sent_data.date = dt.date()
+                    yield self.publish({"date": dt.date().strftime("%d/%m/%y")})
 
-                yield self.publish({"date": dt.date().strftime("%d/%m/%y")})
+
+            yield gen.sleep(0.1)
