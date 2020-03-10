@@ -1,7 +1,7 @@
 var loc = window.location, ws_uri;
 ws_uri = "ws:";
 ws_uri += "//" + loc.host;
-ws_uri += ws_uri + "/transistor/calibsocket";
+ws_uri += "/transistor/calibsocket";
 
 var ws = new WebSocket(ws_uri);
 // ws.onopen = function() {
