@@ -1,4 +1,9 @@
-var ws = new WebSocket("ws://localhost:6680/transistor/calibsocket");
+var loc = window.location, ws_uri;
+ws_uri = "ws:";
+ws_uri += "//" + loc.host;
+ws_uri += loc.pathname + "calibsocket";
+
+var ws = new WebSocket(ws_uri);
 // ws.onopen = function() {
 //};
 
