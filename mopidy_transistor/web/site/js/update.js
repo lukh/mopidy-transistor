@@ -1,7 +1,7 @@
 var loc = window.location, ws_uri;
 ws_uri = "ws:";
 ws_uri += "//" + loc.host;
-ws_uri += loc.pathname + "updatesocket";
+ws_uri += ws_uri + "/transistor/updatesocket";
 
 var ws = new WebSocket(ws_uri);
 
