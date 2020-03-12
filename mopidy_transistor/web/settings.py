@@ -1,6 +1,7 @@
 from configparser import SafeConfigParser
 from collections import OrderedDict
-from threading import Timer
+import datetime
+
 
 import bcrypt
 import subprocess
@@ -8,6 +9,7 @@ import subprocess
 import tornado.web
 import tornado.websocket
 import tornado.gen
+import tornado.ioloop
 
 from transitions import Machine, State
 
@@ -386,8 +388,7 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.write_message(u"Done !")
 
     def wait(self, seconds):
-        timer = Timer(seconds, self.timeout)
-        timer.start()
+        tornado.ioloop.IOLoop.instance().add_timeout(datetime.timedelta(seconds=seconds), self.timeout)
 
     def open(self):
         print("WebSocket opened")
