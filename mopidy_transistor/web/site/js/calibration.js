@@ -9,7 +9,7 @@ var ws = new WebSocket(ws_uri);
 
 ws.onmessage = function (evt) {
    //  alert(evt.data);
-   el("calib_information").innerText = evt.data;
+   el("calib_information").innerHTML = el("calib_information").innerHTML + '<br>' + evt.data;
 };
 
 function calibration_step() {
