@@ -1,7 +1,7 @@
 from configparser import SafeConfigParser
 from collections import OrderedDict
 import datetime
-
+import os
 
 import bcrypt
 import subprocess
@@ -15,6 +15,8 @@ from transitions import Machine, State
 
 from .basics import BaseHandler
 from .settings_conf import settings_conf
+
+import mopidy_transistor
 
 
 class SettingsHandler(BaseHandler):
@@ -106,6 +108,30 @@ class SettingsHandler(BaseHandler):
             parser.write(fp)
 
         self.redirect("settings?passwd_updated={}".format(passwd_updated))
+
+
+
+class UploadLibraryHandler(BaseHandler):
+    def initialize(self, config):
+        self.config = config
+
+    def post(self):
+        try:
+            file1 = self.request.files['file_backup_upload'][0]
+            original_fname = file1['filename']
+
+            if original_fname == "library.json.gz":
+                output_file_path = os.path.join(
+                    mopidy_transistor.Extension.get_data_dir(self.config), "library.json.gz"
+                )
+                output_file = open(output_file_path, 'wb')
+                output_file.write(file1['body'])
+
+
+        except KeyError:
+            pass
+
+        self.redirect("settings")
 
 
 class WifiHandler(BaseHandler):

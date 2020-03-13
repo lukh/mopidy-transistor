@@ -2,6 +2,17 @@
 {% block body %}
 <script type="text/javascript" src="js/settings.js"></script>
 
+<h2>Backup Local Data & Settings</h2>
+
+<form class="settings-form" method="get" action="/transistor/settings/backup_data/library.json.gz">
+    <button type="submit"><i class="fa fa-download"></i> Backup Data</button>
+</form>
+
+<form class="settings-form" enctype="multipart/form-data" action="/transistor/uploadlibrary" method="post">
+    <input id='file_backup_upload' type='file' name="file_backup_upload"/>
+    <button type="submit" id="button_upload_backup"><i class="fa fa-upload"></i> Import Data</button>
+</form>
+
 
 <h2>Settings</h2>
 

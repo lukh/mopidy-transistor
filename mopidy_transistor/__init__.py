@@ -8,6 +8,7 @@ import pkg_resources
 import tornado.web
 
 from mopidy import config, ext
+import mopidy_transistor
 
 from . import web
 
@@ -70,6 +71,7 @@ class Extension(ext.Extension):
             ("/podcasts", web.PodcastHandler, {"core": core, "config": config}),
             ("/about", web.AboutHandler, {}),
             ("/settings", web.SettingsHandler, {"config": config}),
+            ("/uploadlibrary", web.UploadLibraryHandler, {"config": config}),
             ("/alarms", web.AlarmsHandler, {"queue_web": self._queue_web}),
             ("/wifi", web.WifiHandler, {}),
             ("/update", web.UpdateHandler, {}),
@@ -83,8 +85,16 @@ class Extension(ext.Extension):
                 {"queue_front": self._queue_front, "queue_web": self._queue_web},
             ),
             (
+                r"/settings/backup_data/(.*)", 
+                tornado.web.StaticFileHandler,
+                {"path": os.path.join(mopidy_transistor.Extension.get_data_dir(config))}
+            ),
+            (
                 r"/(.*)",
                 tornado.web.StaticFileHandler,
                 {"path": os.path.join(os.path.dirname(__file__), "web", "site")},
             ),
         ]
+
+
+         
