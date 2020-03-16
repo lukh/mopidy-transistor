@@ -74,6 +74,7 @@ class Extension(ext.Extension):
             ("/uploadlibrary", web.UploadLibraryHandler, {"config": config}),
             ("/alarms", web.AlarmsHandler, {"queue_web": self._queue_web}),
             ("/wifi", web.WifiHandler, {}),
+            ("/country_wifi", web.UpdateWifiCountryCodehandler, {}),
             ("/update", web.UpdateHandler, {}),
             ("/updatesocket", web.UpdateWebSocketHandler, {}),
             ("/login", web.LoginHandler, {"config": config}),

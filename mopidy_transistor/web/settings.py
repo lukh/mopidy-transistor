@@ -182,6 +182,15 @@ class WifiHandler(BaseHandler):
                 subprocess.Popen("yawap --add {} {}".format(ssid, passwd), shell=True)
 
 
+class UpdateWifiCountryCodehandler(BaseHandler):
+    def post(self):
+        country = self.get_argument("country", None)
+        if country is not None:
+            subprocess.Popen("yawap --set-wpa-supplicant-conf country {}".format(country), shell=True)
+
+        self.redirect('wifi')
+
+
 class UpdateHandler(BaseHandler):
     def initialize(self):
         pass
