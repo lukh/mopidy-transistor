@@ -201,6 +201,9 @@ event_source.onmessage = function(message) {
   if(data.hasOwnProperty('battery_soc')){
     bat_gauge = el("battery-level");
     bat_gauge.style.width = data.battery_soc.toString() + "%";
+
+    bat = el("battery");
+    bat.title = data.battery_soc.toString() + "%";
   }
 
   if(data.hasOwnProperty('battery_charging')){
