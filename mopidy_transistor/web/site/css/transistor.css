@@ -468,3 +468,11 @@
 .wifi-table-col-delete{
   width: 100px;
 }
+
+.wifi-form{
+  display: none;
+}
+
+.wifi-form.active{
+  display: block;
+}

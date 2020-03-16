@@ -14,3 +14,17 @@ function deleteSSID(ssid){
 
     entry.appendChild(form);
 }
+
+function showAddWifiForm() {
+    form = el("add-wifi-form");
+    plus_button = el("show-add-wifi-button")
+    if(form.className == "settings-form wifi-form"){
+        form.className = "settings-form wifi-form active";
+        plus_button.className = "fa fa-minus-circle";
+    }
+
+    else{
+        form.className = "settings-form wifi-form";
+        plus_button.className = "fa fa-plus-circle";
+    }
+}

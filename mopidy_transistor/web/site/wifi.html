@@ -287,10 +287,10 @@
 
 {% end if %}
 
-<h3>Add</h3>
-
 {% if ssids is not None %}
-<form class="settings-form" method="post" action="wifi">
+<h3 onclick="showAddWifiForm()"><i id="show-add-wifi-button" class="fa fa-plus-circle"></i> Add</h3>
+
+<form class="settings-form wifi-form" id="add-wifi-form"" method="post" action="wifi">
     <label for="ssids">SSIDs</label>
     <select name="ssids">
         {% for ssid in ssids %}
@@ -304,8 +304,8 @@
     <input type="text" name="passwd">
     <button type="submit">Save</button>
 </form>
-{% else %}
 
+{% else %}
 {% if valid_ssid is None %}
 Wifi SSID is invalid
 {% else %}
@@ -327,7 +327,7 @@ This web page will try it automatically in a 10 seconds.
 
 
 <script>
-setTimeout("location.href = 'http://transistor.home:6680';", 20000);
+setTimeout("location.href = 'http://transistor:6680';", 20000);
 </script>
 {% end if %}
 
