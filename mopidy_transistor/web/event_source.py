@@ -34,15 +34,30 @@ class EventSource(web.RequestHandler):
     @gen.coroutine
     def get(self):
         while not self._stop:
-            for ev in ['tuner_position', 'tuner_labels', 'battery_soc', 'battery_charging']:
-                if self._shared_data.get(ev) != SharedData.UNSET and self._sent_data.get(ev) != self._shared_data.get(ev):
+            for ev in [
+                "tuner_position",
+                "tuner_labels",
+                "battery_soc",
+                "battery_charging",
+            ]:
+                if self._shared_data.get(
+                    ev
+                ) != SharedData.UNSET and self._sent_data.get(
+                    ev
+                ) != self._shared_data.get(
+                    ev
+                ):
                     self._sent_data.set(ev, self._shared_data.get(ev))
 
                     yield self.publish({ev: self._shared_data.get(ev)})
 
             t = self._shared_data.time
             d = self._shared_data.date
-            if t != SharedData.UNSET and d != SharedData.UNSET and self._shared_data.timestamp:
+            if (
+                t != SharedData.UNSET
+                and d != SharedData.UNSET
+                and self._shared_data.timestamp
+            ):
                 try:
                     dt = datetime.datetime(
                         d.year, d.month, d.day, t.hour, t.minute, t.second
@@ -55,12 +70,15 @@ class EventSource(web.RequestHandler):
 
                 if dt.time() != self._sent_data.time:
                     self._sent_data.time = dt.time()
-                    yield self.publish({"time": dt.time().strftime("%H:%M:%S")})
+                    yield self.publish(
+                        {"time": dt.time().strftime("%H:%M:%S")}
+                    )
 
                 if dt.date() != self._sent_data.date:
                     self._sent_data.date = dt.date()
 
-                    yield self.publish({"date": dt.date().strftime("%d/%m/%y")})
-
+                    yield self.publish(
+                        {"date": dt.date().strftime("%d/%m/%y")}
+                    )
 
             yield gen.sleep(0.1)

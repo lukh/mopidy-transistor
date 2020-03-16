@@ -144,7 +144,9 @@ class TransistorFrontend(
 
         # Load podcasts from lib
         podcasts = self.core.library.browse("transistor:podcasts").get()
-        self.lib["podcasts"] = {int(pod.uri.split(":")[-1]): pod for pod in podcasts}
+        self.lib["podcasts"] = {
+            int(pod.uri.split(":")[-1]): pod for pod in podcasts
+        }
 
         # Load radios from lib
         banks = self.core.library.browse("transistor:radios").get()
@@ -156,9 +158,14 @@ class TransistorFrontend(
 
         # load default bank
         self._selected_radio_bank = None
-        if not os.path.isfile(self._data_path) and len(self.lib["radio_banks"]) > 0:
+        if (
+            not os.path.isfile(self._data_path)
+            and len(self.lib["radio_banks"]) > 0
+        ):
             with open(self._data_path, "w") as fp:
-                json.dump({"bank": list(self.lib["radio_banks"].keys())[0]}, fp)
+                json.dump(
+                    {"bank": list(self.lib["radio_banks"].keys())[0]}, fp
+                )
 
         if os.path.isfile(self._data_path):
             with open(self._data_path) as fp:
@@ -230,7 +237,9 @@ class TransistorFrontend(
         elif command == "update_datetime":
             dt = msg["dt"]
             self.interface.sendMsg(self.makeSetDate(dt.day, dt.month, dt.year))
-            self.interface.sendMsg(self.makeSetTime(dt.hour, dt.minute, dt.second))
+            self.interface.sendMsg(
+                self.makeSetTime(dt.hour, dt.minute, dt.second)
+            )
 
     def process_serial_message(self, msg):
         self.process(msg)
@@ -239,11 +248,15 @@ class TransistorFrontend(
         def distance(val, target):
             return abs(val - target)
 
-        valid_positions = [p for p in positions if distance(raw_pos, p) <= margin]
+        valid_positions = [
+            p for p in positions if distance(raw_pos, p) <= margin
+        ]
         if len(valid_positions) == 1:
             return valid_positions[0]
         elif len(valid_positions) > 1:
-            pos_sorted = sorted(valid_positions, key=lambda pos: distance(raw_pos, pos))
+            pos_sorted = sorted(
+                valid_positions, key=lambda pos: distance(raw_pos, pos)
+            )
             return pos_sorted[0]
 
         return None
@@ -274,14 +287,22 @@ class TransistorFrontend(
 
     def processNavigation(self, in_navigationtype):
         logger.info("Navigation %s" % (in_navigationtype))
-        if in_navigationtype == TransistorMsg.NavigationType.NavigationType_Next:
+        if (
+            in_navigationtype
+            == TransistorMsg.NavigationType.NavigationType_Next
+        ):
             self.next()
-        elif in_navigationtype == TransistorMsg.NavigationType.NavigationType_Previous:
+        elif (
+            in_navigationtype
+            == TransistorMsg.NavigationType.NavigationType_Previous
+        ):
             self.previous()
 
     def processDate(self, in_datedate, in_datemonth, in_dateyear):
         logger.info(
-            "Date {}, Month {}, Year {}".format(in_datedate, in_datemonth, in_dateyear)
+            "Date {}, Month {}, Year {}".format(
+                in_datedate, in_datemonth, in_dateyear
+            )
         )
         self.shared_data.date = datetime.date(
             year=in_dateyear, month=in_datemonth, day=in_datedate
@@ -298,8 +319,12 @@ class TransistorFrontend(
         )
         self.shared_data.timestamp = time.time()
 
-    def processSendBatteryStatus(self, in_sendbatterystatuspercentage, in_sendbatterystatuscharging):
-        logger.info("Battery Status = {}".format(in_sendbatterystatuspercentage))
+    def processSendBatteryStatus(
+        self, in_sendbatterystatuspercentage, in_sendbatterystatuscharging
+    ):
+        logger.info(
+            "Battery Status = {}".format(in_sendbatterystatuspercentage)
+        )
         self.shared_data.battery_soc = in_sendbatterystatuspercentage
         self.shared_data.battery_charging = in_sendbatterystatuscharging != 0
 
@@ -340,7 +365,9 @@ class TransistorFrontend(
 
         radios = self.lib["radio_banks"][self._selected_radio_bank]
 
-        found_pos = self.find_closest_playable(self._curr_position, radios.keys())
+        found_pos = self.find_closest_playable(
+            self._curr_position, radios.keys()
+        )
         if found_pos is not None:
             if self._curr_played_position != found_pos or force_reload:
                 ref_radio = radios[found_pos]
@@ -370,7 +397,9 @@ class TransistorFrontend(
 
         podcasts = self.lib["podcasts"]
 
-        found_pos = self.find_closest_playable(self._curr_position, podcasts.keys())
+        found_pos = self.find_closest_playable(
+            self._curr_position, podcasts.keys()
+        )
         if found_pos is not None:
             if self._curr_played_position != found_pos or force_reload:
                 ref_pod = podcasts[found_pos]
@@ -402,7 +431,9 @@ class TransistorFrontend(
         elif self.state == "radio":
             try:
                 curr_index = (
-                    self.lib["radio_banks"].keys().index(self._selected_radio_bank)
+                    self.lib["radio_banks"]
+                    .keys()
+                    .index(self._selected_radio_bank)
                 )
             except (KeyError, IndexError, ValueError):
                 curr_index = 0
@@ -410,7 +441,9 @@ class TransistorFrontend(
             if next_index == len(self.lib["radio_banks"]):
                 next_index = 0
 
-            self._selected_radio_bank = self.lib["radio_banks"].keys()[next_index]
+            self._selected_radio_bank = self.lib["radio_banks"].keys()[
+                next_index
+            ]
             self.tuner()
 
     def set_previous(self, **kwargs):
@@ -420,7 +453,9 @@ class TransistorFrontend(
         else:
             try:
                 curr_index = (
-                    self.lib["radio_banks"].keys().index(self._selected_radio_bank)
+                    self.lib["radio_banks"]
+                    .keys()
+                    .index(self._selected_radio_bank)
                 )
             except (KeyError, IndexError, ValueError):
                 curr_index = 0
@@ -428,7 +463,9 @@ class TransistorFrontend(
             if next_index < 0:
                 next_index = len(self.lib["radio_banks"]) - 1
 
-            self._selected_radio_bank = self.lib["radio_banks"].keys()[next_index]
+            self._selected_radio_bank = self.lib["radio_banks"].keys()[
+                next_index
+            ]
             self.tuner()
 
     def turn_off_system(self, **kwargs):

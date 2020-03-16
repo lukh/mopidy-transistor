@@ -61,14 +61,20 @@ class Extension(ext.Extension):
 
         registry.add("frontend", TransistorFrontend)
 
-        registry.add("http:app", {"name": self.ext_name, "factory": self.web_factory})
+        registry.add(
+            "http:app", {"name": self.ext_name, "factory": self.web_factory}
+        )
 
     def web_factory(self, config, core):
         return [
             ("/", web.MainHandler, {}),
             ("/browse", web.BrowseHandler, {}),
             ("/radios", web.RadioHandler, {"core": core, "config": config}),
-            ("/podcasts", web.PodcastHandler, {"core": core, "config": config}),
+            (
+                "/podcasts",
+                web.PodcastHandler,
+                {"core": core, "config": config},
+            ),
             ("/about", web.AboutHandler, {}),
             ("/settings", web.SettingsHandler, {"config": config}),
             ("/uploadlibrary", web.UploadLibraryHandler, {"config": config}),
@@ -83,19 +89,27 @@ class Extension(ext.Extension):
             (
                 "/calibsocket",
                 web.CalibrationWebSocketHandler,
-                {"queue_front": self._queue_front, "queue_web": self._queue_web},
+                {
+                    "queue_front": self._queue_front,
+                    "queue_web": self._queue_web,
+                },
             ),
             (
-                r"/settings/backup_data/(.*)", 
+                r"/settings/backup_data/(.*)",
                 tornado.web.StaticFileHandler,
-                {"path": os.path.join(mopidy_transistor.Extension.get_data_dir(config))}
+                {
+                    "path": os.path.join(
+                        mopidy_transistor.Extension.get_data_dir(config)
+                    )
+                },
             ),
             (
                 r"/(.*)",
                 tornado.web.StaticFileHandler,
-                {"path": os.path.join(os.path.dirname(__file__), "web", "site")},
+                {
+                    "path": os.path.join(
+                        os.path.dirname(__file__), "web", "site"
+                    )
+                },
             ),
         ]
-
-
-         

@@ -13,7 +13,8 @@ class RadioHandler(BaseHandler):
         self.core = core
         self.lib = library.Library(
             os.path.join(
-                mopidy_transistor.Extension.get_data_dir(config), "library.json.gz"
+                mopidy_transistor.Extension.get_data_dir(config),
+                "library.json.gz",
             ),
             podcast_timeout=config["transistor"]["podcasts_timeout"],
         )
@@ -67,7 +68,9 @@ class RadioHandler(BaseHandler):
 
         del_radio_bank = self.get_argument("del_radio_bank", None)
         if del_radio_bank:
-            del_radio_radio_index = int(self.get_argument("del_radio_radio", None))
+            del_radio_radio_index = int(
+                self.get_argument("del_radio_radio", None)
+            )
             if del_radio_bank in self.lib.data["radio_banks"]:
                 radios = self.lib.data["radio_banks"][del_radio_bank]
                 if del_radio_radio_index < len(radios):
@@ -101,7 +104,8 @@ class PodcastHandler(BaseHandler):
         self.core = core
         self.lib = library.Library(
             os.path.join(
-                mopidy_transistor.Extension.get_data_dir(config), "library.json.gz"
+                mopidy_transistor.Extension.get_data_dir(config),
+                "library.json.gz",
             ),
             podcast_timeout=config["transistor"]["podcasts_timeout"],
         )
@@ -111,7 +115,9 @@ class PodcastHandler(BaseHandler):
         self.lib.load()
         podcasts = self.lib.data["podcasts"]
 
-        self.render("site/podcasts.html", active_page="podcasts", podcasts=podcasts)
+        self.render(
+            "site/podcasts.html", active_page="podcasts", podcasts=podcasts
+        )
 
     def post(self, *args, **kwargs):
         podcasts = self.lib.data["podcasts"]

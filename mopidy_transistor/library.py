@@ -85,7 +85,13 @@ class Library(object):
         def run():
             try:
                 for podcast in self.data["podcasts"]:
-                    raw = urlopen(podcast["feed_url"], timeout=self._podcast_timeout, context=ssl.create_default_context(cafile=certifi.where()))
+                    raw = urlopen(
+                        podcast["feed_url"],
+                        timeout=self._podcast_timeout,
+                        context=ssl.create_default_context(
+                            cafile=certifi.where()
+                        ),
+                    )
                     parsed = podcastparser.parse(podcast["feed_url"], raw)
                     episodes = parsed["episodes"]
 
@@ -96,14 +102,20 @@ class Library(object):
                         media_url = episode["enclosures"][0]["url"]
 
                         # podcast['episodes'].append({"title":unicodedata.normalize('NFKD', title).encode('ascii','ignore'), "url":media_url})
-                        podcast["episodes"].append({"title": title, "url": media_url})
+                        podcast["episodes"].append(
+                            {"title": title, "url": media_url}
+                        )
 
                 self.save()
-                logger.info("Transistor Library: done downloading podcasts infos")
+                logger.info(
+                    "Transistor Library: done downloading podcasts infos"
+                )
 
             except Exception as e:
                 logger.error(
-                    "Transistor: Can't retrieve podcast data: {}".format(str(e))
+                    "Transistor: Can't retrieve podcast data: {}".format(
+                        str(e)
+                    )
                 )
 
         thr = threading.Thread(target=run)

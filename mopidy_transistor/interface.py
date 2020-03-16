@@ -37,7 +37,9 @@ class SerialInterfaceListener(Thread):
         # opening serial port
         try:
             # rtscts=True,dsrdtr=True is for virtual port (using socat)
-            self.serial = serial.Serial(serial_port, serial_baudrate, timeout=0.1)
+            self.serial = serial.Serial(
+                serial_port, serial_baudrate, timeout=0.1
+            )
         except serial.SerialException as e:
             self.serial = None
             logger.error(
@@ -80,7 +82,9 @@ class SerialInterfaceListener(Thread):
 
     def sendMsg(self, msg):
         if self.serial is None:
-            logger.warning("Can't send message to the hardware, serial port not opened")
+            logger.warning(
+                "Can't send message to the hardware, serial port not opened"
+            )
             return
 
         self._mutex.acquire()
