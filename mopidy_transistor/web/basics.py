@@ -62,7 +62,8 @@ class LoginHandler(BaseHandler):
         raw_passwd = str(self.get_argument("passwd"))
 
         if (self._user is None and self._hashed_passwd is None) or (
-            user == self._user and bcrypt.checkpw(raw_passwd, str(self._hashed_passwd))
+            user == self._user
+            and bcrypt.checkpw(raw_passwd, str(self._hashed_passwd))
         ):
             self.set_secure_cookie("user", user)
             self.redirect(self.get_argument("next", "/"))

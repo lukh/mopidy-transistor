@@ -199,7 +199,20 @@ event_source.onmessage = function(message) {
   }
 
   if(data.hasOwnProperty('battery_soc')){
-    bat_gauge = el("battery_level");
+    bat_gauge = el("battery-level");
     bat_gauge.style.width = data.battery_soc.toString() + "%";
+
+    bat = el("battery");
+    bat.title = data.battery_soc.toString() + "%";
+  }
+
+  if(data.hasOwnProperty('battery_charging')){
+    bat_chag = el("battery-charging-status");
+    if(data.battery_charging == true){
+      bat_chag.style.display = "inline";
+    }
+    else{
+      bat_chag.style.display = "none";
+    }
   }
 };

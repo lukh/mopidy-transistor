@@ -1,4 +1,9 @@
-var ws = new WebSocket("ws://localhost:6680/transistor/updatesocket");
+var loc = window.location, ws_uri;
+ws_uri = "ws:";
+ws_uri += "//" + loc.host;
+ws_uri += "/transistor/updatesocket";
+
+var ws = new WebSocket(ws_uri);
 
 ws.onmessage = function (evt) {
    el("update_informations").innerText = el("update_informations").innerText + evt.data;

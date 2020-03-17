@@ -1,104 +1,62 @@
 from threading import Lock
 import subprocess
 
-import datetime
+
+class CommonSharedData(object):
+    UNSET = "UNSET"
+
+    def __init__(self, **kwargs):
+        super(CommonSharedData, self).__setattr__("_lock", Lock())
+        super(CommonSharedData, self).__setattr__("_attributes", kwargs)
+
+    def __getattr__(self, name):
+        if name not in self._attributes:
+            super(CommonSharedData, self).__getattr__(name)
+
+        return self.get(name)
+
+    def __setattr__(self, name, value):
+        if name not in self._attributes:
+            super(CommonSharedData, self).__getattr__(name, value)
+        return self.set(name, value)
+
+    def get(self, name):
+        if name not in self._attributes:
+            raise KeyError(name)
+
+        self._lock.acquire()
+        val = self._attributes[name]
+        self._lock.release()
+        return val
+
+    def set(self, name, value):
+        if name not in self._attributes:
+            raise KeyError(name)
+
+        self._lock.acquire()
+        self._attributes[name] = value
+        self._lock.release()
 
 
-class SharedData(object):
+class SharedData(CommonSharedData):
     def __init__(self):
-        self._lock = Lock()
-
-        self._tuner_position = 0
-        self._tuner_labels = []
-        self._time = datetime.time(0, 0, 0)
-        self._date = datetime.date.max
-        self._battery_soc = 0
-
-        self._timestamp = 0
-
-    @property
-    def tuner_position(self):
-        self._lock.acquire()
-        data = self._tuner_position
-        self._lock.release()
-        return data
-
-    @tuner_position.setter
-    def tuner_position(self, tp):
-        self._lock.acquire()
-        self._tuner_position = tp
-        self._lock.release()
-
-    @property
-    def tuner_labels(self):
-        self._lock.acquire()
-        data = self._tuner_labels
-        self._lock.release()
-        return data
-
-    @tuner_labels.setter
-    def tuner_labels(self, tl):
-        self._lock.acquire()
-        self._tuner_labels = tl
-        self._lock.release()
-
-    @property
-    def time(self):
-        self._lock.acquire()
-        data = self._time
-        self._lock.release()
-        return data
-
-    @time.setter
-    def time(self, t):
-        self._lock.acquire()
-        self._time = t
-        self._lock.release()
-
-    @property
-    def date(self):
-        self._lock.acquire()
-        data = self._date
-        self._lock.release()
-        return data
-
-    @date.setter
-    def date(self, d):
-        self._lock.acquire()
-        self._date = d
-        self._lock.release()
-
-    @property
-    def battery_soc(self):
-        self._lock.acquire()
-        data = self._battery_soc
-        self._lock.release()
-        return data
-
-    @battery_soc.setter
-    def battery_soc(self, tp):
-        self._lock.acquire()
-        self._battery_soc = tp
-        self._lock.release()
-
-    @property
-    def timestamp(self):
-        self._lock.acquire()
-        data = self._timestamp
-        self._lock.release()
-        return data
-
-    @timestamp.setter
-    def timestamp(self, tp):
-        self._lock.acquire()
-        self._timestamp = tp
-        self._lock.release()
+        super(SharedData, self).__init__(
+            tuner_position=self.UNSET,
+            tuner_labels=self.UNSET,
+            time=self.UNSET,
+            date=self.UNSET,
+            battery_soc=self.UNSET,
+            battery_charging=self.UNSET,
+            timestamp=self.UNSET,
+        )
 
 
 def is_connected_to_internet():
     # ping google gateway
     cmd = "ping -q -w 1 -c 1 8.8.8.8 > /dev/null && echo ok || echo error"
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
+    process = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=None, shell=True
+    )
     output, _ = process.communicate()
 
     return output.find(b"ok") != -1

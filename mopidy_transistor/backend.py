@@ -20,7 +20,8 @@ class TransistorBackend(pykka.ThreadingActor, backend.Backend):
 
         lib = library.Library(
             os.path.join(
-                mopidy_transistor.Extension.get_data_dir(config), "library.json.gz"
+                mopidy_transistor.Extension.get_data_dir(config),
+                "library.json.gz",
             ),
             podcast_timeout=config["transistor"]["podcasts_timeout"],
         )
@@ -76,7 +77,9 @@ class TransistorLibraryProvider(backend.LibraryProvider):
                                     models.Track(
                                         name=ep["title"],
                                         uri=uri,
-                                        artists=[models.Artist(name=podcast["name"])],
+                                        artists=[
+                                            models.Artist(name=podcast["name"])
+                                        ],
                                         album=models.Album(name=""),
                                     )
                                 ]
@@ -88,7 +91,9 @@ class TransistorLibraryProvider(backend.LibraryProvider):
             return []
 
         if uri == "transistor:noise":
-            return [models.Ref.track(name="Random Noise", uri="transistor:noise")]
+            return [
+                models.Ref.track(name="Random Noise", uri="transistor:noise")
+            ]
 
         split_uri = uri.split(":")
 
@@ -96,14 +101,20 @@ class TransistorLibraryProvider(backend.LibraryProvider):
         if len(split_uri) == 2:
             if split_uri[1] == "":
                 return [
-                    models.Ref.directory(name="Radios", uri="transistor:radios"),
-                    models.Ref.directory(name="Podcast", uri="transistor:podcasts"),
+                    models.Ref.directory(
+                        name="Radios", uri="transistor:radios"
+                    ),
+                    models.Ref.directory(
+                        name="Podcast", uri="transistor:podcasts"
+                    ),
                     models.Ref.directory(name="Noise", uri="transistor:noise"),
                 ]
 
             if split_uri[1] == "radios":
                 return [
-                    models.Ref.album(name=bank, uri="transistor:radios:{}".format(bank))
+                    models.Ref.album(
+                        name=bank, uri="transistor:radios:{}".format(bank)
+                    )
                     for bank in self.lib.data["radio_banks"]
                 ]
 
@@ -111,7 +122,9 @@ class TransistorLibraryProvider(backend.LibraryProvider):
                 return [
                     models.Ref.album(
                         name=podcast["name"],
-                        uri="transistor:podcasts:{}".format(podcast["position"]),
+                        uri="transistor:podcasts:{}".format(
+                            podcast["position"]
+                        ),
                     )
                     for podcast in self.lib.data["podcasts"]
                 ]
@@ -191,7 +204,9 @@ class TransistorPlaybackProvider(backend.PlaybackProvider):
             and os.path.splitext(f)[-1].lower() in [".wav", ".mp3"]
         ]
         if len(onlyfiles) == 0:
-            logger.warning("No files found in FM Noise folder: {}.".format(folder))
+            logger.warning(
+                "No files found in FM Noise folder: {}.".format(folder)
+            )
             return []
 
         return [os.path.join(folder, fn) for fn in onlyfiles]

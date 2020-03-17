@@ -3,7 +3,9 @@ from .transistor import RadioHandler, PodcastHandler
 from .alarms import AlarmsHandler
 from .settings import (
     SettingsHandler,
+    UploadLibraryHandler,
     WifiHandler,
+    UpdateWifiCountryCodehandler,
     UpdateHandler,
     UpdateWebSocketHandler,
     CalibrationHandler,
@@ -20,7 +22,9 @@ __all__ = [
     "PodcastHandler",
     "AlarmsHandler",
     "SettingsHandler",
+    "UploadLibraryHandler",
     "WifiHandler",
+    "UpdateWifiCountryCodehandler",
     "UpdateHandler",
     "UpdateWebSocketHandler",
     "CalibrationHandler",

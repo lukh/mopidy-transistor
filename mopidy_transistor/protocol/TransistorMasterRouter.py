@@ -96,7 +96,9 @@ class TransistorMasterRouter(object):
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
         raise NotImplementedError
 
-    def processSendBatteryStatus(self, in_sendbatterystatuspercentage):
+    def processSendBatteryStatus(
+        self, in_sendbatterystatuspercentage, in_sendbatterystatuscharging
+    ):
         raise NotImplementedError
 
     def processSendProtocolVersion(
@@ -106,17 +108,24 @@ class TransistorMasterRouter(object):
 
     def process(self, in_msg):
         if in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_Command:
-            if in_msg.getCommand() == TransistorMsg.Command.Command_Potentiometer:
+            if (
+                in_msg.getCommand()
+                == TransistorMsg.Command.Command_Potentiometer
+            ):
                 if (
                     in_msg.getPotentiometer()
                     == TransistorMsg.Potentiometer.Potentiometer_Volume
                 ):
-                    self.processPotentiometerVolume(in_msg.getPotentiometerValue())
+                    self.processPotentiometerVolume(
+                        in_msg.getPotentiometerValue()
+                    )
                 elif (
                     in_msg.getPotentiometer()
                     == TransistorMsg.Potentiometer.Potentiometer_Tuner
                 ):
-                    self.processPotentiometerTuner(in_msg.getPotentiometerValue())
+                    self.processPotentiometerTuner(
+                        in_msg.getPotentiometerValue()
+                    )
 
             elif in_msg.getCommand() == TransistorMsg.Command.Command_PowerOff:
                 self.processPowerOff()
@@ -124,28 +133,46 @@ class TransistorMasterRouter(object):
             elif in_msg.getCommand() == TransistorMsg.Command.Command_Mode:
                 self.processMode(in_msg.getModeType())
 
-            elif in_msg.getCommand() == TransistorMsg.Command.Command_Navigation:
+            elif (
+                in_msg.getCommand() == TransistorMsg.Command.Command_Navigation
+            ):
                 self.processNavigation(in_msg.getNavigationType())
 
         elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_DateTime:
             if in_msg.getDateTime() == TransistorMsg.DateTime.DateTime_Date:
                 self.processDate(
-                    in_msg.getDateDate(), in_msg.getDateMonth(), in_msg.getDateYear()
+                    in_msg.getDateDate(),
+                    in_msg.getDateMonth(),
+                    in_msg.getDateYear(),
                 )
 
             elif in_msg.getDateTime() == TransistorMsg.DateTime.DateTime_Time:
                 self.processTime(
-                    in_msg.getTimeHour(), in_msg.getTimeMinute(), in_msg.getTimeSecond()
+                    in_msg.getTimeHour(),
+                    in_msg.getTimeMinute(),
+                    in_msg.getTimeSecond(),
                 )
 
         elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_System:
-            if in_msg.getSystem() == TransistorMsg.System.System_SendBatteryStatus:
-                self.processSendBatteryStatus(in_msg.getSendBatteryStatusPercentage())
+            if (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_SendBatteryStatus
+            ):
+                self.processSendBatteryStatus(
+                    in_msg.getSendBatteryStatusPercentage(),
+                    in_msg.getSendBatteryStatusCharging(),
+                )
 
-            elif in_msg.getSystem() == TransistorMsg.System.System_QueryProtocolVersion:
+            elif (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_QueryProtocolVersion
+            ):
                 pass
 
-            elif in_msg.getSystem() == TransistorMsg.System.System_SendProtocolVersion:
+            elif (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_SendProtocolVersion
+            ):
                 self.processSendProtocolVersion(
                     in_msg.getSendProtocolVersionMajor(),
                     in_msg.getSendProtocolVersionMinor(),
@@ -154,7 +181,10 @@ class TransistorMasterRouter(object):
             elif in_msg.getSystem() == TransistorMsg.System.System_Calibrate:
                 pass
 
-            elif in_msg.getSystem() == TransistorMsg.System.System_SaveCalibration:
+            elif (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_SaveCalibration
+            ):
                 pass
 
             elif in_msg.getSystem() == TransistorMsg.System.System_SetDateTime:

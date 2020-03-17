@@ -193,12 +193,22 @@ class TransistorMsg(mp.Message):
     # SendBatteryStatusPercentage
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |Pc |Pc |Pc |   |   |   |   |    ||   |   |   |Pc |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |Pc |Pc |Pc |   |   |   |   |    ||   |   |   |   |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     def getSendBatteryStatusPercentage(self):
-        return self.get(5, 8)
+        return self.get(5, 7)
 
     def setSendBatteryStatusPercentage(self, in_sendbatterystatuspercentage):
-        self.set(5, 8, in_sendbatterystatuspercentage)
+        self.set(5, 7, in_sendbatterystatuspercentage)
+
+    # SendBatteryStatusCharging
+    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+    # |   |   |   |   |   |   |   |    ||   |   |   |Ch |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    def getSendBatteryStatusCharging(self):
+        return self.get(12, 1)
+
+    def setSendBatteryStatusCharging(self, in_sendbatterystatuscharging):
+        self.set(12, 1, in_sendbatterystatuscharging)
 
     # SendProtocolVersionMajor
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |

@@ -1,6 +1,7 @@
 from configparser import SafeConfigParser
 from collections import OrderedDict
-from threading import Timer
+import datetime
+import os
 
 import bcrypt
 import subprocess
@@ -8,11 +9,14 @@ import subprocess
 import tornado.web
 import tornado.websocket
 import tornado.gen
+import tornado.ioloop
 
 from transitions import Machine, State
 
 from .basics import BaseHandler
 from .settings_conf import settings_conf
+
+import mopidy_transistor
 
 
 class SettingsHandler(BaseHandler):
@@ -76,7 +80,8 @@ class SettingsHandler(BaseHandler):
                         self.config["transistor"]["passwd"] is None
                         or new_pass == rep_passwd
                         and bcrypt.checkpw(
-                            str(old_passwd), str(self.config["transistor"]["passwd"])
+                            str(old_passwd),
+                            str(self.config["transistor"]["passwd"]),
                         )
                     ):
 
@@ -106,12 +111,36 @@ class SettingsHandler(BaseHandler):
         self.redirect("settings?passwd_updated={}".format(passwd_updated))
 
 
+class UploadLibraryHandler(BaseHandler):
+    def initialize(self, config):
+        self.config = config
+
+    def post(self):
+        try:
+            file1 = self.request.files["file_backup_upload"][0]
+            original_fname = file1["filename"]
+
+            if original_fname == "library.json.gz":
+                output_file_path = os.path.join(
+                    mopidy_transistor.Extension.get_data_dir(self.config),
+                    "library.json.gz",
+                )
+                output_file = open(output_file_path, "wb")
+                output_file.write(file1["body"])
+
+        except KeyError:
+            pass
+
+        self.redirect("settings")
+
+
 class WifiHandler(BaseHandler):
     def initialize(self):
         pass
 
     @tornado.web.authenticated
     def get(self):
+        # scan availables networks
         pid = subprocess.Popen(
             "yawap --list", stdout=subprocess.PIPE, stderr=None, shell=True
         )
@@ -119,23 +148,71 @@ class WifiHandler(BaseHandler):
         output = str(output, "utf-8", "ignore").strip("\n")
         ssids = output.split(";")
 
-        self.render("site/wifi.html", active_page="wifi", ssids=ssids, valid_ssid=None)
+        # scan saved networks
+        pid = subprocess.Popen(
+            "yawap --list-saved",
+            stdout=subprocess.PIPE,
+            stderr=None,
+            shell=True,
+        )
+        output, _ = pid.communicate()
+        output = str(output, "utf-8", "ignore").strip("\n")
+        saved_ssids = output.split(";")
+
+        self.render(
+            "site/wifi.html",
+            active_page="wifi",
+            ssids=ssids,
+            valid_ssid=None,
+            saved_ssids=saved_ssids,
+        )
 
     def post(self):
         ssids = self.get_argument("ssids", "")
         ssid_other = self.get_argument("ssid_other", "")
-        passwd = self.get_argument("passwd")
+        passwd = self.get_argument("passwd", "")
 
-        if ssids == "" and ssid_other == "":
-            self.render(
-                "site/wifi.html", active_page="wifi", valid_ssid=None, ssids=None
+        del_ssid = self.get_argument("del_ssid", "")
+        if del_ssid != "":
+            subprocess.Popen("yawap --delete {}".format(del_ssid), shell=True)
+            self.redirect("wifi")
+
+        else:
+            if (ssids == "" and ssid_other == "") or passwd == "":
+                self.render(
+                    "site/wifi.html",
+                    active_page="wifi",
+                    valid_ssid=None,
+                    ssids=None,
+                    saved_ssids=None,
+                )
+                return
+
+            else:
+                ssid = ssid_other if ssid_other != "" else ssids
+                self.render(
+                    "site/wifi.html",
+                    active_page="wifi",
+                    valid_ssid=ssid,
+                    ssids=None,
+                    saved_ssids=None,
+                )
+
+                subprocess.Popen(
+                    "yawap --add {} {}".format(ssid, passwd), shell=True
+                )
+
+
+class UpdateWifiCountryCodehandler(BaseHandler):
+    def post(self):
+        country = self.get_argument("country", None)
+        if country is not None:
+            subprocess.Popen(
+                "yawap --set-wpa-supplicant-conf country {}".format(country),
+                shell=True,
             )
-            return
 
-        ssid = ssid_other if ssid_other != "" else ssids
-        self.render("site/wifi.html", active_page="wifi", valid_ssid=ssid, ssids=None)
-
-        subprocess.Popen("yawap --add {} {}".format(ssid, passwd), shell=True)
+        self.redirect("wifi")
 
 
 class UpdateHandler(BaseHandler):
@@ -170,9 +247,7 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
                 execute("sudo apt-get update")
                 execute("sudo apt-get upgrade")
 
-                self.STATE = (
-                    "DONE"  # need a refresh of the webpage to re execute an update
-                )
+                self.STATE = "DONE"  # need a refresh of the webpage to re execute an update
 
             elif msg == "update_mopidy":
                 self.STATE = "BUSY"
@@ -181,9 +256,7 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
                 execute("sudo apt-get update")
                 # execute("sudo apt-get upgrade python-mopidy")
 
-                self.STATE = (
-                    "DONE"  # need a refresh of the webpage to re execute an update
-                )
+                self.STATE = "DONE"  # need a refresh of the webpage to re execute an update
 
 
 class CalibrationHandler(BaseHandler):
@@ -212,7 +285,9 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
                     "save_calibrate_volume_low",
                     on_enter=["handle_save_calibrate_volume_low"],
                 ),
-                State("turn_volume_high", on_enter=["handle_turn_volume_high"]),
+                State(
+                    "turn_volume_high", on_enter=["handle_turn_volume_high"]
+                ),
                 State(
                     "start_calibrate_volume_high",
                     on_enter=["handle_start_calibrate_volume_high"],
@@ -242,7 +317,11 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
                 State("save", on_enter=["handle_save"]),
             ],
             transitions=[
-                {"trigger": "next_step", "source": "idle", "dest": "turn_volume_low"},
+                {
+                    "trigger": "next_step",
+                    "source": "idle",
+                    "dest": "turn_volume_low",
+                },
                 {
                     "trigger": "next_step",
                     "source": "turn_volume_low",
@@ -370,8 +449,9 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.write_message(u"Done !")
 
     def wait(self, seconds):
-        timer = Timer(seconds, self.timeout)
-        timer.start()
+        tornado.ioloop.IOLoop.instance().add_timeout(
+            datetime.timedelta(seconds=seconds), self.timeout
+        )
 
     def open(self):
         print("WebSocket opened")

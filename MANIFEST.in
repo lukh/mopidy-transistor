@@ -6,4 +6,4 @@ include mopidy_transistor/ext.conf
 include tox.ini
 
 recursive-include tests *.py
-recursive-include mopidy_transistor/web/site *.html *.css *.svg *.png *.js *.js.map
+recursive-include mopidy_transistor/web/site *.html *.css *.svg *.png *.js *.js.map *.eot *.ttf *.woff *.woff2 

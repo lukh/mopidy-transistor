@@ -25,6 +25,7 @@
     <link href="/transistor/css/transistor.css" rel="stylesheet">
     <link href="/transistor/css/battery.css" rel="stylesheet">
     <link href="/transistor/css/tuner.css" rel="stylesheet">
+    <link href="/transistor/css/popup.css" rel="stylesheet">
 
     <link href="vendor/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 </head>
@@ -53,7 +54,9 @@
                 <div id="time"></div>
                 <div id="date"></div>
             </div>
-            <div id="battery"><div id="battery_level"></div></div>
+
+            <div title="" id="battery"><div id="battery-level"></div></div>
+            <i id="battery-charging-status" class="fas fa-plug"></i>
         </div>
         {% block body %}Not defined{% end %}
     </div>

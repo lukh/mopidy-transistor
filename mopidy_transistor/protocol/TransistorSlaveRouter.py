@@ -111,15 +111,18 @@ class TransistorSlaveRouter(object):
 
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
-    # |Pc |Pc |Pc |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Pc |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
+    # |Pc |Pc |Pc |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Ch |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
-    def makeSendBatteryStatus(in_sendbatterystatuspercentage):
+    def makeSendBatteryStatus(
+        in_sendbatterystatuspercentage, in_sendbatterystatuscharging
+    ):
         msg = TransistorMsg()
 
         msg.setMsgType(TransistorMsg.MsgType.MsgType_System)
         msg.setSystem(TransistorMsg.System.System_SendBatteryStatus)
 
         msg.setSendBatteryStatusPercentage(in_sendbatterystatuspercentage)
+        msg.setSendBatteryStatusCharging(in_sendbatterystatuscharging)
 
         return msg
 
@@ -152,7 +155,9 @@ class TransistorSlaveRouter(object):
     def processSetDate(self, in_setdatedate, in_setdatemonth, in_setdateyear):
         raise NotImplementedError
 
-    def processSetTime(self, in_settimehour, in_settimeminute, in_settimesecond):
+    def processSetTime(
+        self, in_settimehour, in_settimeminute, in_settimesecond
+    ):
         raise NotImplementedError
 
     def process(self, in_msg):
@@ -163,21 +168,34 @@ class TransistorSlaveRouter(object):
             pass
 
         elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_System:
-            if in_msg.getSystem() == TransistorMsg.System.System_SendBatteryStatus:
+            if (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_SendBatteryStatus
+            ):
                 pass
 
-            elif in_msg.getSystem() == TransistorMsg.System.System_QueryProtocolVersion:
+            elif (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_QueryProtocolVersion
+            ):
                 self.processQueryProtocolVersion()
 
-            elif in_msg.getSystem() == TransistorMsg.System.System_SendProtocolVersion:
+            elif (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_SendProtocolVersion
+            ):
                 pass
 
             elif in_msg.getSystem() == TransistorMsg.System.System_Calibrate:
                 self.processCalibrate(
-                    in_msg.getCalibratePotentiometer(), in_msg.getCalibratePhase()
+                    in_msg.getCalibratePotentiometer(),
+                    in_msg.getCalibratePhase(),
                 )
 
-            elif in_msg.getSystem() == TransistorMsg.System.System_SaveCalibration:
+            elif (
+                in_msg.getSystem()
+                == TransistorMsg.System.System_SaveCalibration
+            ):
                 self.processSaveCalibration()
 
             elif in_msg.getSystem() == TransistorMsg.System.System_SetDateTime:
