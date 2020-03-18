@@ -62,13 +62,38 @@ function browseTracks(uri_base=null) {
                 typeDiv.innerHTML = track.type == "directory" ? '<i class="fas fa-folder"></i>' : '<i class="fas fa-compact-disc"></i>';
             }
             else if(track.type == "track"){
-                typeDiv.innerHTML = '<i class="fas fa-play-circle"></i>';
+                typeDiv.innerHTML = '<i class="fas fa-play-circle play-button"></i>';
+                if (play_status.uri == track.uri && play_status.state == "playing"){
+                    typeDiv.innerHTML = '<i class="fas fa-pause-circle play-button play-button"></i>';
+                }
                 typeDiv.id = track.uri;
                 typeDiv.onclick = function(typeDiv){
                     return function() {
-                        mopidy.tracklist.clear();
-                        mopidy.tracklist.add({uris:[typeDiv.id]});
-                        mopidy.playback.play();
+                        uri = typeDiv.id;
+                        if(play_status.uri == uri){
+                            if(play_status.state == "playing"){
+                                mopidy.playback.pause();
+                                typeDiv.innerHTML = '<i class="fas fa-play-circle play-button"></i>';
+                            }
+                            else{
+                                mopidy.playback.resume();
+                                typeDiv.innerHTML = '<i class="fas fa-pause-circle play-button"></i>';
+                            }
+                        }
+
+                        else{
+                            mopidy.tracklist.clear();
+                            mopidy.tracklist.add({uris:[uri]});
+                            mopidy.playback.play();
+
+                            play_buttons = document.getElementsByClassName("play-button");
+                            var i;
+                            for (i = 0; i < play_buttons.length; i++) {
+                                play_buttons[i].className = "fas fa-play-circle play-button";
+                            }
+
+                            typeDiv.innerHTML = '<i class="fas fa-pause-circle play-button"></i>';
+                        }
                     };
                 }(typeDiv);
             }

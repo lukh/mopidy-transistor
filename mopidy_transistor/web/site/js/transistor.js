@@ -1,6 +1,8 @@
 var mopidy = new Mopidy();
 var event_source = new EventSource('/transistor/events');
 
+var play_status = {state:"", uri:""};
+
 // Utilities
 function el(id) {
    return document.getElementById(id);
@@ -133,6 +135,9 @@ mopidy.on('event:volumeChanged', function(event) {
       el("current-album").innerText = albumName;
       el("current-track").innerText = track.name;
 
+
+      play_status.uri = track.uri;
+
       // mopidy.library
       //    .getImages([[track.uri]])
       //    .then(result => updateCover(track.uri, result));
@@ -159,6 +164,8 @@ mopidy.on('event:volumeChanged', function(event) {
       break;
     default:
   }
+
+  play_status.state = state;
 }
 
 

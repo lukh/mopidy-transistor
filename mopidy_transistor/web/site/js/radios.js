@@ -113,8 +113,29 @@ function updateRadio(bank, id, radio, position, url) {
     
 
 function playRadio(bank, position) {
-    mopidy.tracklist.clear();
     uri = "transistor:radios:" + bank + ":" + position;
-    mopidy.tracklist.add({uris:[uri]});
-    mopidy.playback.play();
+    if(play_status.uri == uri){
+        if(play_status.state == "playing"){
+            mopidy.playback.pause();
+            el("play-button-"+bank+"-"+position).className = "fas fa-play-circle play-button";
+        }
+        else{
+            mopidy.playback.resume();
+            el("play-button-"+bank+"-"+position).className = "fas fa-pause-circle play-button";
+        }
+    }
+
+    else{
+        mopidy.tracklist.clear();
+        mopidy.tracklist.add({uris:[uri]});
+        mopidy.playback.play();
+
+        play_buttons = document.getElementsByClassName("play-button");
+        var i;
+        for (i = 0; i < play_buttons.length; i++) {
+            play_buttons[i].className = "fas fa-play-circle play-button";
+        }
+
+        el("play-button-"+bank+"-"+position).className = "fas fa-pause-circle play-button";
+    }
 }
