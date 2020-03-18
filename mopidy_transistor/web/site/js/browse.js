@@ -48,13 +48,15 @@ function browseTracks(uri_base=null) {
 
                         href = document.createElement("i");
                         href.className = "browse-header-entry fas fa-chevron-right";
-                        href.innerHTML = newRow.cells[1].innerText;
+                        href.innerHTML = newRow.cells[2].innerText;
                         headerRef.appendChild(href);
 
                         browseTracks(newRow.id);
                     };
                 }(newRow);
             }
+
+
             // cell 0
             var cellType  = newRow.insertCell(0);
             var typeDiv = document.createElement("div");
@@ -99,13 +101,9 @@ function browseTracks(uri_base=null) {
             }
             cellType.appendChild(typeDiv);
 
-            // cell 1
-            var cellName  = newRow.insertCell(1);
-            var nameText  = document.createTextNode(track.name);
-            cellName.appendChild(nameText);
 
             // cell 2
-            var cellAdd  = newRow.insertCell(2);
+            var cellAdd  = newRow.insertCell(1);
             if(track.type == "track"){
                 var addDiv = document.createElement("div");
                 addDiv.id = track.uri;
@@ -125,6 +123,13 @@ function browseTracks(uri_base=null) {
                 }(typeDiv);
                 cellAdd.appendChild(addDiv);
             }
+
+            // cell 1
+            var cellName  = newRow.insertCell(2);
+            var nameText  = document.createTextNode(track.name);
+            cellName.appendChild(nameText);
+
+            
 
         }
     };
