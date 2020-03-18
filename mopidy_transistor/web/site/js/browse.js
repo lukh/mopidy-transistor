@@ -30,6 +30,8 @@ function browseTracks(uri_base=null) {
             cellType.appendChild(typeDiv);
 
             var cellName  = newRow.insertCell(1);
+
+            var cellName  = newRow.insertCell(2);
             var nameText  = document.createTextNode("Back");
             cellName.appendChild(nameText);
         }
