@@ -68,6 +68,7 @@
   
   .radios-tablink:hover {
     background-color: #777;
+    cursor: pointer;
   }
 
   .radios-tablink.active {
@@ -76,6 +77,10 @@
 
   .radios-tablink i{
     margin-right: 10px;
+  }
+
+  .radios-tablink i:hover{
+    color: #f44336;
   }
 
   .radios-tablink form{
@@ -103,6 +108,11 @@
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
+  }
+
+  .radios-add-bank:hover{
+    color: rgb(32, 179, 32);
+    cursor: pointer;
   }
 
   .radios-new-bank{
@@ -143,6 +153,15 @@
 
   .radios-table-col-delete{
     width: 20px;
+  }
+
+  .radios-table i:hover{
+    cursor: pointer;
+  }
+
+  #radios-addradio-show:hover{
+    cursor: pointer;
+    color: rgb(32, 179, 32);
   }
 
   #radios-addradio{
@@ -282,6 +301,15 @@
  .podcasts-table-col-delete{
    width: 20px;
  }
+ 
+ .podcasts-table i:hover{
+   cursor: pointer;
+ }
+
+ #podcasts-addpodcast-show:hover{
+  cursor: pointer;
+  color: rgb(32, 179, 32);
+}
 
  #podcasts-addpodcast{
    width:30%;

@@ -19,7 +19,7 @@
         <td>{{ podcast["position"] }}</td>
         <td>{{ podcast["name"] }}</td>
         <td>{{ podcast["feed_url"] }}</td>
-        <td onclick="updatePodcast({{ p_id }}, '{{ podcast["name"] }}', {{ podcast["position"] }}, '{{ podcast["feed_url"] }}')"<i class="fas fa-pen"></i></td>
+        <td onclick="updatePodcast({{ p_id }}, '{{ podcast["name"] }}', {{ podcast["position"] }}, '{{ podcast["feed_url"] }}')"><i class="fas fa-pen"></i></td>
         <td class="delete-podcast" id="delete-{{ p_id }}"><i class="fas fa-trash" onclick="deletePodcast({{ p_id }})"></i></td>
     </tr>
     {%end for %}
@@ -35,7 +35,7 @@
     <button type="submit" name="modify_podcast">Update Podcast</button>
 </form>
 
-<span onclick="addPodcast()"><i id="podcasts-addpodcast-show" class="fas fa-plus-circle"></i> Add podcast</span>
+<h3 onclick="addPodcast()"><i id="podcasts-addpodcast-show" class="fas fa-plus-circle"></i> Add podcast</h3>
 
 <form id="podcasts-addpodcast" action="podcasts" method="post">
     <label for="position">Position (0-100)</label><input type="number" name="position" max=100 min=0><br>
