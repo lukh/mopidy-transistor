@@ -50,12 +50,15 @@ class SettingsHandler(BaseHandler):
             "2": "Error while updating password",
         }
 
+        uploaded_data_status = self.get_argument("uploaded_data_status", None)
+
         self.render(
             "site/settings.html",
             active_page="settings",
             config=config,
             active_section="transistor",
             warning_msg=lut_pu.get(passwd_updated, None),
+            uploaded_data_status=uploaded_data_status
         )
 
     def post(self, *args, **kwargs):
@@ -116,6 +119,7 @@ class UploadLibraryHandler(BaseHandler):
         self.config = config
 
     def post(self):
+        uploaded_data_status = "Can't upload data file"
         try:
             file1 = self.request.files["file_backup_upload"][0]
             original_fname = file1["filename"]
@@ -128,10 +132,12 @@ class UploadLibraryHandler(BaseHandler):
                 output_file = open(output_file_path, "wb")
                 output_file.write(file1["body"])
 
+                uploaded_data_status = "The file has been uploaded successfully"
+
         except KeyError:
             pass
 
-        self.redirect("settings")
+        self.redirect("settings?uploaded_data_status={}".format(uploaded_data_status))
 
 
 class WifiHandler(BaseHandler):

@@ -8,10 +8,13 @@
     <button type="submit"><i class="fa fa-download"></i> Backup Data</button>
 </form>
 
-<form class="settings-form" enctype="multipart/form-data" action="/transistor/uploadlibrary" method="post">
-    <input id='file_backup_upload' type='file' name="file_backup_upload"/>
-    <button type="submit" id="button_upload_backup"><i class="fa fa-upload"></i> Import Data</button>
+<form id="form_upload_backup" class="settings-form" enctype="multipart/form-data" action="/transistor/uploadlibrary" method="post">
+    <input id='file_backup_upload' type='file' name="file_backup_upload" style="display: none"/>
+    <button type="button" id="button_upload_backup" onclick="onUploadBackup()"><i class="fa fa-upload"></i> Import Data</button>
 </form>
+{% if uploaded_data_status is not None %}
+<p>{{uploaded_data_status}}</p>
+{% end if %}
 
 
 <h2>Settings</h2>

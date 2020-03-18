@@ -16,3 +16,15 @@ function openSection(pageName, elmnt){
     // Add the specific color to the button used to open the tab content
     elmnt.className = "settings-tablink active";
 }
+
+function onUploadBackup(){
+    // el('file_backup_upload').removeEventListener("change")
+    el('file_backup_upload').addEventListener('change', submitForm);
+    function submitForm() {
+        el('form_upload_backup').submit();
+    }
+
+    el('file_backup_upload').click();
+}
+
+
