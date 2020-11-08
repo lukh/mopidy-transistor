@@ -339,6 +339,10 @@ class TransistorFrontend(
 
         # TODO: Update if needed...
 
+
+    def processSendBatteryVoltage(self, in_sendbatteryvoltagevoltage):
+        logger.info(f">>>>>>>>>>>>>>>>>>>> BATTERY VOLTAGE: {in_sendbatteryvoltagevoltage}")
+
     # State machine calls
     def set_volume(self, position=None):
         """

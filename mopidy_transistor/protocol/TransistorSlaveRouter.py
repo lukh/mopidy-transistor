@@ -1,6 +1,5 @@
 from .TransistorMsg import TransistorMsg
 
-
 class TransistorSlaveRouter(object):
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
@@ -11,6 +10,7 @@ class TransistorSlaveRouter(object):
     @staticmethod
     def makePotentiometerVolume(in_potentiometervalue):
         msg = TransistorMsg()
+
 
         msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
         msg.setCommand(TransistorMsg.Command.Command_Potentiometer)
@@ -28,6 +28,7 @@ class TransistorSlaveRouter(object):
     def makePotentiometerTuner(in_potentiometervalue):
         msg = TransistorMsg()
 
+
         msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
         msg.setCommand(TransistorMsg.Command.Command_Potentiometer)
 
@@ -37,12 +38,16 @@ class TransistorSlaveRouter(object):
 
         return msg
 
+
+
+
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
     # |   |   |   |   |Co |Co |Ms |Ms  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
     def makePowerOff():
         msg = TransistorMsg()
+
 
         msg.setMsgType(TransistorMsg.MsgType.MsgType_Command)
         msg.setCommand(TransistorMsg.Command.Command_PowerOff)
@@ -113,9 +118,7 @@ class TransistorSlaveRouter(object):
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
     # |Pc |Pc |Pc |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Ch |Pc |Pc |Pc |Pc  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
-    def makeSendBatteryStatus(
-        in_sendbatterystatuspercentage, in_sendbatterystatuscharging
-    ):
+    def makeSendBatteryStatus(in_sendbatterystatuspercentage, in_sendbatterystatuscharging):
         msg = TransistorMsg()
 
         msg.setMsgType(TransistorMsg.MsgType.MsgType_System)
@@ -126,13 +129,28 @@ class TransistorSlaveRouter(object):
 
         return msg
 
+
+    # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
+    # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
+    # |   |   |   |Sy |Sy |Sy |Ms |Ms  ||Vo |Vo |Vo |Vo |Vo |Vo |Vo |Vo  ||Vo |Vo |Vo |Vo |Vo |Vo |Vo |Vo  ||   |   |   |   |   |   |   |    |
+    @staticmethod
+    def makeSendBatteryVoltage(in_sendbatteryvoltagevoltage):
+        msg = TransistorMsg()
+
+
+        msg.setMsgType(TransistorMsg.MsgType.MsgType_System)
+        msg.setSystem(TransistorMsg.System.System_SendBatteryVoltage)
+
+        msg.setSendBatteryVoltageVoltage(in_sendbatteryvoltagevoltage)
+
+        return msg
+
+
     # |00 |   |   |   |   |   |   |    ||01 |   |   |   |   |   |   |    ||02 |   |   |   |   |   |   |    ||03 |   |   |   |   |   |   |    |
     # |07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  ||07 |06 |05 |04 |03 |02 |01 |00  |
     # |Ma |Ma |Ma |Sy |Sy |Sy |Ms |Ms  ||   |   |   |Mi |Mi |Mi |Mi |Ma  ||   |   |   |   |   |   |   |    ||   |   |   |   |   |   |   |    |
     @staticmethod
-    def makeSendProtocolVersion(
-        in_sendprotocolversionmajor, in_sendprotocolversionminor
-    ):
+    def makeSendProtocolVersion(in_sendprotocolversionmajor, in_sendprotocolversionminor):
         msg = TransistorMsg()
 
         msg.setMsgType(TransistorMsg.MsgType.MsgType_System)
@@ -155,66 +173,52 @@ class TransistorSlaveRouter(object):
     def processSetDate(self, in_setdatedate, in_setdatemonth, in_setdateyear):
         raise NotImplementedError
 
-    def processSetTime(
-        self, in_settimehour, in_settimeminute, in_settimesecond
-    ):
+    def processSetTime(self, in_settimehour, in_settimeminute, in_settimesecond):
         raise NotImplementedError
+
+
+
 
     def process(self, in_msg):
         if in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_Command:
-            pass
+                pass
 
         elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_DateTime:
-            pass
+                pass
 
         elif in_msg.getMsgType() == TransistorMsg.MsgType.MsgType_System:
-            if (
-                in_msg.getSystem()
-                == TransistorMsg.System.System_SendBatteryStatus
-            ):
-                pass
+            if in_msg.getSystem() == TransistorMsg.System.System_SendBatteryStatus:
+                    pass
 
-            elif (
-                in_msg.getSystem()
-                == TransistorMsg.System.System_QueryProtocolVersion
-            ):
-                self.processQueryProtocolVersion()
+            elif in_msg.getSystem() == TransistorMsg.System.System_SendBatteryVoltage:
+                    pass
 
-            elif (
-                in_msg.getSystem()
-                == TransistorMsg.System.System_SendProtocolVersion
-            ):
-                pass
+            elif in_msg.getSystem() == TransistorMsg.System.System_QueryProtocolVersion:
+                    self.processQueryProtocolVersion()
+
+
+            elif in_msg.getSystem() == TransistorMsg.System.System_SendProtocolVersion:
+                    pass
 
             elif in_msg.getSystem() == TransistorMsg.System.System_Calibrate:
-                self.processCalibrate(
-                    in_msg.getCalibratePotentiometer(),
-                    in_msg.getCalibratePhase(),
-                )
+                    self.processCalibrate(in_msg.getCalibratePotentiometer(), in_msg.getCalibratePhase())
 
-            elif (
-                in_msg.getSystem()
-                == TransistorMsg.System.System_SaveCalibration
-            ):
-                self.processSaveCalibration()
+
+            elif in_msg.getSystem() == TransistorMsg.System.System_SaveCalibration:
+                    self.processSaveCalibration()
+
 
             elif in_msg.getSystem() == TransistorMsg.System.System_SetDateTime:
-                if (
-                    in_msg.getSetDateTime()
-                    == TransistorMsg.SetDateTime.SetDateTime_SetDate
-                ):
-                    self.processSetDate(
-                        in_msg.getSetDateDate(),
-                        in_msg.getSetDateMonth(),
-                        in_msg.getSetDateYear(),
-                    )
+                if in_msg.getSetDateTime() == TransistorMsg.SetDateTime.SetDateTime_SetDate:
+                        self.processSetDate(in_msg.getSetDateDate(), in_msg.getSetDateMonth(), in_msg.getSetDateYear())
 
-                elif (
-                    in_msg.getSetDateTime()
-                    == TransistorMsg.SetDateTime.SetDateTime_SetTime
-                ):
-                    self.processSetTime(
-                        in_msg.getSetTimeHour(),
-                        in_msg.getSetTimeMinute(),
-                        in_msg.getSetTimeSecond(),
-                    )
+
+                elif in_msg.getSetDateTime() == TransistorMsg.SetDateTime.SetDateTime_SetTime:
+                        self.processSetTime(in_msg.getSetTimeHour(), in_msg.getSetTimeMinute(), in_msg.getSetTimeSecond())
+
+
+
+
+
+
+
