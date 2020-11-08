@@ -95,28 +95,3 @@ class SerialInterfaceListener(Thread):
         self.serial.write(buff)
         self._mutex.release()
 
-
-class WebsocketInterfaceListener(Thread):
-    def __init__(self, frontend, queue_web):
-        super(WebsocketInterfaceListener, self).__init__()
-
-        self._stop_flag = False
-
-        self._frontend = frontend
-        self._queue_web = queue_web
-
-    @property
-    def stop(self):
-        return self._stop_flag
-
-    @stop.setter
-    def stop(self, st):
-        self._stop_flag = st
-
-    def run(self):
-        while not self.stop:
-            while not self._queue_web.empty():
-                self._frontend.process_queue_web(self._queue_web.get())
-
-            else:
-                time.sleep(0.1)

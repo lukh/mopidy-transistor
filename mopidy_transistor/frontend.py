@@ -22,19 +22,26 @@ from . import interface
 logger = logging.getLogger(__name__)
 
 
+class TransistorController(object):
+    def __init__(self, frontend):
+        self.frontend = frontend
+
+    def process_websocket_message(self, message):
+        self.frontend.process_websocket_message(message)
+
 class TransistorFrontend(
     pykka.ThreadingActor, core.CoreListener, TransistorMasterRouter
 ):
     # used to push data to the event source (tuner, radios list, battery)
     shared_data = SharedData()
-    # used to communicate between front and web.
-    queue_web = Queue()
 
     def __init__(self, config, core):
         super(TransistorFrontend, self).__init__()
 
         self.core = core
         self.config = config
+
+        self.core.transistor = pykka.traversable(TransistorController(frontend=self))
 
         self._data_path = os.path.join(
             mopidy_transistor.Extension.get_data_dir(config), "data.json"
@@ -58,17 +65,9 @@ class TransistorFrontend(
 
         self.interface.sendMsg(self.makeQueryProtocolVersion())
 
-        self.websocket = interface.WebsocketInterfaceListener(
-            self.actor_ref.proxy(), self.queue_web
-        )
-        self.websocket.start()
-
     def on_stop(self):
         self.interface.stop = True
         self.interface.join()
-
-        self.websocket.stop = True
-        self.websocket.join()
 
     def initStateMachine(self):
         Machine(
@@ -171,7 +170,7 @@ class TransistorFrontend(
                 data = json.load(fp)
                 self._selected_radio_bank = data["bank"]
 
-    def process_queue_web(self, msg):
+    def process_websocket_message(self, msg):
         command = msg.get("cmd", "")
 
         if command == "start_calibrate_volume_low":
