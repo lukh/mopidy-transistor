@@ -56,7 +56,6 @@ class Extension(ext.Extension):
         from .frontend import TransistorFrontend
 
         self._shared_data = TransistorFrontend.shared_data
-        self._queue_front = TransistorFrontend.queue_front
         self._queue_web = TransistorFrontend.queue_web
 
         registry.add("frontend", TransistorFrontend)
@@ -90,7 +89,6 @@ class Extension(ext.Extension):
                 "/calibsocket",
                 web.CalibrationWebSocketHandler,
                 {
-                    "queue_front": self._queue_front,
                     "queue_web": self._queue_web,
                 },
             ),

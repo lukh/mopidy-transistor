@@ -274,8 +274,7 @@ class CalibrationHandler(BaseHandler):
 
 
 class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
-    def initialize(self, queue_front, queue_web):
-        self._queue_front = queue_front
+    def initialize(self, queue_web):
         self._queue_web = queue_web
 
         Machine(

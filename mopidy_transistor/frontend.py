@@ -28,7 +28,6 @@ class TransistorFrontend(
     # used to push data to the event source (tuner, radios list, battery)
     shared_data = SharedData()
     # used to communicate between front and web.
-    queue_front = Queue()
     queue_web = Queue()
 
     def __init__(self, config, core):
