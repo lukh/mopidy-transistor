@@ -12,6 +12,11 @@ ws.onmessage = function (evt) {
    el("calib_information").innerHTML = el("calib_information").innerHTML + '<br>' + evt.data;
 };
 
+function calibration_start() {
+   pot_id = el("potentiometers-select").value;
+   ws.send(JSON.stringify({"cmd":"start", "pot-id":pot_id}));
+}
+
 function calibration_step() {
-   ws.send("next_step");
+   ws.send(JSON.stringify({"cmd":"next_step"}));
 }

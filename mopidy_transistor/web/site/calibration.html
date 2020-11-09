@@ -5,8 +5,15 @@
 
 <h2>Calibration</h2>
 
+
 <div class="settings-form">
-   <button id="calibrate_step" onclick="calibration_step()">Start Calibrate</button>
+   <select name="potentiometers" id="potentiometers-select">
+      {% for pot in potentiometers %}
+      <option value={{ pot }}>{{ potentiometers[pot] }}</option>
+      {% end for %}
+   </select>
+   <button id="calibrate_start" onclick="calibration_start()">Start Calibration</button>
+   <button id="calibrate_step" onclick="calibration_step()">Next Step</button>
 </div>
 
 <span id="calib_information"></span>
