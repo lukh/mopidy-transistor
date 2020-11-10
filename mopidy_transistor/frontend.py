@@ -23,6 +23,9 @@ logger = logging.getLogger(__name__)
 
 
 class TransistorController(object):
+    """ 
+        
+    """
     def __init__(self, frontend):
         self.frontend = frontend
 
@@ -173,63 +176,17 @@ class TransistorFrontend(
     def process_websocket_message(self, msg):
         command = msg.get("cmd", "")
 
-        if command == "start_calibrate_volume_low":
+        if command == "calibrate":
+            pot = msg["potentiometer"]
+            phase = msg["phase"]
             self.interface.sendMsg(
                 self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StartLow,
+                    pot,
+                    phase
                 )
             )
-        elif command == "save_calibrate_volume_low":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StopLow,
-                )
-            )
-        elif command == "start_calibrate_volume_high":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StartHigh,
-                )
-            )
-        elif command == "save_calibrate_volume_high":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Volume,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StopHigh,
-                )
-            )
-        elif command == "start_calibrate_tuner_low":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StartLow,
-                )
-            )
-        elif command == "save_calibrate_tuner_low":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StopLow,
-                )
-            )
-        elif command == "start_calibrate_tuner_high":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StartHigh,
-                )
-            )
-        elif command == "save_calibrate_tuner_high":
-            self.interface.sendMsg(
-                self.makeCalibrate(
-                    TransistorMsg.CalibratePotentiometer.CalibratePotentiometer_Tuner,
-                    TransistorMsg.CalibratePhase.CalibratePhase_StopHigh,
-                )
-            )
-        elif command == "save":
+
+        elif command == "save_calibrate":
             self.interface.sendMsg(self.makeSaveCalibration())
 
         elif command == "update_datetime":

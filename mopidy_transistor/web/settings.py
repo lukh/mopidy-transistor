@@ -284,6 +284,13 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         Low = "Low"
         High = "High"
 
+    PhaseMap = {
+        ("start", CalibrationPhase.Low):TransistorMsg.CalibratePhase.CalibratePhase_StartLow,
+        ("start", CalibrationPhase.High):TransistorMsg.CalibratePhase.CalibratePhase_StartHigh,
+        ("stop", CalibrationPhase.Low):TransistorMsg.CalibratePhase.CalibratePhase_StopLow,
+        ("stop", CalibrationPhase.High):TransistorMsg.CalibratePhase.CalibratePhase_StopHigh
+    }
+
     def initialize(self, core):
         self.core = core
         Machine(
@@ -359,16 +366,16 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
     def on_enter_start_calibrate(self):
         self.write_message(f"Start {self.potentiometer.name.split('_')[1]} : {self.phase.value} Calibration, Wait...")
         self.wait(2)
-        # self.core.transistor.process_websocket_message({"cmd": None})
+        self.core.transistor.process_websocket_message({"cmd":"calibrate", "potentiometer":self.potentiometer, "phase":self.PhaseMap[("start", self.phase)]})
         
     def on_enter_stop_calibrate(self):
         self.write_message(f"Saving {self.potentiometer.name.split('_')[1]} : {self.phase.value}")
-        # self.core.transistor.process_websocket_message({"cmd": None})
+        self.core.transistor.process_websocket_message({"cmd":"calibrate", "potentiometer":self.potentiometer, "phase":self.PhaseMap[("stop", self.phase)]})
         self.wait(0.5)
 
     def on_enter_save(self):
         self.write_message(u"Saving...")
-        # self.core.transistor.process_websocket_message({"cmd": self.state})
+        self.core.transistor.process_websocket_message({"cmd": "save_calibrate"})
         self.wait(0.5)
         
     def wait(self, seconds):
