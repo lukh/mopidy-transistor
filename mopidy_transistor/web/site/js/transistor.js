@@ -1,7 +1,15 @@
 var mopidy = new Mopidy();
-var event_source = new EventSource('/transistor/events');
+
+var loc = window.location, ws_uri;
+eventsource_ws_uri = "ws:";
+eventsource_ws_uri += "//" + loc.host;
+eventsource_ws_uri += "/transistor/events";
+var event_source = new WebSocket(eventsource_ws_uri);
 
 var play_status = {state:"", uri:""};
+
+var today_time = new Date('01 Jan 1970 00:00:00 GMT');
+
 
 // Utilities
 function el(id) {
@@ -196,13 +204,20 @@ event_source.onmessage = function(message) {
   }
 
   if(data.hasOwnProperty('time')){
-    time_label = el("time");
-    time_label.innerText = data.time;
+    t = JSON.parse(data.time);
+
+    today_time.setHours(t.h);
+    today_time.setMinutes(t.m);
+    today_time.setSeconds(t.s);
   }
 
   if(data.hasOwnProperty('date')){
-    date_label = el("date");
-    date_label.innerText = data.date;
+    d = JSON.parse(data.date);
+
+    today_time.setFullYear(d.y);
+    today_time.setMonth(d.m - 1);
+    today_time.setDate(d.d);
+
   }
 
   if(data.hasOwnProperty('battery_soc')){
@@ -223,3 +238,29 @@ event_source.onmessage = function(message) {
     }
   }
 };
+
+
+
+function updateTime() {
+  today_time = new Date(today_time.getTime() + 1000);
+
+  var h = today_time.getHours();
+  var m = today_time.getMinutes();
+  var s = today_time.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+
+  var Y = today_time.getFullYear();
+  var M = today_time.getMonth();
+  var D = today_time.getDate();
+
+  el("date").innerText = Y + "/" + M + "/" + D;
+  el("time").innerHTML = h + ":" + m + ":" + s;
+
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+
+setInterval(updateTime, 1000);

@@ -259,9 +259,7 @@ class TransistorFrontend(
                 in_datedate, in_datemonth, in_dateyear
             )
         )
-        self.shared_data.date = datetime.date(
-            year=in_dateyear, month=in_datemonth, day=in_datedate
-        )
+        self.shared_data.date = f'{{"y":{in_dateyear}, "m": {in_datemonth}, "d":{in_datedate}}}'
 
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
         logger.info(
@@ -269,10 +267,7 @@ class TransistorFrontend(
                 in_timehour, in_timeminute, in_timesecond
             )
         )
-        self.shared_data.time = datetime.time(
-            hour=in_timehour, minute=in_timeminute, second=in_timesecond
-        )
-        self.shared_data.timestamp = time.time()
+        self.shared_data.time = f'{{"h":{in_timehour}, "m":{in_timeminute}, "s":{in_timesecond}}}'
 
     def processSendBatteryStatus(
         self, in_sendbatterystatuspercentage, in_sendbatterystatuscharging

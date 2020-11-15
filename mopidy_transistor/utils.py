@@ -6,8 +6,11 @@ class CommonSharedData(object):
     UNSET = "UNSET"
 
     def __init__(self, **kwargs):
+        super().__init__()
+
         super(CommonSharedData, self).__setattr__("_lock", Lock())
         super(CommonSharedData, self).__setattr__("_attributes", kwargs)
+        super(CommonSharedData, self).__setattr__("_updated", {k:False for k in kwargs})
 
     def __getattr__(self, name):
         if name not in self._attributes:
@@ -17,7 +20,7 @@ class CommonSharedData(object):
 
     def __setattr__(self, name, value):
         if name not in self._attributes:
-            super(CommonSharedData, self).__getattr__(name, value)
+            super(CommonSharedData, self).__setattr__(name, value)
         return self.set(name, value)
 
     def get(self, name):
@@ -26,6 +29,7 @@ class CommonSharedData(object):
 
         self._lock.acquire()
         val = self._attributes[name]
+        self._updated[name] = False
         self._lock.release()
         return val
 
@@ -35,7 +39,19 @@ class CommonSharedData(object):
 
         self._lock.acquire()
         self._attributes[name] = value
+        self._updated[name] = True
         self._lock.release()
+
+    def get_data(self):
+        self._lock.acquire()
+
+        data =  {k:self._attributes[k] for k in self._attributes if self._updated[k] == True}
+        
+        for k in self._updated: self._updated[k] = False
+
+        self._lock.release()
+
+        return data
 
 
 class SharedData(CommonSharedData):
@@ -47,7 +63,6 @@ class SharedData(CommonSharedData):
             date=self.UNSET,
             battery_soc=self.UNSET,
             battery_charging=self.UNSET,
-            timestamp=self.UNSET,
         )
 
 
