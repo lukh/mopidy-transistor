@@ -2,6 +2,8 @@ from configparser import SafeConfigParser
 from collections import OrderedDict
 import datetime
 import os
+import json
+from enum import Enum
 
 import bcrypt
 import subprocess
@@ -17,6 +19,8 @@ from .basics import BaseHandler
 from .settings_conf import settings_conf
 
 import mopidy_transistor
+
+from mopidy_transistor.protocol.TransistorMsg import TransistorMsg
 
 
 class SettingsHandler(BaseHandler):
@@ -267,193 +271,113 @@ class UpdateWebSocketHandler(tornado.websocket.WebSocketHandler):
 
 class CalibrationHandler(BaseHandler):
     def initialize(self):
-        pass
+        self.potentiometers = {
+          p.value:p.name.split("_")[1] for p in TransistorMsg.CalibratePotentiometer
+        }
 
     def get(self):
-        self.render("site/calibration.html", active_page="calibration")
+        self.render("site/calibration.html", active_page="calibration", potentiometers=self.potentiometers)
 
 
 class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
-    def initialize(self, queue_front, queue_web):
-        self._queue_front = queue_front
-        self._queue_web = queue_web
+    class CalibrationPhase(Enum):
+        Low = "Low"
+        High = "High"
 
+    PhaseMap = {
+        ("start", CalibrationPhase.Low):TransistorMsg.CalibratePhase.CalibratePhase_StartLow,
+        ("start", CalibrationPhase.High):TransistorMsg.CalibratePhase.CalibratePhase_StartHigh,
+        ("stop", CalibrationPhase.Low):TransistorMsg.CalibratePhase.CalibratePhase_StopLow,
+        ("stop", CalibrationPhase.High):TransistorMsg.CalibratePhase.CalibratePhase_StopHigh
+    }
+
+    def initialize(self, core):
+        self.core = core
         Machine(
             model=self,
             states=[
-                State("idle", on_enter=["handle_done"]),
-                State("turn_volume_low", on_enter=["handle_turn_volume_low"]),
-                State(
-                    "start_calibrate_volume_low",
-                    on_enter=["handle_start_calibrate_volume_low"],
-                ),
-                State(
-                    "save_calibrate_volume_low",
-                    on_enter=["handle_save_calibrate_volume_low"],
-                ),
-                State(
-                    "turn_volume_high", on_enter=["handle_turn_volume_high"]
-                ),
-                State(
-                    "start_calibrate_volume_high",
-                    on_enter=["handle_start_calibrate_volume_high"],
-                ),
-                State(
-                    "save_calibrate_volume_high",
-                    on_enter=["handle_save_calibrate_volume_high"],
-                ),
-                State("turn_tuner_low", on_enter=["handle_turn_tuner_low"]),
-                State(
-                    "start_calibrate_tuner_low",
-                    on_enter=["handle_start_calibrate_tuner_low"],
-                ),
-                State(
-                    "save_calibrate_tuner_low",
-                    on_enter=["handle_save_calibrate_tuner_low"],
-                ),
-                State("turn_tuner_high", on_enter=["handle_turn_tuner_high"]),
-                State(
-                    "start_calibrate_tuner_high",
-                    on_enter=["handle_start_calibrate_tuner_high"],
-                ),
-                State(
-                    "save_calibrate_tuner_high",
-                    on_enter=["handle_save_calibrate_tuner_high"],
-                ),
-                State("save", on_enter=["handle_save"]),
+                {"name":"idle"},
+                {"name":"turn"},
+                {"name":"start_calibrate"},
+                {"name":"stop_calibrate"},
+                {"name":"save"}
             ],
             transitions=[
                 {
-                    "trigger": "next_step",
+                    "trigger": "start",
                     "source": "idle",
-                    "dest": "turn_volume_low",
+                    "dest": "turn",
                 },
                 {
                     "trigger": "next_step",
-                    "source": "turn_volume_low",
-                    "dest": "start_calibrate_volume_low",
+                    "source": "turn",
+                    "dest": "start_calibrate",
                 },
                 {
                     "trigger": "timeout",
-                    "source": "start_calibrate_volume_low",
-                    "dest": "save_calibrate_volume_low",
+                    "source": "start_calibrate",
+                    "dest": "stop_calibrate",
                 },
                 {
                     "trigger": "timeout",
-                    "source": "save_calibrate_volume_low",
-                    "dest": "turn_volume_high",
-                },
-                {
-                    "trigger": "next_step",
-                    "source": "turn_volume_high",
-                    "dest": "start_calibrate_volume_high",
+                    "source": "stop_calibrate",
+                    "dest": "turn",
+                    "before":"increment_phase",
+                    "conditions":"is_not_finished"
                 },
                 {
                     "trigger": "timeout",
-                    "source": "start_calibrate_volume_high",
-                    "dest": "save_calibrate_volume_high",
-                },
-                {
-                    "trigger": "timeout",
-                    "source": "save_calibrate_volume_high",
-                    "dest": "turn_tuner_low",
-                },
-                {
-                    "trigger": "next_step",
-                    "source": "turn_tuner_low",
-                    "dest": "start_calibrate_tuner_low",
-                },
-                {
-                    "trigger": "timeout",
-                    "source": "start_calibrate_tuner_low",
-                    "dest": "save_calibrate_tuner_low",
-                },
-                {
-                    "trigger": "timeout",
-                    "source": "save_calibrate_tuner_low",
-                    "dest": "turn_tuner_high",
-                },
-                {
-                    "trigger": "next_step",
-                    "source": "turn_tuner_high",
-                    "dest": "start_calibrate_tuner_high",
-                },
-                {
-                    "trigger": "timeout",
-                    "source": "start_calibrate_tuner_high",
-                    "dest": "save_calibrate_tuner_high",
-                },
-                {
-                    "trigger": "timeout",
-                    "source": "save_calibrate_tuner_high",
+                    "source": "stop_calibrate",
                     "dest": "save",
+                    "before":"increment_phase",
+                    "conditions":"is_finished"
                 },
-                {"trigger": "timeout", "source": "save", "dest": "idle"},
+                {
+                    "trigger":"timeout", 
+                    "source": "save", 
+                    "dest": "idle"
+                },
             ],
             initial="idle",
             ignore_invalid_triggers=True,
         )
 
-    def handle_turn_volume_low(self):
-        self.write_message(u"Turn Volume Low and press Calibration button")
+        self.potentiometer = None
+        self.phase = self.CalibrationPhase.Low
 
-    def handle_start_calibrate_volume_low(self):
-        self.write_message(u"Start Volume Low Calibration, Wait...")
-        self.wait(2)
-        self._queue_web.put({"cmd": self.state})
+    def increment_phase(self):
+        self.phase = self.CalibrationPhase.High
 
-    def handle_save_calibrate_volume_low(self):
-        self.write_message(u"Saving Volume Low")
-        self._queue_web.put({"cmd": self.state})
-        self.wait(0.5)
+    def is_finished(self):
+        return self.phase == self.CalibrationPhase.High
 
-    def handle_turn_volume_high(self):
-        self.write_message(u"Turn Volume High and press Calibration button")
+    def is_not_finished(self):
+        return not self.is_finished()
 
-    def handle_start_calibrate_volume_high(self):
-        self.write_message(u"Start Volume High Calibration, Wait...")
-        self.wait(2)
-        self._queue_web.put({"cmd": self.state})
-
-    def handle_save_calibrate_volume_high(self):
-        self.write_message(u"Saving Volume High")
-        self._queue_web.put({"cmd": self.state})
-        self.wait(0.5)
-
-    def handle_turn_tuner_low(self):
-        self.write_message(u"Turn Tuner Low and press Calibration button")
-
-    def handle_start_calibrate_tuner_low(self):
-        self.write_message(u"Start Tuner Low Calibration, Wait...")
-        self.wait(2)
-        self._queue_web.put({"cmd": self.state})
-
-    def handle_save_calibrate_tuner_low(self):
-        self.write_message(u"Saving Tuner Low")
-        self._queue_web.put({"cmd": self.state})
-        self.wait(0.5)
-
-    def handle_turn_tuner_high(self):
-        self.write_message(u"Turn Tuner High and press Calibration button")
-
-    def handle_start_calibrate_tuner_high(self):
-        self.write_message(u"Start Tuner High Calibration, Wait...")
-        self.wait(2)
-        self._queue_web.put({"cmd": self.state})
-
-    def handle_save_calibrate_tuner_high(self):
-        self.write_message(u"Saving Tuner High")
-        self._queue_web.put({"cmd": self.state})
-        self.wait(0.5)
-
-    def handle_save(self):
-        self.write_message(u"Saving...")
-        self._queue_web.put({"cmd": self.state})
-        self.wait(0.5)
-
-    def handle_done(self):
+    def on_enter_idle(self):
+        self.phase = self.CalibrationPhase.Low
         self.write_message(u"Done !")
 
+    def on_enter_turn(self, potentiometer=None):
+        if isinstance(potentiometer, TransistorMsg.CalibratePotentiometer):
+            self.potentiometer = potentiometer
+        self.write_message(f"Turn {self.potentiometer.name.split('_')[1]} to {self.phase.value} and press Next Step button")
+
+    def on_enter_start_calibrate(self):
+        self.write_message(f"Start {self.potentiometer.name.split('_')[1]} : {self.phase.value} Calibration, Wait...")
+        self.wait(2)
+        self.core.transistor.process_websocket_message({"cmd":"calibrate", "potentiometer":self.potentiometer, "phase":self.PhaseMap[("start", self.phase)]})
+        
+    def on_enter_stop_calibrate(self):
+        self.write_message(f"Saving {self.potentiometer.name.split('_')[1]} : {self.phase.value}")
+        self.core.transistor.process_websocket_message({"cmd":"calibrate", "potentiometer":self.potentiometer, "phase":self.PhaseMap[("stop", self.phase)]})
+        self.wait(0.5)
+
+    def on_enter_save(self):
+        self.write_message(u"Saving...")
+        self.core.transistor.process_websocket_message({"cmd": "save_calibrate"})
+        self.wait(0.5)
+        
     def wait(self, seconds):
         tornado.ioloop.IOLoop.instance().add_timeout(
             datetime.timedelta(seconds=seconds), self.timeout
@@ -463,8 +387,20 @@ class CalibrationWebSocketHandler(tornado.websocket.WebSocketHandler):
         print("WebSocket opened")
 
     def on_message(self, message):
-        if message == "next_step":
+        message = json.loads(message)
+        cmd = message.get("cmd", "")
+
+        pot_id = TransistorMsg.CalibratePotentiometer(int(message.get("pot-id", 0)))
+
+        if cmd == "start":
+            self.start(potentiometer=pot_id)
+
+        if cmd == "next_step":
             self.next_step()
+
 
     def on_close(self):
         print("WebSocket closed")
+
+
+

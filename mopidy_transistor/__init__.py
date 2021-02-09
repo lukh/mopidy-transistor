@@ -56,8 +56,6 @@ class Extension(ext.Extension):
         from .frontend import TransistorFrontend
 
         self._shared_data = TransistorFrontend.shared_data
-        self._queue_front = TransistorFrontend.queue_front
-        self._queue_web = TransistorFrontend.queue_web
 
         registry.add("frontend", TransistorFrontend)
 
@@ -78,7 +76,7 @@ class Extension(ext.Extension):
             ("/about", web.AboutHandler, {}),
             ("/settings", web.SettingsHandler, {"config": config}),
             ("/uploadlibrary", web.UploadLibraryHandler, {"config": config}),
-            ("/alarms", web.AlarmsHandler, {"queue_web": self._queue_web}),
+            ("/alarms", web.AlarmsHandler, {}),
             ("/wifi", web.WifiHandler, {}),
             ("/country_wifi", web.UpdateWifiCountryCodehandler, {}),
             ("/update", web.UpdateHandler, {}),
@@ -88,11 +86,7 @@ class Extension(ext.Extension):
             ("/events", web.EventSource, {"shared_data": self._shared_data}),
             (
                 "/calibsocket",
-                web.CalibrationWebSocketHandler,
-                {
-                    "queue_front": self._queue_front,
-                    "queue_web": self._queue_web,
-                },
+                web.CalibrationWebSocketHandler, {'core':core}
             ),
             (
                 r"/settings/backup_data/(.*)",
