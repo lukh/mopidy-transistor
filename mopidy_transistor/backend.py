@@ -169,8 +169,12 @@ class TransistorPlaybackProvider(backend.PlaybackProvider):
             return None
 
         if uri == "transistor:noise":
-            fn = self.noises[random.randint(0, len(self.noises) - 1)]
-            return "file://" + fn
+            noise_size = len(self.noises)
+            if noise_size > 0:
+                fn = self.noises[random.randint(0,  noise_size - 1)]
+                return "file://" + fn
+            else:
+                return None
 
         split_uri = uri.split(":")
 
