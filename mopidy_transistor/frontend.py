@@ -218,21 +218,21 @@ class TransistorFrontend(
 
     # Serial Message Implementation
     def processPotentiometerVolume(self, in_potentiometervalue):
-        logger.info("Pot Vol %d" % in_potentiometervalue)
+        logger.debug("Pot Vol %d" % in_potentiometervalue)
         position = int(100 * (float(in_potentiometervalue) / 32767.0))
         self.volume(position=position)
 
     def processPotentiometerTuner(self, in_potentiometervalue):
-        logger.info("Pot Tuner %d" % in_potentiometervalue)
+        logger.debug("Pot Tuner %d" % in_potentiometervalue)
         position = int(100 * (float(in_potentiometervalue) / 32767.0))
         self.tuner(position=position)
 
     def processPowerOff(self):
-        logger.info("Turning Off")
+        logger.debug("Turning Off")
         self.power_off()
 
     def processMode(self, in_modetype):
-        logger.info("Mode %s" % str(in_modetype))
+        logger.debug("Mode %s" % str(in_modetype))
         if in_modetype == TransistorMsg.ModeType.ModeType_NextMode:
             self.press_next_mode()
         elif in_modetype == TransistorMsg.ModeType.ModeType_Radio:
@@ -241,7 +241,7 @@ class TransistorFrontend(
             self.press_podcast()
 
     def processNavigation(self, in_navigationtype):
-        logger.info("Navigation %s" % (in_navigationtype))
+        logger.debug("Navigation %s" % (in_navigationtype))
         if (
             in_navigationtype
             == TransistorMsg.NavigationType.NavigationType_Next
@@ -254,7 +254,7 @@ class TransistorFrontend(
             self.previous()
 
     def processDate(self, in_datedate, in_datemonth, in_dateyear):
-        logger.info(
+        logger.debug(
             "Date {}, Month {}, Year {}".format(
                 in_datedate, in_datemonth, in_dateyear
             )
@@ -262,7 +262,7 @@ class TransistorFrontend(
         self.shared_data.date = f'{{"y":{in_dateyear}, "m": {in_datemonth}, "d":{in_datedate}}}'
 
     def processTime(self, in_timehour, in_timeminute, in_timesecond):
-        logger.info(
+        logger.debug(
             "Hour {}, Minute {}, Second {}".format(
                 in_timehour, in_timeminute, in_timesecond
             )
@@ -272,7 +272,7 @@ class TransistorFrontend(
     def processSendBatteryStatus(
         self, in_sendbatterystatuspercentage, in_sendbatterystatuscharging
     ):
-        logger.info(
+        logger.debug(
             "Battery Status = {}".format(in_sendbatterystatuspercentage)
         )
         self.shared_data.battery_soc = in_sendbatterystatuspercentage
@@ -281,7 +281,7 @@ class TransistorFrontend(
     def processSendProtocolVersion(
         self, in_sendprotocolversionmajor, in_sendprotocolversionminor
     ):
-        logger.info(
+        logger.debug(
             "FW Version: {}.{}".format(
                 in_sendprotocolversionmajor, in_sendprotocolversionminor
             )
