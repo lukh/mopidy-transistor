@@ -50,7 +50,7 @@ class TransistorLibraryProvider(backend.LibraryProvider):
             return []
 
         if uri == "transistor:noise":
-            return [models.Track(name="Random Noise", uri=uri)]
+            return [models.Track(name="Random Noise", uri=uri, artists=[models.Artist(name="Various Artist")], album=models.Album(name="Transistor Noises"))]
 
         split_uri = uri.split(":")
 
