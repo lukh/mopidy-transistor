@@ -385,17 +385,16 @@ class TransistorFrontend(
         elif self.state == "radio":
             try:
                 curr_index = (
-                    self.lib["radio_banks"]
-                    .keys()
+                    list(self.lib["radio_banks"].keys())
                     .index(self._selected_radio_bank)
                 )
-            except (KeyError, IndexError, ValueError):
+            except (KeyError, IndexError, ValueError) as e:
+                logger.warning("can't get curr_index: " + str(e))
                 curr_index = 0
             next_index = curr_index + 1
             if next_index == len(self.lib["radio_banks"]):
                 next_index = 0
-
-            self._selected_radio_bank = self.lib["radio_banks"].keys()[
+            self._selected_radio_bank = list(self.lib["radio_banks"].keys())[
                 next_index
             ]
             self.tuner()
@@ -407,17 +406,17 @@ class TransistorFrontend(
         else:
             try:
                 curr_index = (
-                    self.lib["radio_banks"]
-                    .keys()
+                    list(self.lib["radio_banks"].keys())
                     .index(self._selected_radio_bank)
                 )
             except (KeyError, IndexError, ValueError):
+                logger.warning("can't get curr_index: " + str(e))
                 curr_index = 0
             next_index = curr_index - 1
             if next_index < 0:
                 next_index = len(self.lib["radio_banks"]) - 1
 
-            self._selected_radio_bank = self.lib["radio_banks"].keys()[
+            self._selected_radio_bank = list(self.lib["radio_banks"].keys())[
                 next_index
             ]
             self.tuner()
